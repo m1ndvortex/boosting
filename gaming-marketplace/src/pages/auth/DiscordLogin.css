@@ -1,0 +1,317 @@
+/* Discord Login Page Styles */
+
+.discord-login {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--discord-bg-tertiary) 0%, var(--discord-bg-primary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.discord-login::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(114, 137, 218, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(114, 137, 218, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.discord-login__container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+}
+
+.discord-login__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.discord-login__logo {
+  margin-bottom: 24px;
+}
+
+.discord-logo {
+  color: var(--discord-accent);
+  width: 124px;
+  height: 34px;
+}
+
+.discord-login__title {
+  font-size: 32px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.discord-login__subtitle {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.discord-login__content {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.discord-login__card {
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  border: 1px solid rgba(114, 137, 218, 0.1);
+}
+
+.discord-login__card-header {
+  padding: 32px 32px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--discord-bg-primary);
+}
+
+.discord-login__card-header h2 {
+  font-size: 24px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.discord-login__card-header p {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.discord-login__card-body {
+  padding: 32px;
+}
+
+.discord-login__error {
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--discord-danger);
+}
+
+.discord-login__error-icon {
+  font-size: 16px;
+}
+
+.discord-login__button {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+}
+
+.discord-login__button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(114, 137, 218, 0.3);
+}
+
+.discord-login__button:active {
+  transform: translateY(0);
+}
+
+.discord-login__button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.discord-login__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid var(--discord-text-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.discord-login__info {
+  text-align: center;
+}
+
+.discord-login__info p {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* User Selection Modal Content */
+.discord-login__user-selection {
+  padding: 8px 0;
+}
+
+.discord-login__selection-subtitle {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.discord-login__user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.discord-login__user-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--discord-bg-primary);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.discord-login__user-item:hover {
+  background: var(--discord-bg-tertiary);
+  border-color: var(--discord-accent);
+  transform: translateY(-1px);
+}
+
+.discord-login__user-item:active {
+  transform: translateY(0);
+}
+
+.discord-login__user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.discord-login__user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discord-login__user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.discord-login__user-name {
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.discord-login__user-discriminator {
+  font-size: 14px;
+  font-weight: var(--font-weight-normal);
+  color: var(--discord-text-muted);
+}
+
+.discord-login__user-email {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.discord-login__user-arrow {
+  font-size: 18px;
+  color: var(--discord-text-muted);
+  transition: all 0.2s ease;
+}
+
+.discord-login__user-item:hover .discord-login__user-arrow {
+  color: var(--discord-accent);
+  transform: translateX(4px);
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .discord-login {
+    padding: 16px;
+  }
+  
+  .discord-login__title {
+    font-size: 28px;
+  }
+  
+  .discord-login__card-header,
+  .discord-login__card-body {
+    padding: 24px;
+  }
+  
+  .discord-login__card-header h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .discord-login__card-header,
+  .discord-login__card-body {
+    padding: 20px;
+  }
+  
+  .discord-login__user-item {
+    padding: 10px 12px;
+  }
+  
+  .discord-login__user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}

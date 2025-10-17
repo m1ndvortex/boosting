@@ -1,0 +1,36 @@
+/* Loading Component Styles */
+
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+  gap: 16px;
+}
+
+.app-loading__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(114, 137, 218, 0.3);
+  border-top: 3px solid var(--discord-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.app-loading p {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

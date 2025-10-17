@@ -1,10 +1,14 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ThemeDemo } from './components/demo/ThemeDemo';
+import { AuthProvider } from './contexts/AuthContext';
+import { AppRouter } from './components/routing/AppRouter';
+import './components/common/Loading.css';
 
 function App() {
   return (
     <Router>
-      <ThemeDemo />
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </Router>
   );
 }

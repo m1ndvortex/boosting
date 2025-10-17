@@ -3,7 +3,7 @@ import './Button.css';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'large';
   fullWidth?: boolean;
   loading?: boolean;
   children: React.ReactNode;
@@ -19,10 +19,11 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
+  const sizeClass = size === 'large' ? 'lg' : size;
   const classes = [
     'discord-button',
     `discord-button--${variant}`,
-    `discord-button--${size}`,
+    `discord-button--${sizeClass}`,
     fullWidth && 'discord-button--full-width',
     loading && 'discord-button--loading',
     className
