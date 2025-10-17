@@ -271,3 +271,182 @@ export const generateMockBoosterOrders = (boosterId: string): Order[] => [
     createdAt: new Date(Date.now() - 345600000), // 4 days ago
   }
 ];
+
+// Generate comprehensive mock data for testing scenarios
+export const generateMockDataSet = () => {
+  // Generate mock transactions
+  const generateMockTransactions = (userId: string) => [
+    {
+      id: `txn_${Date.now()}_1`,
+      walletId: userId,
+      type: 'deposit' as const,
+      amount: 50000,
+      currency: 'gold' as const,
+      status: 'completed' as const,
+      paymentMethod: 'credit_card',
+      createdAt: new Date(Date.now() - 86400000)
+    },
+    {
+      id: `txn_${Date.now()}_2`,
+      walletId: userId,
+      type: 'earning' as const,
+      amount: 25,
+      currency: 'usd' as const,
+      status: 'completed' as const,
+      createdAt: new Date(Date.now() - 43200000)
+    },
+    {
+      id: `txn_${Date.now()}_3`,
+      walletId: userId,
+      type: 'withdrawal' as const,
+      amount: 100,
+      currency: 'usd' as const,
+      status: 'pending_approval' as const,
+      createdAt: new Date(Date.now() - 21600000)
+    }
+  ];
+
+  // Generate mock shop products
+  const generateMockShopProducts = () => [
+    {
+      id: 'shop_wow_30',
+      gameId: 'game_wow',
+      productType: 'game_time' as const,
+      name: 'WoW Game Time - 30 Days',
+      description: '30 days of World of Warcraft game time',
+      durationDays: 30,
+      prices: { gold: 60000, usd: 15, toman: 630000 },
+      stockType: 'unlimited' as const,
+      isActive: true
+    },
+    {
+      id: 'shop_wow_60',
+      gameId: 'game_wow',
+      productType: 'game_time' as const,
+      name: 'WoW Game Time - 60 Days',
+      description: '60 days of World of Warcraft game time',
+      durationDays: 60,
+      prices: { gold: 110000, usd: 28, toman: 1176000 },
+      stockType: 'unlimited' as const,
+      isActive: true
+    },
+    {
+      id: 'shop_wow_90',
+      gameId: 'game_wow',
+      productType: 'game_time' as const,
+      name: 'WoW Game Time - 90 Days',
+      description: '90 days of World of Warcraft game time',
+      durationDays: 90,
+      prices: { gold: 150000, usd: 40, toman: 1680000 },
+      stockType: 'unlimited' as const,
+      isActive: true
+    }
+  ];
+
+  // Generate mock teams
+  const generateMockTeams = () => [
+    {
+      id: 'team_1',
+      name: 'Elite Boosters',
+      description: 'Professional boosting team with years of experience',
+      leaderId: 'user_4', // TeamLeader user
+      members: [
+        {
+          id: 'member_1',
+          teamId: 'team_1',
+          userId: 'user_4',
+          role: 'leader' as const,
+          status: 'active' as const,
+          joinedAt: new Date(Date.now() - 2592000000) // 30 days ago
+        },
+        {
+          id: 'member_2',
+          teamId: 'team_1',
+          userId: 'user_2',
+          role: 'member' as const,
+          status: 'active' as const,
+          joinedAt: new Date(Date.now() - 1296000000) // 15 days ago
+        }
+      ],
+      isActive: true,
+      createdAt: new Date(Date.now() - 2592000000)
+    }
+  ];
+
+  // Generate mock role requests
+  const generateMockRoleRequests = () => [
+    {
+      id: 'role_req_1',
+      userId: 'user_1',
+      requestedRole: 'booster' as const,
+      status: 'pending' as const,
+      requestedAt: new Date(Date.now() - 86400000),
+      reason: 'I have extensive experience in Mythic+ dungeons and would like to offer boosting services.'
+    },
+    {
+      id: 'role_req_2',
+      userId: 'user_2',
+      requestedRole: 'advertiser' as const,
+      status: 'pending' as const,
+      requestedAt: new Date(Date.now() - 43200000),
+      reason: 'I want to create and manage boosting services for my team.'
+    }
+  ];
+
+  // Generate mock activity log entries
+  const generateMockActivityLog = () => [
+    {
+      id: 'activity_1',
+      serviceId: 'service_1',
+      userId: 'user_4',
+      userName: 'TeamLeader',
+      action: 'created',
+      changes: { title: 'Mythic+15 Weekly Chest' },
+      timestamp: new Date(Date.now() - 3600000),
+      teamId: 'team_1'
+    },
+    {
+      id: 'activity_2',
+      serviceId: 'service_1',
+      userId: 'user_2',
+      userName: 'BoostMaster',
+      action: 'updated price',
+      changes: { usdPrice: 25 },
+      timestamp: new Date(Date.now() - 1800000),
+      teamId: 'team_1'
+    }
+  ];
+
+  return {
+    transactions: generateMockTransactions,
+    shopProducts: generateMockShopProducts(),
+    teams: generateMockTeams(),
+    roleRequests: generateMockRoleRequests(),
+    activityLog: generateMockActivityLog()
+  };
+};
+
+// Initialize mock data in localStorage if not present
+export const initializeMockData = () => {
+  const mockData = generateMockDataSet();
+  
+  // Initialize shop products
+  if (!localStorage.getItem('gaming_marketplace_shop_products')) {
+    localStorage.setItem('gaming_marketplace_shop_products', JSON.stringify(mockData.shopProducts));
+  }
+  
+  // Initialize teams
+  if (!localStorage.getItem('gaming_marketplace_teams')) {
+    localStorage.setItem('gaming_marketplace_teams', JSON.stringify(mockData.teams));
+  }
+  
+  // Initialize role requests
+  if (!localStorage.getItem('gaming_marketplace_role_requests')) {
+    localStorage.setItem('gaming_marketplace_role_requests', JSON.stringify(mockData.roleRequests));
+  }
+  
+  // Initialize activity log
+  if (!localStorage.getItem('gaming_marketplace_activity_log')) {
+    localStorage.setItem('gaming_marketplace_activity_log', JSON.stringify(mockData.activityLog));
+  }
+};

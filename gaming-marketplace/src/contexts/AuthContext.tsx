@@ -75,23 +75,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Mock Discord users for simulation
 const MOCK_DISCORD_USERS: Omit<User, 'roles' | 'createdAt'>[] = [
   {
-    id: 'user_1',
+    id: 'test-client-1',
     discordId: '123456789012345678',
-    username: 'GamerPro',
+    username: 'TestClient',
     discriminator: '1234',
     avatar: 'https://cdn.discordapp.com/avatars/123456789012345678/avatar1.png',
-    email: 'gamerpro@example.com',
+    email: 'testclient@example.com',
   },
   {
-    id: 'user_2',
+    id: 'test-booster-1',
     discordId: '234567890123456789',
-    username: 'BoostMaster',
+    username: 'BoosterUser',
     discriminator: '5678',
     avatar: 'https://cdn.discordapp.com/avatars/234567890123456789/avatar2.png',
-    email: 'boostmaster@example.com',
+    email: 'boosteruser@example.com',
   },
   {
-    id: 'user_3',
+    id: 'test-admin-1',
     discordId: '345678901234567890',
     username: 'AdminUser',
     discriminator: '9999',
@@ -99,20 +99,36 @@ const MOCK_DISCORD_USERS: Omit<User, 'roles' | 'createdAt'>[] = [
     email: 'admin@example.com',
   },
   {
-    id: 'user_4',
+    id: 'test-advertiser-1',
     discordId: '456789012345678901',
-    username: 'TeamLeader',
+    username: 'AdvertiserUser',
     discriminator: '1111',
     avatar: 'https://cdn.discordapp.com/avatars/456789012345678901/avatar4.png',
-    email: 'teamleader@example.com',
+    email: 'advertiser@example.com',
+  },
+  {
+    id: 'test-new-user',
+    discordId: '567890123456789012',
+    username: 'NewUser',
+    discriminator: '0001',
+    avatar: 'https://cdn.discordapp.com/avatars/567890123456789012/avatar5.png',
+    email: 'newuser@example.com',
   },
 ];
 
 // Auth provider component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+export const AuthProvider: React.FC<{ 
+  children: React.ReactNode;
+  initialUser?: User | null;
+}> = ({
   children,
+  initialUser = null,
 }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(authReducer, {
+    ...initialState,
+    isAuthenticated: !!initialUser,
+    user: initialUser,
+  });
 
   // Check for existing session on mount
   useEffect(() => {
@@ -161,7 +177,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
       }
       
-      if (mockUser.username === 'BoostMaster') {
+      if (mockUser.username === 'BoosterUser') {
         roles.push({
           id: 'role_booster_' + Date.now(),
           name: 'booster',
@@ -171,7 +187,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         });
       }
       
-      if (mockUser.username === 'TeamLeader') {
+      if (mockUser.username === 'AdvertiserUser') {
         roles.push(
           {
             id: 'role_advertiser_' + Date.now(),
@@ -204,9 +220,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, authToken);
 
       // Initialize wallet with some demo balance
-      const wallets = JSON.parse(localStorage.getItem('gaming_marketplace_wallet') || '{}');
-      if (!wallets[user.id]) {
-        wallets[user.id] = {
+      const walletKey = `gaming-marketplace-wallet-${user.id}`;
+      const existingWallet = localStorage.getItem(walletKey);
+      if (!existingWallet) {
+        const wallet = {
           userId: user.id,
           balances: { 
             gold: user.username === 'AdminUser' ? 100000 : 25000, 
@@ -215,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           },
           updatedAt: new Date().toISOString(),
         };
-        localStorage.setItem('gaming_marketplace_wallet', JSON.stringify(wallets));
+        localStorage.setItem(walletKey, JSON.stringify(wallet));
       }
 
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });

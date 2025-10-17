@@ -27,6 +27,7 @@ type WalletAction =
 interface WalletContextType {
   state: WalletState;
   loadWallet: () => Promise<void>;
+  refreshWallet: () => Promise<void>;
   deposit: (amount: number, currency: Currency, paymentMethod: string) => Promise<void>;
   requestWithdrawal: (amount: number, currency: Currency, paymentMethod: string) => Promise<void>;
   convertCurrency: (fromCurrency: Currency, toCurrency: Currency, amount: number) => Promise<void>;
@@ -257,9 +258,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: 'CLEAR_ERROR' });
   };
 
+  // Refresh wallet function (alias for loadWallet)
+  const refreshWallet = loadWallet;
+
   const contextValue: WalletContextType = {
     state,
     loadWallet,
+    refreshWallet,
     deposit,
     requestWithdrawal,
     convertCurrency,

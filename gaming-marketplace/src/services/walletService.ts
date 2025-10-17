@@ -23,6 +23,15 @@ export const PAYMENT_METHODS = [
 export class WalletService {
   // Get user wallet
   static getWallet(userId: string): Wallet {
+    // Try the new format first (individual wallet keys)
+    const walletKey = `${STORAGE_KEYS.WALLET}-${userId}`;
+    const individualWallet = StorageService.getItem<Wallet>(walletKey);
+    
+    if (individualWallet) {
+      return individualWallet;
+    }
+    
+    // Fallback to old format (all wallets in one object)
     const wallets = StorageService.getItem<Record<string, Wallet>>(STORAGE_KEYS.WALLET) || {};
     
     if (!wallets[userId]) {
@@ -32,8 +41,9 @@ export class WalletService {
         balances: { gold: 0, usd: 0, toman: 0 },
         updatedAt: new Date(),
       };
-      wallets[userId] = defaultWallet;
-      StorageService.setItem(STORAGE_KEYS.WALLET, wallets);
+      
+      // Save in new format
+      StorageService.setItem(walletKey, defaultWallet);
       return defaultWallet;
     }
     
@@ -42,21 +52,16 @@ export class WalletService {
 
   // Update wallet balances
   static updateWallet(userId: string, balances: Partial<{ gold: number; usd: number; toman: number }>): Wallet {
-    const wallets = StorageService.getItem<Record<string, Wallet>>(STORAGE_KEYS.WALLET) || {};
+    const wallet = this.getWallet(userId);
     
-    if (!wallets[userId]) {
-      wallets[userId] = {
-        userId,
-        balances: { gold: 0, usd: 0, toman: 0 },
-        updatedAt: new Date(),
-      };
-    }
+    wallet.balances = { ...wallet.balances, ...balances };
+    wallet.updatedAt = new Date();
     
-    wallets[userId].balances = { ...wallets[userId].balances, ...balances };
-    wallets[userId].updatedAt = new Date();
+    // Save in new format
+    const walletKey = `${STORAGE_KEYS.WALLET}-${userId}`;
+    StorageService.setItem(walletKey, wallet);
     
-    StorageService.setItem(STORAGE_KEYS.WALLET, wallets);
-    return wallets[userId];
+    return wallet;
   }
 
   // Deposit funds
@@ -74,7 +79,7 @@ export class WalletService {
     
     // Create transaction record
     const transaction: Transaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
       type: 'deposit',
       amount,
@@ -108,7 +113,7 @@ export class WalletService {
     
     // Create pending withdrawal transaction
     const transaction: Transaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
       type: 'withdrawal',
       amount,
@@ -158,7 +163,7 @@ export class WalletService {
     
     // Create transaction record
     const transaction: Transaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
       type: 'conversion',
       amount: convertedAmount,
@@ -177,7 +182,7 @@ export class WalletService {
     userId: string,
     amount: number,
     currency: Currency,
-    orderId: string
+    _orderId: string
   ): Promise<{ transaction: Transaction; wallet: Wallet }> {
     const wallet = this.getWallet(userId);
     
@@ -189,7 +194,7 @@ export class WalletService {
     const updatedWallet = this.updateWallet(userId, { [currency]: newBalance });
     
     const transaction: Transaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
       type: 'purchase',
       amount,
@@ -208,14 +213,14 @@ export class WalletService {
     userId: string,
     amount: number,
     currency: Currency,
-    orderId: string
+    _orderId: string
   ): Promise<{ transaction: Transaction; wallet: Wallet }> {
     const wallet = this.getWallet(userId);
     const newBalance = wallet.balances[currency] + amount;
     const updatedWallet = this.updateWallet(userId, { [currency]: newBalance });
     
     const transaction: Transaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
       type: 'earning',
       amount,
@@ -231,17 +236,33 @@ export class WalletService {
 
   // Get user transactions
   static getTransactions(userId: string): Transaction[] {
-    const transactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
-    return transactions
+    // Try the new format first (individual user transactions)
+    const transactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${userId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(transactionKey) || [];
+    
+    if (userTransactions.length > 0) {
+      return userTransactions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+    
+    // Fallback to old format (all transactions in one array)
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    return allTransactions
       .filter(t => t.walletId === userId)
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   // Save transaction
   private static saveTransaction(transaction: Transaction): void {
-    const transactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
-    transactions.push(transaction);
-    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, transactions);
+    // Save in new format (individual user transactions)
+    const transactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${transaction.walletId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(transactionKey) || [];
+    userTransactions.push(transaction);
+    StorageService.setItem(transactionKey, userTransactions);
+    
+    // Also save in old format for backward compatibility
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    allTransactions.push(transaction);
+    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, allTransactions);
   }
 
   // Get exchange rate

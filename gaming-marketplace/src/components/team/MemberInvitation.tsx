@@ -63,7 +63,7 @@ export const MemberInvitation: React.FC<MemberInvitationProps> = ({
   };
 
   const generateSampleUserId = () => {
-    const sampleId = `user_${Math.random().toString(36).substr(2, 8)}`;
+    const sampleId = `user_${Math.random().toString(36).substring(2, 10)}`;
     setUserId(sampleId);
     setError(null);
     setSuccess(null);

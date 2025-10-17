@@ -1,0 +1,204 @@
+/* Error Boundary Styles */
+
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.error-boundary--page {
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+}
+
+.error-boundary--feature {
+  min-height: 200px;
+  padding: var(--spacing-md);
+  background: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--discord-border-secondary);
+}
+
+.error-boundary--component {
+  min-height: 60px;
+  padding: var(--spacing-sm);
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: var(--border-radius-sm);
+}
+
+.error-boundary__content {
+  text-align: center;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.error-boundary--component .error-boundary__content {
+  flex-direction: row;
+  gap: var(--spacing-sm);
+  text-align: left;
+}
+
+.error-boundary__icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+}
+
+.error-boundary--feature .error-boundary__icon {
+  font-size: 32px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-boundary--component .error-boundary__icon {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.error-boundary__title {
+  color: var(--discord-text-primary);
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.error-boundary--page .error-boundary__title {
+  font-size: 24px;
+}
+
+.error-boundary--feature .error-boundary__title {
+  font-size: 18px;
+}
+
+.error-boundary__message {
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.error-boundary--page .error-boundary__message {
+  font-size: 16px;
+}
+
+.error-boundary--feature .error-boundary__message,
+.error-boundary--component .error-boundary__message {
+  font-size: 14px;
+}
+
+.error-boundary__details {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  text-align: left;
+}
+
+.error-boundary__details summary {
+  color: var(--discord-text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  background: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-boundary__details summary:hover {
+  background: var(--discord-interactive-muted);
+}
+
+.error-boundary__stack {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  border: 1px solid var(--discord-border-secondary);
+}
+
+.error-boundary__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.error-boundary--component .error-boundary__actions {
+  margin-top: 0;
+}
+
+.error-boundary__error-id {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  margin: 0;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--discord-border-secondary);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .error-boundary--page {
+    padding: var(--spacing-md);
+  }
+  
+  .error-boundary__content {
+    max-width: 100%;
+  }
+  
+  .error-boundary__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .error-boundary--component .error-boundary__content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .error-boundary--component .error-boundary__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+/* Animation for error appearance */
+.error-boundary {
+  animation: errorFadeIn 0.3s ease-out;
+}
+
+@keyframes errorFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus styles for accessibility */
+.error-boundary__details summary:focus {
+  outline: 2px solid var(--discord-accent);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .error-boundary__actions {
+    display: none;
+  }
+  
+  .error-boundary__details {
+    break-inside: avoid;
+  }
+}

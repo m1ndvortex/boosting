@@ -1,0 +1,86 @@
+/* Notification Bell Styles */
+
+.notification-bell {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--discord-text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-bell:hover {
+  color: var(--discord-text-primary);
+  background: var(--discord-interactive-muted);
+}
+
+.notification-bell.has-notifications {
+  color: var(--discord-accent);
+}
+
+.notification-bell.has-notifications:hover {
+  color: var(--discord-accent-hover);
+}
+
+.notification-bell__icon {
+  font-size: 18px;
+  display: block;
+}
+
+.notification-bell__badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--discord-danger);
+  color: var(--discord-text-primary);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  padding: 2px 4px;
+  border-radius: 8px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Focus styles for accessibility */
+.notification-bell:focus {
+  outline: 2px solid var(--discord-accent);
+  outline-offset: 2px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .notification-bell {
+    padding: var(--spacing-md);
+  }
+  
+  .notification-bell__icon {
+    font-size: 20px;
+  }
+  
+  .notification-bell__badge {
+    top: 4px;
+    right: 4px;
+    font-size: 11px;
+    min-width: 18px;
+    height: 18px;
+  }
+}

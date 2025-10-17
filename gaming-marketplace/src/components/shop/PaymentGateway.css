@@ -1,0 +1,326 @@
+/* Payment Gateway Styles */
+
+.payment-gateway {
+  max-width: 500px;
+  width: 100%;
+}
+
+.payment-gateway__content {
+  padding: 0;
+}
+
+.payment-gateway__header {
+  margin-bottom: 24px;
+}
+
+.payment-gateway__title {
+  color: var(--discord-text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.payment-gateway__product-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+}
+
+.payment-gateway__product-name {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+}
+
+.payment-gateway__product-price {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.payment-gateway__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.payment-gateway__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-gateway__section-title {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.payment-gateway__methods {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.payment-gateway__method {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.payment-gateway__method:hover {
+  border-color: var(--discord-accent);
+}
+
+.payment-gateway__method--selected {
+  border-color: var(--discord-accent);
+  background: rgba(114, 137, 218, 0.1);
+}
+
+.payment-gateway__method-input {
+  margin: 0;
+}
+
+.payment-gateway__method-icon {
+  font-size: 20px;
+}
+
+.payment-gateway__method-name {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.payment-gateway__card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.payment-gateway__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payment-gateway__field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.payment-gateway__label {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.payment-gateway__input {
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  transition: all 0.17s ease;
+}
+
+.payment-gateway__input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+  box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+}
+
+.payment-gateway__input::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.payment-gateway__crypto-info,
+.payment-gateway__bank-info {
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.payment-gateway__crypto-info p,
+.payment-gateway__bank-info p {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0 0 12px 0;
+}
+
+.payment-gateway__crypto-amount,
+.payment-gateway__bank-amount {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.payment-gateway__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.payment-gateway__button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.payment-gateway__button--cancel {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-secondary);
+}
+
+.payment-gateway__button--cancel:hover {
+  background: var(--discord-bg-secondary);
+  color: var(--discord-text-primary);
+}
+
+.payment-gateway__button--pay {
+  background: var(--discord-success);
+  color: var(--discord-text-primary);
+}
+
+.payment-gateway__button--pay:hover:not(:disabled) {
+  background: #3aa76d;
+}
+
+.payment-gateway__button--pay:disabled {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-muted);
+  cursor: not-allowed;
+}
+
+/* Processing Step */
+.payment-gateway__processing {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.payment-gateway__processing-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: pulse 2s infinite;
+}
+
+.payment-gateway__processing-title {
+  color: var(--discord-text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.payment-gateway__processing-text {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0 0 24px 0;
+}
+
+.payment-gateway__loading {
+  width: 100%;
+  height: 4px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.payment-gateway__loading-bar {
+  height: 100%;
+  background: var(--discord-accent);
+  border-radius: 2px;
+  animation: loading 2s infinite;
+}
+
+/* Success Step */
+.payment-gateway__success {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.payment-gateway__success-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: bounceIn 0.6s ease;
+}
+
+.payment-gateway__success-title {
+  color: var(--discord-success);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.payment-gateway__success-text {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-gateway {
+    width: 95vw;
+    margin: 20px;
+  }
+  
+  .payment-gateway__field-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .payment-gateway__actions {
+    flex-direction: column;
+  }
+}

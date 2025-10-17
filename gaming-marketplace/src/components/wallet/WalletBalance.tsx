@@ -52,9 +52,9 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
     }
   };
 
-  if (loading) {
+  if (loading || !wallet) {
     return (
-      <div className="wallet-balance">
+      <div className="wallet-balance" data-testid="wallet-balance">
         <div className="wallet-balance__header">
           <h2>Wallet Balance</h2>
           <div className="wallet-balance__loading">Loading...</div>
@@ -81,7 +81,7 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
   }
 
   return (
-    <div className="wallet-balance">
+    <div className="wallet-balance" data-testid="wallet-balance">
       <div className="wallet-balance__header">
         <h2>Wallet Balance</h2>
         <div className="wallet-balance__updated">
@@ -93,7 +93,7 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
         <div className="wallet-balance__currency">
           <div className="wallet-balance__currency-icon">🪙</div>
           <div className="wallet-balance__currency-info">
-            <div className="wallet-balance__currency-name">Gold (G)</div>
+            <div className="wallet-balance__currency-name">Gold</div>
             <div className="wallet-balance__currency-amount">
               {formatCurrency(wallet.balances.gold, 'gold')}
             </div>
@@ -104,9 +104,9 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
         <div className="wallet-balance__currency">
           <div className="wallet-balance__currency-icon">💵</div>
           <div className="wallet-balance__currency-info">
-            <div className="wallet-balance__currency-name">USD ($)</div>
+            <div className="wallet-balance__currency-name">USD</div>
             <div className="wallet-balance__currency-amount">
-              {formatCurrency(wallet.balances.usd, 'usd')}
+              ${formatCurrency(wallet.balances.usd, 'usd')}
             </div>
             <div className="wallet-balance__currency-desc">US Dollar</div>
           </div>
@@ -115,7 +115,7 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
         <div className="wallet-balance__currency">
           <div className="wallet-balance__currency-icon">﷼</div>
           <div className="wallet-balance__currency-info">
-            <div className="wallet-balance__currency-name">Toman (﷼)</div>
+            <div className="wallet-balance__currency-name">Toman</div>
             <div className="wallet-balance__currency-amount">
               {formatCurrency(wallet.balances.toman, 'toman')}
             </div>

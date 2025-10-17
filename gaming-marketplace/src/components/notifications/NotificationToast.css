@@ -1,0 +1,157 @@
+/* Notification Toast Styles */
+
+.notification-toast {
+  background: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  border-left: 4px solid var(--discord-accent);
+  min-width: 320px;
+  max-width: 480px;
+  overflow: hidden;
+  position: relative;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.notification-toast--success {
+  border-left-color: var(--discord-success);
+}
+
+.notification-toast--error {
+  border-left-color: var(--discord-danger);
+}
+
+.notification-toast--warning {
+  border-left-color: var(--discord-warning);
+}
+
+.notification-toast--info {
+  border-left-color: var(--discord-accent);
+}
+
+.notification-toast__content {
+  padding: var(--spacing-md);
+}
+
+.notification-toast__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.notification-toast__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.notification-toast__title {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  flex: 1;
+}
+
+.notification-toast__close {
+  background: none;
+  border: none;
+  color: var(--discord-text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.notification-toast__close:hover {
+  color: var(--discord-text-primary);
+  background: var(--discord-interactive-muted);
+}
+
+.notification-toast__message {
+  color: var(--discord-text-secondary);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+  margin-bottom: var(--spacing-sm);
+}
+
+.notification-toast__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.notification-toast__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--discord-accent);
+  animation: progressBar linear;
+  transform-origin: left;
+}
+
+.notification-toast--success .notification-toast__progress {
+  background: var(--discord-success);
+}
+
+.notification-toast--error .notification-toast__progress {
+  background: var(--discord-danger);
+}
+
+.notification-toast--warning .notification-toast__progress {
+  background: var(--discord-warning);
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes progressBar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Hover effects */
+.notification-toast:hover .notification-toast__progress {
+  animation-play-state: paused;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .notification-toast {
+    min-width: 280px;
+    max-width: calc(100vw - 32px);
+    margin: 0 var(--spacing-md);
+  }
+  
+  .notification-toast__actions {
+    flex-direction: column;
+  }
+}

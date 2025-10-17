@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MarketplaceService } from '../../services/marketplaceService';
-import { OrderService } from '../../services/orderService';
+
 import type { Order } from '../../types';
 import './OrderHistory.css';
 

@@ -1,21 +1,27 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { WorkspaceProvider } from './contexts/WorkspaceContext';
-import { WalletProvider } from './contexts/WalletContext';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { NotificationProvider } from './contexts/NotificationContext';
+import { NotificationContainer } from './components/notifications/NotificationContainer';
+import { AppProvider } from './contexts/AppProvider';
 import { AppRouter } from './components/routing/AppRouter';
+import './styles/global.css';
+import './styles/theme.css';
+import './styles/animations.css';
+import './styles/responsive.css';
 import './components/common/Loading.css';
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <WalletProvider>
-          <WorkspaceProvider>
+    <ErrorBoundary level="page">
+      <Router>
+        <NotificationProvider>
+          <AppProvider>
             <AppRouter />
-          </WorkspaceProvider>
-        </WalletProvider>
-      </AuthProvider>
-    </Router>
+            <NotificationContainer />
+          </AppProvider>
+        </NotificationProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

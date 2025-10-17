@@ -155,7 +155,7 @@ class OrderServiceClass {
     const orders = this.getOrders();
     
     const newOrder: Order = {
-      id: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `order_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       ...orderData,
       status: 'pending',
       createdAt: new Date()

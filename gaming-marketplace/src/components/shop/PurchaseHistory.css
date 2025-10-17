@@ -1,0 +1,256 @@
+/* Purchase History Styles */
+
+.purchase-history {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.purchase-history__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.purchase-history__title {
+  color: var(--discord-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.purchase-history__count {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  background: var(--discord-bg-tertiary);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.purchase-history__empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.purchase-history__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.purchase-history__empty h3 {
+  color: var(--discord-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.purchase-history__empty p {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.purchase-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.purchase-history__item {
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 16px;
+  border: 1px solid transparent;
+  transition: all 0.17s ease;
+}
+
+.purchase-history__item:hover {
+  border-color: var(--discord-accent);
+}
+
+.purchase-history__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.purchase-history__item-info {
+  flex: 1;
+}
+
+.purchase-history__item-title {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.purchase-history__item-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--discord-text-muted);
+}
+
+.purchase-history__order-number {
+  font-weight: 500;
+}
+
+.purchase-history__item-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+}
+
+.purchase-history__status-icon {
+  font-size: 14px;
+}
+
+.purchase-history__status-text {
+  color: var(--discord-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.purchase-history__item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.purchase-history__payment-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.purchase-history__payment-method {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.purchase-history__payment-icon {
+  font-size: 16px;
+}
+
+.purchase-history__payment-text {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+}
+
+.purchase-history__amount {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.purchase-history__code-section {
+  background: var(--discord-bg-secondary);
+  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid var(--discord-accent);
+}
+
+.purchase-history__code-header {
+  margin-bottom: 8px;
+}
+
+.purchase-history__code-label {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.purchase-history__code-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.purchase-history__code {
+  flex: 1;
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-accent);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.purchase-history__copy-button {
+  background: var(--discord-accent);
+  color: var(--discord-text-primary);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.17s ease;
+  min-width: 40px;
+}
+
+.purchase-history__copy-button:hover {
+  background: var(--discord-accent-hover);
+}
+
+.purchase-history__copy-button--copied {
+  background: var(--discord-success);
+}
+
+.purchase-history__copy-feedback {
+  color: var(--discord-success);
+  font-size: 12px;
+  margin-top: 4px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .purchase-history {
+    padding: 16px;
+  }
+  
+  .purchase-history__item-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .purchase-history__payment-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .purchase-history__code-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .purchase-history__copy-button {
+    width: 100%;
+  }
+}

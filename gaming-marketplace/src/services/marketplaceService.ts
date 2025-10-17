@@ -25,7 +25,10 @@ export class MarketplaceService {
     
     // Get services from localStorage for all users
     const keys = Object.keys(localStorage);
-    const serviceKeys = keys.filter(key => key.startsWith(STORAGE_KEYS.SERVICES));
+    const serviceKeys = keys.filter(key => 
+      key.startsWith(STORAGE_KEYS.SERVICES) || 
+      key === 'gaming-marketplace-services'
+    );
     
     serviceKeys.forEach(key => {
       const services = StorageService.getItem<Service[]>(key) || [];
@@ -260,6 +263,16 @@ export class MarketplaceService {
 
   private static getMockAdvertiser(userId: string): User {
     const advertisers: Record<string, User> = {
+      'test-user-1': {
+        id: 'test-user-1',
+        discordId: '123456789012345678',
+        username: 'TestAdvertiser',
+        discriminator: '1234',
+        avatar: 'test-avatar.png',
+        email: 'test@example.com',
+        roles: [{ id: 'role_1', name: 'advertiser', status: 'active' }],
+        createdAt: new Date()
+      },
       advertiser_1: {
         id: 'advertiser_1',
         discordId: '333333333333333333',

@@ -2,7 +2,7 @@
 
 // Generate unique IDs
 export const generateId = (): string => {
-  return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+  return Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
 };
 
 // Format currency values
@@ -171,6 +171,9 @@ export const capitalize = (str: string): string => {
 export const toTitleCase = (str: string): string => {
   return str.replace(
     /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
   );
 };
+
+// Export validation utilities
+export * from './validation';

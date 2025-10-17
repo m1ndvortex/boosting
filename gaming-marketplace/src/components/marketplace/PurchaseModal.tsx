@@ -92,7 +92,6 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
       isOpen={true}
       onClose={onClose}
       title="Purchase Service"
-      className="purchase-modal"
     >
       <div className="purchase-modal__content">
         {/* Service Summary */}
