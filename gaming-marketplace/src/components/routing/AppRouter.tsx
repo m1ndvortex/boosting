@@ -4,6 +4,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { DiscordLogin } from '../../pages/auth/DiscordLogin';
 import { AdminDashboard } from '../../pages/admin/AdminDashboard';
 import { ServiceProviderDashboard } from '../../pages/dashboard/ServiceProviderDashboard';
+import { MarketplacePage } from '../../pages/marketplace/MarketplacePage';
+import { ShopPage } from '../../pages/shop/ShopPage';
+import { WalletPage } from '../../pages/wallet/WalletPage';
+import { MainLayout } from '../layout/MainLayout';
 import type { User } from '../../types';
 
 // Helper function to check if user has a specific role
@@ -85,7 +89,9 @@ export const AppRouter: React.FC = () => {
         path="/admin/*"
         element={
           <ProtectedRoute requiredRole="admin">
-            <AdminDashboard />
+            <MainLayout>
+              <AdminDashboard />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -94,7 +100,9 @@ export const AppRouter: React.FC = () => {
         path="/dashboard/*"
         element={
           <ProtectedRoute>
-            <ServiceProviderDashboard />
+            <MainLayout>
+              <ServiceProviderDashboard />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -104,7 +112,9 @@ export const AppRouter: React.FC = () => {
         path="/marketplace/*"
         element={
           <ProtectedRoute>
-            <div>Marketplace (Coming Soon)</div>
+            <MainLayout>
+              <MarketplacePage />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -114,7 +124,9 @@ export const AppRouter: React.FC = () => {
         path="/shop/*"
         element={
           <ProtectedRoute>
-            <div>Shop (Coming Soon)</div>
+            <MainLayout>
+              <ShopPage />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -124,7 +136,9 @@ export const AppRouter: React.FC = () => {
         path="/wallet/*"
         element={
           <ProtectedRoute>
-            <div>Wallet (Coming Soon)</div>
+            <MainLayout>
+              <WalletPage />
+            </MainLayout>
           </ProtectedRoute>
         }
       />

@@ -1,0 +1,81 @@
+/* Marketplace Page Styles */
+.marketplace-page {
+  min-height: 100vh;
+  background: var(--discord-bg-primary);
+}
+
+.marketplace-page__content {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.marketplace-page__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.marketplace-page__icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.marketplace-page__placeholder h2 {
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 16px 0;
+}
+
+.marketplace-page__placeholder p {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0 0 32px 0;
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+.marketplace-page__features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.marketplace-page__feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  color: var(--discord-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.marketplace-page__feature-icon {
+  font-size: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .marketplace-page__content {
+    padding: 16px;
+  }
+  
+  .marketplace-page__placeholder {
+    padding: 40px 16px;
+  }
+  
+  .marketplace-page__features {
+    grid-template-columns: 1fr;
+  }
+}

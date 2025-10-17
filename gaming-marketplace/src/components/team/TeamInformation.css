@@ -1,0 +1,263 @@
+.team-information {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.team-information__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-information__header h3 {
+  color: var(--discord-text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.team-information__edit-button {
+  background: var(--discord-accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+}
+
+.team-information__edit-button:hover {
+  background: var(--discord-accent-hover);
+}
+
+.team-information__section {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.team-information__section h4 {
+  color: var(--discord-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.team-information__details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-information__detail-item {
+  display: flex;
+  gap: 12px;
+}
+
+.team-information__detail-label {
+  color: var(--discord-text-secondary);
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.team-information__detail-value {
+  color: var(--discord-text-primary);
+  flex: 1;
+}
+
+.team-information__status {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.team-information__status--active {
+  background: var(--discord-success);
+  color: white;
+}
+
+.team-information__edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.team-information__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.team-information__field label {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.team-information__input,
+.team-information__textarea {
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-primary);
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  transition: border-color 0.17s ease;
+}
+
+.team-information__input:focus,
+.team-information__textarea:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.team-information__textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.team-information__error {
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 4px;
+  padding: 12px;
+  color: var(--discord-danger);
+  font-size: 14px;
+}
+
+.team-information__edit-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.team-information__button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+  border: none;
+}
+
+.team-information__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.team-information__button--secondary {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.team-information__button--secondary:hover:not(:disabled) {
+  background: var(--discord-bg-primary);
+}
+
+.team-information__button--primary {
+  background: var(--discord-accent);
+  color: white;
+}
+
+.team-information__button--primary:hover:not(:disabled) {
+  background: var(--discord-accent-hover);
+}
+
+.team-information__members {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-information__member {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.team-information__member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-information__member-name {
+  color: var(--discord-text-primary);
+  font-weight: 500;
+}
+
+.team-information__member-role {
+  color: var(--discord-text-secondary);
+  font-size: 13px;
+}
+
+.team-information__member-joined {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+}
+
+.team-information__remove-button {
+  background: var(--discord-danger);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+}
+
+.team-information__remove-button:hover {
+  background: #d73c3c;
+}
+
+.team-information__invitations {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-information__invitation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.team-information__invitation-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-information__invitation-user {
+  color: var(--discord-text-primary);
+  font-weight: 500;
+}
+
+.team-information__invitation-date {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+}
+
+.team-information__invitation-status {
+  color: var(--discord-warning);
+  font-size: 13px;
+  font-weight: 500;
+}

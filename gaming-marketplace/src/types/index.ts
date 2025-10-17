@@ -168,6 +168,36 @@ export interface ShopOrder {
   createdAt: Date;
 }
 
+// Activity logging for team workspaces
+export interface ActivityLogEntry {
+  id: string;
+  serviceId: string;
+  userId: string;
+  userName: string;
+  action: string;
+  changes: Record<string, any>;
+  timestamp: Date;
+}
+
+// Team invitation system
+export interface TeamInvitation {
+  id: string;
+  teamId: string;
+  invitedUserId: string;
+  invitedBy: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'expired';
+  createdAt: Date;
+  respondedAt?: Date;
+}
+
+// Workspace context
+export interface WorkspaceContext {
+  type: WorkspaceType;
+  id: string;
+  name: string;
+  isTeamLeader?: boolean;
+}
+
 // Utility types
 export type WorkspaceType = 'personal' | 'team';
 export type Currency = 'gold' | 'usd' | 'toman';

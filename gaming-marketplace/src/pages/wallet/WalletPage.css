@@ -1,0 +1,132 @@
+/* Wallet Page Styles */
+.wallet-page {
+  min-height: 100vh;
+  background: var(--discord-bg-primary);
+}
+
+.wallet-page__content {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wallet-page__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-page__icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.wallet-page__placeholder h2 {
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 16px 0;
+}
+
+.wallet-page__placeholder p {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0 0 32px 0;
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+.wallet-page__features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+
+.wallet-page__feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  color: var(--discord-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.wallet-page__feature-icon {
+  font-size: 20px;
+}
+
+.wallet-page__preview {
+  width: 100%;
+  max-width: 400px;
+}
+
+.wallet-page__preview h3 {
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 16px 0;
+}
+
+.wallet-page__currencies {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wallet-page__currency {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+}
+
+.wallet-page__currency-icon {
+  font-size: 24px;
+  width: 32px;
+  text-align: center;
+}
+
+.wallet-page__currency-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-page__currency-name {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.wallet-page__currency-desc {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wallet-page__content {
+    padding: 16px;
+  }
+  
+  .wallet-page__placeholder {
+    padding: 40px 16px;
+  }
+  
+  .wallet-page__features {
+    grid-template-columns: 1fr;
+  }
+}

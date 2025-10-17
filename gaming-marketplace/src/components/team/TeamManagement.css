@@ -1,0 +1,202 @@
+.team-management {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.team-management__nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.team-management__nav-item {
+  background: none;
+  border: none;
+  color: var(--discord-text-secondary);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.team-management__nav-item:hover {
+  background: var(--discord-bg-secondary);
+  color: var(--discord-text-primary);
+}
+
+.team-management__nav-item--active {
+  background: var(--discord-accent);
+  color: white;
+}
+
+.team-management__content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.team-management__overview {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.team-management__overview-header h3 {
+  color: var(--discord-text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.team-management__overview-header p {
+  color: var(--discord-text-secondary);
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.team-management__no-teams {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.team-management__no-teams-content h4 {
+  color: var(--discord-text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.team-management__no-teams-content p {
+  color: var(--discord-text-secondary);
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+.team-management__create-button {
+  background: var(--discord-accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+}
+
+.team-management__create-button:hover {
+  background: var(--discord-accent-hover);
+}
+
+.team-management__create-button--small {
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.team-management__teams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.team-management__teams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-management__teams-header h4 {
+  color: var(--discord-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.team-management__teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.team-management__team-card {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.team-management__team-card:hover {
+  border-color: var(--discord-accent);
+  transform: translateY(-2px);
+}
+
+.team-management__team-card--selected {
+  border-color: var(--discord-accent);
+  background: rgba(114, 137, 218, 0.1);
+}
+
+.team-management__team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.team-management__team-header h5 {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.team-management__leader-badge {
+  background: var(--discord-success);
+  color: white;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.team-management__team-description {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.team-management__team-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--discord-text-muted);
+}
+
+.team-management__no-selection,
+.team-management__no-permission {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.team-management__no-selection p,
+.team-management__no-permission p {
+  color: var(--discord-text-secondary);
+  font-size: 16px;
+  margin: 0;
+}

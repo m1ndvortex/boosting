@@ -6,7 +6,6 @@ import './DiscordLogin.css';
 
 export const DiscordLogin: React.FC = () => {
   const { state, login, clearError } = useAuth();
-  const [selectedUserId, setSelectedUserId] = useState<string>('');
   const [showUserSelection, setShowUserSelection] = useState(false);
   const mockUsers = getMockDiscordUsers();
 
@@ -16,7 +15,6 @@ export const DiscordLogin: React.FC = () => {
   };
 
   const handleUserSelect = async (userId: string) => {
-    setSelectedUserId(userId);
     setShowUserSelection(false);
     await login(userId);
   };

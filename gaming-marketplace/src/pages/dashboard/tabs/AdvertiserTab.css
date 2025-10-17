@@ -1,0 +1,16 @@
+.advertiser-tab {
+  display: flex;
+  height: 100%;
+  background: var(--discord-bg-primary);
+}
+
+.advertiser-tab__sidebar {
+  flex-shrink: 0;
+  border-right: 1px solid var(--discord-bg-tertiary);
+}
+
+.advertiser-tab__main {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--discord-bg-primary);
+}

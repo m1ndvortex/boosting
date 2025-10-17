@@ -1,0 +1,106 @@
+.workspace-switcher {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.workspace-switcher__dropdown {
+  position: relative;
+}
+
+.workspace-switcher__button {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  border: 1px solid var(--discord-bg-primary);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 160px;
+  justify-content: space-between;
+}
+
+.workspace-switcher__button:hover {
+  background: var(--discord-interactive-hover);
+  border-color: var(--discord-accent);
+}
+
+.workspace-switcher__button--active {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+  color: white;
+}
+
+.workspace-switcher__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+  z-index: 1000;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.workspace-switcher__menu-item {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--discord-text-primary);
+  padding: 12px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.workspace-switcher__menu-item:hover {
+  background: var(--discord-bg-tertiary);
+}
+
+.workspace-switcher__menu-item--active {
+  background: var(--discord-accent);
+  color: white;
+}
+
+.workspace-switcher__menu-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.workspace-switcher__menu-badge {
+  background: var(--discord-success);
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.workspace-switcher__menu-check {
+  color: var(--discord-success);
+  font-weight: bold;
+  margin-left: auto;
+}
+
+/* Close dropdowns when clicking outside */
+.workspace-switcher__dropdown:not(:focus-within) .workspace-switcher__menu {
+  display: none;
+}

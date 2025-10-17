@@ -1,0 +1,378 @@
+.admin-dashboard {
+  display: flex;
+  height: 100vh;
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.admin-dashboard__sidebar {
+  flex-shrink: 0;
+  border-right: 1px solid var(--discord-bg-tertiary);
+}
+
+.admin-dashboard__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-dashboard__header {
+  padding: 24px 32px 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+  background: var(--discord-bg-secondary);
+}
+
+.admin-dashboard__title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--discord-text-primary);
+}
+
+.admin-dashboard__subtitle {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.admin-dashboard__main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+}
+
+/* Section container styles */
+.admin-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-section__header {
+  margin-bottom: 24px;
+}
+
+.admin-section__title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--discord-text-primary);
+}
+
+.admin-section__description {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.admin-section__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Card styles for admin sections */
+.admin-card {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.admin-card__header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.admin-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--discord-text-primary);
+}
+
+.admin-card__content {
+  color: var(--discord-text-secondary);
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+  text-align: center;
+}
+
+.stat-card__icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.stat-card__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--discord-accent);
+  margin: 0 0 4px 0;
+}
+
+.stat-card__label {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+/* Table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.admin-table th {
+  background: var(--discord-bg-tertiary);
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table td {
+  color: var(--discord-text-secondary);
+}
+
+.admin-table tr:hover {
+  background: var(--discord-bg-tertiary);
+}
+
+/* Form styles */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-form__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+}
+
+.admin-form__input {
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 4px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+}
+
+.admin-form__input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.admin-form__textarea {
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 4px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.admin-form__textarea:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+/* Button styles */
+.admin-button {
+  padding: 10px 16px;
+  background: var(--discord-accent);
+  color: var(--discord-text-primary);
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+}
+
+.admin-button:hover {
+  background: var(--discord-accent-hover);
+}
+
+.admin-button--secondary {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-secondary);
+}
+
+.admin-button--secondary:hover {
+  background: var(--discord-interactive-hover);
+  color: var(--discord-text-primary);
+}
+
+.admin-button--danger {
+  background: var(--discord-danger);
+}
+
+.admin-button--danger:hover {
+  background: #d73502;
+}
+
+.admin-button--success {
+  background: var(--discord-success);
+}
+
+.admin-button--success:hover {
+  background: #369870;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-button {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.17s ease;
+}
+
+.action-button--approve {
+  background: var(--discord-success);
+  color: white;
+}
+
+.action-button--approve:hover {
+  background: #369870;
+}
+
+.action-button--reject {
+  background: var(--discord-danger);
+  color: white;
+}
+
+.action-button--reject:hover {
+  background: #d73502;
+}
+
+.action-button--edit {
+  background: var(--discord-accent);
+  color: white;
+}
+
+.action-button--edit:hover {
+  background: var(--discord-accent-hover);
+}
+
+/* Status badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge--active {
+  background: rgba(67, 181, 129, 0.2);
+  color: var(--discord-success);
+}
+
+.status-badge--pending {
+  background: rgba(250, 166, 26, 0.2);
+  color: var(--discord-warning);
+}
+
+.status-badge--rejected {
+  background: rgba(240, 71, 71, 0.2);
+  color: var(--discord-danger);
+}
+
+.status-badge--inactive {
+  background: rgba(114, 118, 125, 0.2);
+  color: var(--discord-text-muted);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--discord-text-muted);
+}
+
+.empty-state__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state__title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--discord-text-secondary);
+}
+
+.empty-state__description {
+  font-size: 14px;
+  margin: 0;
+}/
+* Additional styles for admin sections */
+.admin-section__placeholder {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--discord-text-muted);
+}
+
+.admin-section__placeholder .admin-section__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.admin-section__placeholder h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--discord-text-secondary);
+}
+
+.admin-section__placeholder p {
+  font-size: 14px;
+  margin: 0;
+}

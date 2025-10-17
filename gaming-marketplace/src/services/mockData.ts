@@ -1,0 +1,199 @@
+// Mock data for games, service types, and other entities
+
+import type { Game, ServiceType, Service, Order, User } from '../types';
+
+// Mock games data
+export const MOCK_GAMES: Game[] = [
+  {
+    id: 'game_wow',
+    name: 'World of Warcraft',
+    slug: 'wow',
+    icon: '🎮',
+    isActive: true,
+    serviceTypes: []
+  },
+  {
+    id: 'game_ff14',
+    name: 'Final Fantasy XIV',
+    slug: 'ff14',
+    icon: '⚔️',
+    isActive: true,
+    serviceTypes: []
+  },
+  {
+    id: 'game_gw2',
+    name: 'Guild Wars 2',
+    slug: 'gw2',
+    icon: '🛡️',
+    isActive: true,
+    serviceTypes: []
+  }
+];
+
+// Mock service types data
+export const MOCK_SERVICE_TYPES: ServiceType[] = [
+  {
+    id: 'st_mythic_plus',
+    gameId: 'game_wow',
+    name: 'Mythic+ Dungeon',
+    requiresAdmin: false,
+    description: 'Complete Mythic+ dungeons for gear and rating',
+    isActive: true
+  },
+  {
+    id: 'st_leveling',
+    gameId: 'game_wow',
+    name: 'Leveling',
+    requiresAdmin: false,
+    description: 'Character leveling services',
+    isActive: true
+  },
+  {
+    id: 'st_raid',
+    gameId: 'game_wow',
+    name: 'Raid',
+    requiresAdmin: true,
+    description: 'Raid completion and gear runs',
+    isActive: true
+  },
+  {
+    id: 'st_delve',
+    gameId: 'game_wow',
+    name: 'Delve',
+    requiresAdmin: false,
+    description: 'Delve exploration and completion',
+    isActive: true
+  },
+  {
+    id: 'st_custom',
+    gameId: 'game_wow',
+    name: 'Custom Boost',
+    requiresAdmin: false,
+    description: 'Custom boosting services',
+    isActive: true
+  }
+];
+
+// Update games with service types
+MOCK_GAMES[0].serviceTypes = MOCK_SERVICE_TYPES.filter(st => st.gameId === 'game_wow');
+
+// Mock users for booster assignment
+export const MOCK_BOOSTERS: User[] = [
+  {
+    id: 'booster_1',
+    discordId: '111111111111111111',
+    username: 'ProBooster',
+    discriminator: '0001',
+    avatar: 'https://cdn.discordapp.com/avatars/111111111111111111/avatar.png',
+    email: 'probooster@example.com',
+    roles: [
+      {
+        id: 'role_booster_1',
+        name: 'booster',
+        status: 'active',
+        approvedBy: 'admin',
+        approvedAt: new Date()
+      }
+    ],
+    createdAt: new Date()
+  },
+  {
+    id: 'booster_2',
+    discordId: '222222222222222222',
+    username: 'EliteBooster',
+    discriminator: '0002',
+    avatar: 'https://cdn.discordapp.com/avatars/222222222222222222/avatar.png',
+    email: 'elitebooster@example.com',
+    roles: [
+      {
+        id: 'role_booster_2',
+        name: 'booster',
+        status: 'active',
+        approvedBy: 'admin',
+        approvedAt: new Date()
+      }
+    ],
+    createdAt: new Date()
+  }
+];
+
+// Generate mock services
+export const generateMockServices = (userId: string): Service[] => [
+  {
+    id: 'service_1',
+    gameId: 'game_wow',
+    serviceTypeId: 'st_mythic_plus',
+    title: 'Mythic+15 Weekly Chest',
+    description: 'Complete your weekly Mythic+15 for the best rewards',
+    prices: {
+      gold: 50000,
+      usd: 25,
+      toman: 1000000
+    },
+    workspaceType: 'personal',
+    workspaceOwnerId: userId,
+    createdBy: userId,
+    status: 'active',
+    createdAt: new Date()
+  },
+  {
+    id: 'service_2',
+    gameId: 'game_wow',
+    serviceTypeId: 'st_leveling',
+    title: '1-80 Leveling Boost',
+    description: 'Fast and safe character leveling from 1 to 80',
+    prices: {
+      gold: 100000,
+      usd: 50,
+      toman: 2000000
+    },
+    workspaceType: 'personal',
+    workspaceOwnerId: userId,
+    createdBy: userId,
+    status: 'active',
+    createdAt: new Date()
+  }
+];
+
+// Generate mock orders
+export const generateMockOrders = (userId: string): Order[] => [
+  {
+    id: 'order_1',
+    serviceId: 'service_1',
+    buyerId: 'client_1',
+    boosterId: 'booster_1',
+    earningsRecipientId: userId,
+    status: 'in_progress',
+    pricePaid: 25,
+    currency: 'usd',
+    createdAt: new Date(Date.now() - 86400000), // 1 day ago
+  },
+  {
+    id: 'order_2',
+    serviceId: 'service_2',
+    buyerId: 'client_2',
+    earningsRecipientId: userId,
+    status: 'pending',
+    pricePaid: 50000,
+    currency: 'gold',
+    createdAt: new Date(Date.now() - 3600000), // 1 hour ago
+  },
+  {
+    id: 'order_3',
+    serviceId: 'service_1',
+    buyerId: 'client_3',
+    boosterId: 'booster_2',
+    earningsRecipientId: userId,
+    status: 'evidence_submitted',
+    pricePaid: 1000000,
+    currency: 'toman',
+    evidence: {
+      orderId: 'order_3',
+      imageFile: new File([''], 'screenshot.png', { type: 'image/png' }),
+      notes: 'Mythic+15 completed successfully. Key upgraded to +16.',
+      uploadedBy: 'booster_2',
+      uploadedAt: new Date(Date.now() - 1800000) // 30 minutes ago
+    },
+    createdAt: new Date(Date.now() - 7200000), // 2 hours ago
+  }
+];
