@@ -1,0 +1,233 @@
+.my-earnings {
+  max-width: 1200px;
+}
+
+.my-earnings__header {
+  margin-bottom: 32px;
+}
+
+.my-earnings__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.my-earnings__subtitle {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.my-earnings__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--discord-text-secondary);
+}
+
+.my-earnings__loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--discord-bg-tertiary);
+  border-top: 3px solid var(--discord-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.my-earnings__summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .my-earnings__summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+.my-earnings__summary-card {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.my-earnings__summary-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 20px 0;
+}
+
+.my-earnings__totals {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.my-earnings__total-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+}
+
+.my-earnings__total-amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--discord-success);
+}
+
+.my-earnings__total-label {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.my-earnings__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.my-earnings__stat-card {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.my-earnings__stat-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+}
+
+.my-earnings__stat-content {
+  flex: 1;
+}
+
+.my-earnings__stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin-bottom: 4px;
+}
+
+.my-earnings__stat-label {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.my-earnings__orders {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.my-earnings__section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 20px 0;
+}
+
+.my-earnings__empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.my-earnings__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.my-earnings__empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.my-earnings__empty-text {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.my-earnings__order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.my-earnings__order-card {
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.my-earnings__order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.my-earnings__order-id {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--discord-text-primary);
+}
+
+.my-earnings__order-status {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  background: var(--discord-bg-primary);
+  border-radius: 10px;
+}
+
+.my-earnings__order-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.my-earnings__order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.my-earnings__order-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--discord-success);
+}
+
+.my-earnings__order-date {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+}
+
+.my-earnings__completion-date {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}

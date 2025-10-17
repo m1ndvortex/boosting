@@ -197,7 +197,7 @@ export class ServiceService {
   }
 
   // Review evidence (approve/reject)
-  static async reviewEvidence(orderId: string, userId: string, approved: boolean, reason?: string): Promise<Order> {
+  static async reviewEvidence(orderId: string, userId: string, approved: boolean, _reason?: string): Promise<Order> {
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const orders = StorageService.getItem<Order[]>(`${STORAGE_KEYS.ORDERS}_${userId}`) || [];

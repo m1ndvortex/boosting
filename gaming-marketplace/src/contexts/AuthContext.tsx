@@ -203,6 +203,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const authToken = `auth_token_${user.id}_${Date.now()}`;
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, authToken);
 
+      // Initialize wallet with some demo balance
+      const wallets = JSON.parse(localStorage.getItem('gaming_marketplace_wallet') || '{}');
+      if (!wallets[user.id]) {
+        wallets[user.id] = {
+          userId: user.id,
+          balances: { 
+            gold: user.username === 'AdminUser' ? 100000 : 25000, 
+            usd: user.username === 'AdminUser' ? 500 : 100, 
+            toman: user.username === 'AdminUser' ? 20000000 : 4000000 
+          },
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem('gaming_marketplace_wallet', JSON.stringify(wallets));
+      }
+
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });
     } catch (error) {
       const errorMessage =

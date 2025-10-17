@@ -1,0 +1,229 @@
+/* Withdrawal Form Component Styles */
+.withdrawal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.withdrawal-form__error {
+  padding: 12px 16px;
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 6px;
+  color: var(--discord-danger);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+}
+
+.withdrawal-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.withdrawal-form__label {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.withdrawal-form__currency-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.withdrawal-form__currency-tab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.withdrawal-form__currency-tab:hover {
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.withdrawal-form__currency-tab.active {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+  color: var(--discord-text-primary);
+}
+
+.withdrawal-form__balance {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-success);
+}
+
+.withdrawal-form__currency-tab.active .withdrawal-form__balance {
+  color: var(--discord-text-primary);
+}
+
+.withdrawal-form__amount-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.withdrawal-form__max-button {
+  background: none;
+  border: none;
+  color: var(--discord-accent);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.withdrawal-form__max-button:hover {
+  background: rgba(114, 137, 218, 0.1);
+}
+
+.withdrawal-form__max-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.withdrawal-form__input {
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.withdrawal-form__input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.withdrawal-form__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.withdrawal-form__input::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.withdrawal-form__payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.withdrawal-form__payment-method {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: var(--discord-text-secondary);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.withdrawal-form__payment-method:hover {
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.withdrawal-form__payment-method.active {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+  color: var(--discord-text-primary);
+}
+
+.withdrawal-form__payment-method:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.withdrawal-form__payment-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.withdrawal-form__payment-name {
+  flex: 1;
+}
+
+.withdrawal-form__info {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(250, 166, 26, 0.1);
+  border: 1px solid var(--discord-warning);
+  border-radius: 8px;
+}
+
+.withdrawal-form__info-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.withdrawal-form__info-text {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  line-height: 1.4;
+}
+
+.withdrawal-form__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .withdrawal-form {
+    max-width: none;
+  }
+  
+  .withdrawal-form__currency-tab {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .withdrawal-form__amount-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .withdrawal-form__actions {
+    flex-direction: column-reverse;
+  }
+  
+  .withdrawal-form__actions button {
+    width: 100%;
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { User, UserRole } from '../../../types';
+import type { User } from '../../../types';
 
 interface RoleRequest {
   id: string;

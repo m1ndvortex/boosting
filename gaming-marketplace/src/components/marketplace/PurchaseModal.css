@@ -1,0 +1,236 @@
+.purchase-modal .modal__content {
+  max-width: 500px;
+  width: 90vw;
+}
+
+.purchase-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Service Summary */
+.purchase-modal__service {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.purchase-modal__service-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.purchase-modal__game-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.purchase-modal__service-info {
+  flex: 1;
+}
+
+.purchase-modal__service-title {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.purchase-modal__service-meta {
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.purchase-modal__provider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.purchase-modal__provider-label {
+  color: var(--discord-text-secondary);
+}
+
+.purchase-modal__provider-name {
+  color: var(--discord-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Section Titles */
+.purchase-modal__section-title {
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+/* Currency Selection */
+.purchase-modal__currency-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.purchase-modal__currency-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.purchase-modal__currency-option:hover:not(.insufficient) {
+  border-color: var(--discord-accent);
+}
+
+.purchase-modal__currency-option.selected {
+  border-color: var(--discord-accent);
+  background: rgba(114, 137, 218, 0.1);
+}
+
+.purchase-modal__currency-option.insufficient {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.purchase-modal__currency-option input[type="radio"] {
+  margin: 0;
+  accent-color: var(--discord-accent);
+}
+
+.purchase-modal__currency-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.purchase-modal__currency-price {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.purchase-modal__currency-balance {
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+}
+
+.purchase-modal__insufficient-notice {
+  font-size: 0.875rem;
+  color: var(--discord-danger);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Purchase Summary */
+.purchase-modal__summary {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.purchase-modal__summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.purchase-modal__summary-row:not(:last-child) {
+  border-bottom: 1px solid var(--discord-bg-secondary);
+}
+
+.purchase-modal__summary-row--total {
+  font-weight: var(--font-weight-semibold);
+  font-size: 1rem;
+  padding-top: 0.75rem;
+}
+
+.purchase-modal__summary-price {
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.purchase-modal__summary-remaining {
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-success);
+}
+
+/* Purchase Info */
+.purchase-modal__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border-left: 4px solid var(--discord-accent);
+}
+
+.purchase-modal__info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+}
+
+.purchase-modal__info-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Error */
+.purchase-modal__error {
+  background: var(--discord-danger);
+  color: var(--discord-text-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* Actions */
+.purchase-modal__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+.purchase-modal__actions button {
+  min-width: 120px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .purchase-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .purchase-modal__actions button {
+    width: 100%;
+  }
+
+  .purchase-modal__currency-option {
+    padding: 0.75rem;
+  }
+
+  .purchase-modal__service-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}

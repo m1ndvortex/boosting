@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Order, OrderEvidence, User, Service } from '../../../types';
+import type { Order, User, Service } from '../../../types';
 
 interface OrderWithDetails extends Order {
   service: Service;

@@ -1,0 +1,361 @@
+/* Order Tracking Component Styles */
+
+.order-tracking {
+  padding: 24px;
+  background: var(--discord-bg-primary);
+  min-height: 100vh;
+  color: var(--discord-text-primary);
+}
+
+/* Header */
+.order-tracking__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--discord-bg-secondary);
+}
+
+.order-tracking__title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-tracking__back-button {
+  align-self: flex-start;
+  margin-bottom: 16px;
+}
+
+.order-tracking__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--discord-text-primary);
+}
+
+.order-tracking__subtitle {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.order-tracking__actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Content */
+.order-tracking__content {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Loading State */
+.order-tracking__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.order-tracking__loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--discord-bg-tertiary);
+  border-top: 3px solid var(--discord-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+/* Error State */
+.order-tracking__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.order-tracking__error h2 {
+  color: var(--discord-danger);
+  margin-bottom: 8px;
+}
+
+.order-tracking__error p {
+  color: var(--discord-text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Empty State */
+.order-tracking__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.order-tracking__empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.order-tracking__empty h3 {
+  color: var(--discord-text-primary);
+  margin-bottom: 8px;
+}
+
+.order-tracking__empty p {
+  color: var(--discord-text-secondary);
+  margin-bottom: 24px;
+  max-width: 400px;
+}
+
+/* Orders List */
+.order-tracking__orders {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+
+/* Individual Order */
+.order-tracking__order {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 20px;
+  border-left: 4px solid var(--discord-accent);
+}
+
+/* Order Header */
+.order-tracking__order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.order-tracking__order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-tracking__order-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.order-tracking__order-meta {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.order-tracking__order-status {
+  display: flex;
+  align-items: center;
+}
+
+.order-tracking__status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.order-tracking__status-icon {
+  font-size: 14px;
+}
+
+.order-tracking__status-text {
+  white-space: nowrap;
+}
+
+/* Progress Bar */
+.order-tracking__progress {
+  margin-bottom: 16px;
+}
+
+.order-tracking__progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--discord-bg-primary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.order-tracking__progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.order-tracking__progress-text {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+  text-align: right;
+}
+
+/* Order Details */
+.order-tracking__order-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--discord-bg-primary);
+  border-radius: 6px;
+}
+
+.order-tracking__detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.order-tracking__detail-label {
+  color: var(--discord-text-secondary);
+  font-weight: 500;
+}
+
+.order-tracking__detail-value {
+  color: var(--discord-text-primary);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+/* Status Information */
+.order-tracking__status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.order-tracking__status-info-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.order-tracking__status-info--pending {
+  background: rgba(250, 166, 26, 0.1);
+  color: var(--discord-warning);
+  border: 1px solid rgba(250, 166, 26, 0.2);
+}
+
+.order-tracking__status-info--assigned {
+  background: rgba(114, 137, 218, 0.1);
+  color: var(--discord-accent);
+  border: 1px solid rgba(114, 137, 218, 0.2);
+}
+
+.order-tracking__status-info--progress {
+  background: rgba(114, 137, 218, 0.1);
+  color: var(--discord-accent);
+  border: 1px solid rgba(114, 137, 218, 0.2);
+}
+
+.order-tracking__status-info--evidence {
+  background: rgba(250, 166, 26, 0.1);
+  color: var(--discord-warning);
+  border: 1px solid rgba(250, 166, 26, 0.2);
+}
+
+.order-tracking__status-info--completed {
+  background: rgba(67, 181, 129, 0.1);
+  color: var(--discord-success);
+  border: 1px solid rgba(67, 181, 129, 0.2);
+}
+
+.order-tracking__status-info--rejected {
+  background: rgba(240, 71, 71, 0.1);
+  color: var(--discord-danger);
+  border: 1px solid rgba(240, 71, 71, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .order-tracking {
+    padding: 16px;
+  }
+
+  .order-tracking__header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .order-tracking__actions {
+    align-self: flex-start;
+  }
+
+  .order-tracking__orders {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .order-tracking__order {
+    padding: 16px;
+  }
+
+  .order-tracking__order-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .order-tracking__order-status {
+    align-self: flex-start;
+  }
+
+  .order-tracking__order-details {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .order-tracking__detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .order-tracking__status-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .order-tracking__status-info-icon {
+    align-self: flex-start;
+  }
+}
+
+/* Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

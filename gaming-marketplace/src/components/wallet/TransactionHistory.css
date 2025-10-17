@@ -1,0 +1,274 @@
+/* Transaction History Component Styles */
+.transaction-history {
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.transaction-history__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.transaction-history__header h3 {
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.transaction-history__count {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.transaction-history__loading {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+}
+
+.transaction-history__filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.transaction-history__filter-group {
+  display: flex;
+  gap: 12px;
+}
+
+.transaction-history__select {
+  padding: 8px 12px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.transaction-history__select:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.transaction-history__search {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.transaction-history__search:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.transaction-history__search::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.transaction-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.transaction-history__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.transaction-history__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.transaction-history__empty-text {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+}
+
+.transaction-history__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.transaction-history__item:hover {
+  border-color: var(--discord-accent);
+  transform: translateY(-1px);
+}
+
+.transaction-history__item.skeleton {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.transaction-history__item-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--discord-bg-primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.transaction-history__item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-history__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.transaction-history__item-type {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.transaction-history__item-amount {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-accent);
+}
+
+.transaction-history__item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.transaction-history__item-id {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+  font-family: 'Courier New', monospace;
+}
+
+.transaction-history__item-status {
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.transaction-history__item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-history__item-date {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+.transaction-history__item-method {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+  text-transform: capitalize;
+}
+
+.transaction-history__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-text {
+  background: var(--discord-bg-primary);
+  border-radius: 4px;
+  height: 60px;
+  width: 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .transaction-history {
+    padding: 16px;
+  }
+  
+  .transaction-history__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .transaction-history__filters {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .transaction-history__filter-group {
+    width: 100%;
+  }
+  
+  .transaction-history__select {
+    flex: 1;
+  }
+  
+  .transaction-history__item {
+    padding: 12px;
+  }
+  
+  .transaction-history__item-header,
+  .transaction-history__item-meta,
+  .transaction-history__item-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .transaction-history__item-amount {
+    align-self: flex-end;
+  }
+  
+  .transaction-history__item-status {
+    align-self: flex-end;
+  }
+}

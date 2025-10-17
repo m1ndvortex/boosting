@@ -1,0 +1,41 @@
+.view-toggle {
+  display: flex;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.view-toggle__button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--discord-text-muted);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.view-toggle__button:hover {
+  color: var(--discord-text-primary);
+  background: var(--discord-bg-secondary);
+}
+
+.view-toggle__button.active {
+  background: var(--discord-accent);
+  color: var(--discord-text-primary);
+}
+
+.view-toggle__button.active:hover {
+  background: var(--discord-accent-hover);
+}
+
+.view-toggle__button svg {
+  width: 16px;
+  height: 16px;
+}

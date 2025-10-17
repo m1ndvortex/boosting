@@ -1,0 +1,76 @@
+.search-bar {
+  width: 100%;
+}
+
+.search-bar__input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  transition: border-color 0.2s ease;
+}
+
+.search-bar__input-wrapper:focus-within {
+  border-color: var(--discord-accent);
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: 1rem;
+  font-size: 1rem;
+  color: var(--discord-text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-bar__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  font-size: 1rem;
+  color: var(--discord-text-primary);
+  font-family: inherit;
+}
+
+.search-bar__input::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.search-bar__clear {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--discord-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.search-bar__clear:hover {
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.search-bar__clear:active {
+  transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-bar__input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}

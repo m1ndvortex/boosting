@@ -4,7 +4,7 @@ import { useWorkspace } from '../../../../contexts/WorkspaceContext';
 import { ServiceService } from '../../../../services/serviceService';
 import { ServiceForm } from '../../../../components/forms/ServiceForm';
 import { ActivityLog } from '../../../../components/team/ActivityLog';
-import type { Service, Game, ServiceType } from '../../../../types';
+import type { Service, Game } from '../../../../types';
 import './MyServices.css';
 
 export const MyServices: React.FC = () => {

@@ -1,0 +1,219 @@
+/* Currency Converter Component Styles */
+.currency-converter {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.currency-converter__error {
+  padding: 12px 16px;
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 6px;
+  color: var(--discord-danger);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+}
+
+.currency-converter__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 12px;
+}
+
+.currency-converter__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.currency-converter__label {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.currency-converter__input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.currency-converter__select {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--discord-bg-primary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.currency-converter__select:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.currency-converter__select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.currency-converter__amount-input,
+.currency-converter__amount-display {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.currency-converter__input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--discord-bg-primary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.currency-converter__input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.currency-converter__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.currency-converter__input.readonly {
+  background: var(--discord-bg-secondary);
+  cursor: default;
+}
+
+.currency-converter__input::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.currency-converter__max-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--discord-accent);
+  border: none;
+  color: var(--discord-text-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.currency-converter__max-button:hover {
+  background: var(--discord-accent-hover);
+}
+
+.currency-converter__max-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.currency-converter__balance {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+.currency-converter__swap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.currency-converter__swap-button {
+  width: 40px;
+  height: 40px;
+  background: var(--discord-accent);
+  border: none;
+  border-radius: 50%;
+  color: var(--discord-text-primary);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.currency-converter__swap-button:hover {
+  background: var(--discord-accent-hover);
+  transform: rotate(180deg);
+}
+
+.currency-converter__swap-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.currency-converter__rate {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(114, 137, 218, 0.1);
+  border: 1px solid var(--discord-accent);
+  border-radius: 8px;
+}
+
+.currency-converter__rate-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.currency-converter__rate-text {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  line-height: 1.4;
+}
+
+.currency-converter__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .currency-converter {
+    max-width: none;
+  }
+  
+  .currency-converter__input-group {
+    flex-direction: column;
+  }
+  
+  .currency-converter__amount-input {
+    margin-top: 8px;
+  }
+  
+  .currency-converter__actions {
+    flex-direction: column-reverse;
+  }
+  
+  .currency-converter__actions button {
+    width: 100%;
+  }
+}

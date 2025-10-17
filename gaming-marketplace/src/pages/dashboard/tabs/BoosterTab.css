@@ -1,0 +1,16 @@
+.booster-tab {
+  display: flex;
+  height: 100%;
+  background: var(--discord-bg-primary);
+}
+
+.booster-tab__sidebar {
+  flex-shrink: 0;
+}
+
+.booster-tab__main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--discord-bg-primary);
+}

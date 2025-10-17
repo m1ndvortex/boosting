@@ -123,10 +123,10 @@ export const UsersAndRoles: React.FC = () => {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const handleRoleToggle = (userId: string, roleName: string) => {
-    // Mock role toggle functionality
-    console.log(`Toggling ${roleName} role for user ${userId}`);
-  };
+  // const handleRoleToggle = (userId: string, roleName: string) => {
+  //   // Mock role toggle functionality
+  //   console.log(`Toggling ${roleName} role for user ${userId}`);
+  // };
 
   return (
     <div className="admin-section">

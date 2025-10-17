@@ -1,0 +1,182 @@
+.service-filters {
+  width: 100%;
+}
+
+.service-filters__basic {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.service-filters__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 140px;
+}
+
+.service-filters__label {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.service-filters__select {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--discord-text-primary);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.service-filters__select:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.service-filters__select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.service-filters__select option {
+  background: var(--discord-bg-secondary);
+  color: var(--discord-text-primary);
+}
+
+.service-filters__advanced-toggle {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--discord-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-weight: var(--font-weight-medium);
+}
+
+.service-filters__advanced-toggle:hover {
+  border-color: var(--discord-accent);
+}
+
+.service-filters__advanced-toggle.active {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+}
+
+.service-filters__clear {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Advanced Filters */
+.service-filters__advanced {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.service-filters__advanced-title {
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin-bottom: 1rem;
+}
+
+.service-filters__price-range {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.service-filters__price-inputs {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.service-filters__price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 100px;
+}
+
+.service-filters__price-label {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.service-filters__price-input,
+.service-filters__price-currency {
+  background: var(--discord-bg-secondary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--discord-text-primary);
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.service-filters__price-input:focus,
+.service-filters__price-currency:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.service-filters__price-currency {
+  cursor: pointer;
+}
+
+.service-filters__price-currency option {
+  background: var(--discord-bg-secondary);
+  color: var(--discord-text-primary);
+}
+
+.service-filters__apply-price {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .service-filters__basic {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .service-filters__group {
+    min-width: auto;
+  }
+
+  .service-filters__price-inputs {
+    flex-direction: column;
+  }
+
+  .service-filters__price-input-group {
+    min-width: auto;
+  }
+
+  .service-filters__apply-price {
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-filters__advanced {
+    padding: 1rem;
+  }
+}

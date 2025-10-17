@@ -45,9 +45,9 @@ export const DashboardHome: React.FC = () => {
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
   const completedOrders = orders.filter(o => o.status === 'completed').length;
-  const totalEarnings = orders
-    .filter(o => o.status === 'completed')
-    .reduce((sum, o) => sum + o.pricePaid, 0);
+  // const totalEarnings = orders
+  //   .filter(o => o.status === 'completed')
+  //   .reduce((sum, o) => sum + o.pricePaid, 0);
 
   return (
     <div className="dashboard-home">

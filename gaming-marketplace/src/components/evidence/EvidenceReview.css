@@ -1,0 +1,213 @@
+.evidence-review {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.evidence-review__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.evidence-review__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.evidence-review__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.evidence-review__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 16px 0;
+}
+
+.evidence-review__subsection-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 12px 0;
+}
+
+.evidence-review__order-info {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.evidence-review__order-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.evidence-review__detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.evidence-review__detail-label {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.evidence-review__detail-value {
+  font-size: 14px;
+  color: var(--discord-text-primary);
+  font-weight: 500;
+}
+
+.evidence-review__evidence {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.evidence-review__screenshot {
+  margin-bottom: 20px;
+}
+
+.evidence-review__image-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evidence-review__image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--discord-bg-tertiary);
+  cursor: pointer;
+}
+
+.evidence-review__image:hover {
+  border-color: var(--discord-accent);
+}
+
+.evidence-review__image-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+.evidence-review__image-filename {
+  font-weight: 500;
+}
+
+.evidence-review__no-image {
+  padding: 40px;
+  text-align: center;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  color: var(--discord-text-muted);
+  font-style: italic;
+}
+
+.evidence-review__notes-content {
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 16px;
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.evidence-review__actions {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.evidence-review__action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.evidence-review__no-permission,
+.evidence-review__status-info {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+  text-align: center;
+}
+
+.evidence-review__no-permission p,
+.evidence-review__status-info p {
+  margin: 0;
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+}
+
+.evidence-review__reject-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 500px;
+}
+
+.evidence-review__reject-description {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.evidence-review__reject-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 6px;
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.evidence-review__reject-textarea:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.evidence-review__reject-textarea::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.evidence-review__reject-char-count {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+  text-align: right;
+}
+
+.evidence-review__reject-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}

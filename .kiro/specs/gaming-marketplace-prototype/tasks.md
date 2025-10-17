@@ -166,7 +166,12 @@
     - Test workspace switcher only appears for team members
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 6.1, 6.2, 6.3, 6.4, 6.5_
 
-- [ ] 8. Create Booster tab with order management and evidence system
+- [x] 8. Create Booster tab with order management and evidence system
+
+
+
+
+
   - Build Booster tab with sidebar navigation (Dashboard Home, Assigned Orders, My Earnings, Profile)
   - Implement assigned orders interface with order details and status display
   - Create "Start Order" functionality to update status to "In Progress"
@@ -175,7 +180,9 @@
   - Create evidence submission workflow with status updates
   - Build evidence review interface for reviewers (Admin, Support, Advertiser, Team Advertiser)
   - Implement approval/rejection workflow with reason tracking
-  - [ ] 8.1 Test Booster tab and evidence system with Playwright MCP
+  - [x] 8.1 Test Booster tab and evidence system with Playwright MCP
+
+
     - Verify Booster tab appears for users with booster role
     - Test Booster sidebar navigation (Dashboard Home, Assigned Orders, My Earnings, Profile)
     - Validate assigned orders interface displays order details and status
@@ -188,7 +195,12 @@
     - Test rejection workflow provides reason and allows resubmission
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 11.1, 11.2, 11.3, 11.4, 11.5_
 
-- [ ] 9. Implement multi-currency wallet system
+- [x] 9. Implement multi-currency wallet system
+
+
+
+
+
   - Create wallet interface displaying Gold (G), USD ($), and Toman (﷼) balances
   - Build instant deposit system with payment method simulation (Credit Card, Crypto, Iranian Bank Card)
   - Implement withdrawal request system requiring admin approval
@@ -196,7 +208,9 @@
   - Build transaction history with filtering and search capabilities
   - Implement payment method management (add, verify, remove)
   - Create wallet integration with purchase workflows
-  - [ ] 9.1 Test multi-currency wallet system with Playwright MCP
+  - [x] 9.1 Test multi-currency wallet system with Playwright MCP
+
+
     - Verify wallet interface displays Gold (G), USD ($), and Toman (﷼) balances with correct symbols
     - Test instant deposit system with payment method options (Credit Card, Crypto, Iranian Bank Card)
     - Validate deposit updates balance instantly without admin approval
@@ -207,7 +221,19 @@
     - Test wallet integration deducts correct amounts during purchases
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 10. Build marketplace interface for service browsing and purchasing
+- [x] 10. Build marketplace interface for service browsing and purchasing
+
+
+
+
+
+
+
+
+
+
+
+
   - Create marketplace page with service listing grid/list view
   - Implement service filtering by game and service type
   - Build search functionality for service discovery
@@ -216,7 +242,7 @@
   - Build order creation with status "Pending" and wallet deduction
   - Create order tracking interface with status progression display
   - Implement order history and details view
-  - [ ] 10.1 Test marketplace interface with Playwright MCP
+  - [x] 10.1 Test marketplace interface with Playwright MCP
     - Verify marketplace page loads with service listings in grid/list view
     - Test service filtering by game and service type works correctly
     - Validate search functionality finds and displays relevant services
@@ -227,7 +253,10 @@
     - Test order history and details view shows all user orders
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
 
-- [ ] 11. Create shop system for game time products
+- [-] 11. Create shop system for game time products
+
+
+
   - Build shop page accessible to all users via global navigation
   - Implement game time product display (WoW 30/60/90 days) with multi-currency pricing
   - Create dual payment system (wallet and direct card payment)

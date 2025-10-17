@@ -1,51 +1,49 @@
 import React from 'react';
+import './Earnings.css';
 
 export const Earnings: React.FC = () => {
   return (
-    <div style={{ 
-      padding: '2rem', 
-      color: 'var(--discord-text-primary)',
-      background: 'var(--discord-bg-primary)',
-      height: '100%'
-    }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1>Earnings</h1>
-        <p style={{ color: 'var(--discord-text-secondary)' }}>
-          Track your earnings from completed services.
+    <div className="advertiser-earnings">
+      <div className="advertiser-earnings__header">
+        <h1 className="advertiser-earnings__title">Earnings</h1>
+        <p className="advertiser-earnings__subtitle">
+          Track your earnings from completed orders
         </p>
       </div>
-      
-      <div style={{ 
-        background: 'var(--discord-bg-secondary)', 
-        padding: '2rem', 
-        borderRadius: '8px',
-        border: '1px solid var(--discord-bg-tertiary)',
-        textAlign: 'center'
-      }}>
-        <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.5 }}>💰</div>
-        <h3>Earnings Dashboard</h3>
-        <p style={{ color: 'var(--discord-text-secondary)', marginBottom: '1.5rem' }}>
-          View detailed earnings analytics and payment history.
-        </p>
-        <div style={{ 
-          background: 'var(--discord-bg-tertiary)', 
-          padding: '1rem', 
-          borderRadius: '6px',
-          marginBottom: '1rem'
-        }}>
-          <h4 style={{ marginBottom: '0.5rem' }}>Coming Soon:</h4>
-          <ul style={{ 
-            color: 'var(--discord-text-secondary)', 
-            textAlign: 'left',
-            listStyle: 'none',
-            padding: 0
-          }}>
-            <li>• Total earnings breakdown by currency</li>
-            <li>• Monthly and weekly earnings charts</li>
-            <li>• Service performance analytics</li>
-            <li>• Payment history and pending payouts</li>
-            <li>• Tax reporting and export features</li>
-          </ul>
+
+      <div className="advertiser-earnings__stats">
+        <div className="advertiser-earnings__stat-card">
+          <div className="advertiser-earnings__stat-icon">💰</div>
+          <div className="advertiser-earnings__stat-content">
+            <div className="advertiser-earnings__stat-value">$1,245</div>
+            <div className="advertiser-earnings__stat-label">Total USD Earnings</div>
+          </div>
+        </div>
+
+        <div className="advertiser-earnings__stat-card">
+          <div className="advertiser-earnings__stat-icon">🏆</div>
+          <div className="advertiser-earnings__stat-content">
+            <div className="advertiser-earnings__stat-value">450,000G</div>
+            <div className="advertiser-earnings__stat-label">Total Gold Earnings</div>
+          </div>
+        </div>
+
+        <div className="advertiser-earnings__stat-card">
+          <div className="advertiser-earnings__stat-icon">💎</div>
+          <div className="advertiser-earnings__stat-content">
+            <div className="advertiser-earnings__stat-value">25,000,000﷼</div>
+            <div className="advertiser-earnings__stat-label">Total Toman Earnings</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="advertiser-earnings__content">
+        <div className="advertiser-earnings__empty">
+          <div className="advertiser-earnings__empty-icon">📊</div>
+          <h2 className="advertiser-earnings__empty-title">Earnings Dashboard Coming Soon</h2>
+          <p className="advertiser-earnings__empty-text">
+            Detailed earnings analytics and reports will be available here.
+          </p>
         </div>
       </div>
     </div>

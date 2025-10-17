@@ -1,0 +1,174 @@
+.evidence-upload {
+  max-width: 600px;
+}
+
+.evidence-upload__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.evidence-upload__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evidence-upload__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.evidence-upload__section-description {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.evidence-upload__dropzone {
+  border: 2px dashed var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--discord-bg-tertiary);
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.evidence-upload__dropzone:hover {
+  border-color: var(--discord-accent);
+  background: rgba(114, 137, 218, 0.1);
+}
+
+.evidence-upload__dropzone--active {
+  border-color: var(--discord-accent);
+  background: rgba(114, 137, 218, 0.2);
+}
+
+.evidence-upload__dropzone--has-file {
+  padding: 16px;
+  min-height: auto;
+}
+
+.evidence-upload__file-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.evidence-upload__dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.evidence-upload__dropzone-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.evidence-upload__dropzone-text {
+  font-size: 16px;
+  color: var(--discord-text-primary);
+}
+
+.evidence-upload__dropzone-hint {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.evidence-upload__file-preview {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+.evidence-upload__preview-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.evidence-upload__file-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.evidence-upload__file-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--discord-text-primary);
+  word-break: break-word;
+}
+
+.evidence-upload__file-size {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+.evidence-upload__textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 6px;
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.evidence-upload__textarea:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.evidence-upload__textarea::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.evidence-upload__char-count {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+  text-align: right;
+}
+
+.evidence-upload__errors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.evidence-upload__error {
+  font-size: 14px;
+  color: var(--discord-danger);
+  padding: 8px 12px;
+  background: rgba(240, 71, 71, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(240, 71, 71, 0.2);
+}
+
+.evidence-upload__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}

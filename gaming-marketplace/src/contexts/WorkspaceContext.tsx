@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import type { WorkspaceContext, Team, User } from '../types';
+import type { WorkspaceContext, Team } from '../types';
 import { useAuth } from './AuthContext';
 
 interface WorkspaceState {

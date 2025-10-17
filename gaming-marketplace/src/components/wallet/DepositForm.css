@@ -1,0 +1,188 @@
+/* Deposit Form Component Styles */
+.deposit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.deposit-form__error {
+  padding: 12px 16px;
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 6px;
+  color: var(--discord-danger);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+}
+
+.deposit-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.deposit-form__label {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deposit-form__currency-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.deposit-form__currency-tab {
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.deposit-form__currency-tab:hover {
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.deposit-form__currency-tab.active {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+  color: var(--discord-text-primary);
+}
+
+.deposit-form__input {
+  padding: 12px 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.deposit-form__input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.deposit-form__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.deposit-form__input::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.deposit-form__payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.deposit-form__payment-method {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: var(--discord-text-secondary);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.deposit-form__payment-method:hover {
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.deposit-form__payment-method.active {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+  color: var(--discord-text-primary);
+}
+
+.deposit-form__payment-method:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.deposit-form__payment-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.deposit-form__payment-name {
+  flex: 1;
+}
+
+.deposit-form__info {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(114, 137, 218, 0.1);
+  border: 1px solid var(--discord-accent);
+  border-radius: 8px;
+}
+
+.deposit-form__info-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.deposit-form__info-text {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  line-height: 1.4;
+}
+
+.deposit-form__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .deposit-form {
+    max-width: none;
+  }
+  
+  .deposit-form__currency-tabs {
+    grid-template-columns: 1fr;
+  }
+  
+  .deposit-form__currency-tab {
+    padding: 16px;
+  }
+  
+  .deposit-form__actions {
+    flex-direction: column-reverse;
+  }
+  
+  .deposit-form__actions button {
+    width: 100%;
+  }
+}

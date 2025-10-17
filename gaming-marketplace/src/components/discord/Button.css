@@ -74,6 +74,15 @@
   color: var(--discord-interactive-hover);
 }
 
+.discord-button--accent {
+  background-color: var(--discord-success);
+  color: var(--discord-text-primary);
+}
+
+.discord-button--accent:hover:not(:disabled) {
+  background-color: #3ca374;
+}
+
 /* Sizes */
 .discord-button--sm {
   padding: 6px 12px;

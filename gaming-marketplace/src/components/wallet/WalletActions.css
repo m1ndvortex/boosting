@@ -1,0 +1,143 @@
+/* Wallet Actions Component Styles */
+.wallet-actions {
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-actions__header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.wallet-actions__header h3 {
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.wallet-actions__header p {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.wallet-actions__buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.wallet-actions__action {
+  display: flex;
+}
+
+.wallet-actions__button {
+  width: 100%;
+  height: auto;
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-actions__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.wallet-actions__button:active {
+  transform: translateY(0);
+}
+
+.wallet-actions__button:disabled {
+  transform: none;
+  box-shadow: none;
+}
+
+.wallet-actions__button-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.wallet-actions__button-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.wallet-actions__button-title {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: inherit;
+}
+
+.wallet-actions__button-desc {
+  font-size: 12px;
+  opacity: 0.8;
+  color: inherit;
+}
+
+/* Button variant specific styles */
+.wallet-actions__button[data-variant="primary"] .wallet-actions__button-icon {
+  background: rgba(114, 137, 218, 0.2);
+}
+
+.wallet-actions__button[data-variant="secondary"] .wallet-actions__button-icon {
+  background: rgba(185, 187, 190, 0.2);
+}
+
+.wallet-actions__button[data-variant="accent"] .wallet-actions__button-icon {
+  background: rgba(67, 181, 129, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wallet-actions {
+    padding: 16px;
+  }
+  
+  .wallet-actions__buttons {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .wallet-actions__button {
+    padding: 16px;
+  }
+  
+  .wallet-actions__button-icon {
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-actions__button {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .wallet-actions__button-content {
+    align-items: center;
+  }
+}

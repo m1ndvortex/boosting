@@ -1,0 +1,145 @@
+/* Wallet Balance Component Styles */
+.wallet-balance {
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-balance__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.wallet-balance__header h2 {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.wallet-balance__updated {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.wallet-balance__loading {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+}
+
+.wallet-balance__currencies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.wallet-balance__currency {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.wallet-balance__currency:hover {
+  border-color: var(--discord-accent);
+  transform: translateY(-2px);
+}
+
+.wallet-balance__currency.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.wallet-balance__currency-icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--discord-bg-primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.wallet-balance__currency-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.wallet-balance__currency-name {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin-bottom: 4px;
+}
+
+.wallet-balance__currency-amount {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-accent);
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.wallet-balance__currency-desc {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.skeleton-text {
+  background: var(--discord-bg-primary);
+  border-radius: 4px;
+  height: 24px;
+  width: 120px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wallet-balance {
+    padding: 16px;
+  }
+  
+  .wallet-balance__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .wallet-balance__currencies {
+    grid-template-columns: 1fr;
+  }
+  
+  .wallet-balance__currency {
+    padding: 16px;
+  }
+  
+  .wallet-balance__currency-icon {
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .wallet-balance__currency-amount {
+    font-size: 20px;
+  }
+}

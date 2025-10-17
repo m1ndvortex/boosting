@@ -155,7 +155,7 @@ export const generateMockServices = (userId: string): Service[] => [
   }
 ];
 
-// Generate mock orders
+// Generate mock orders for advertisers
 export const generateMockOrders = (userId: string): Order[] => [
   {
     id: 'order_1',
@@ -195,5 +195,79 @@ export const generateMockOrders = (userId: string): Order[] => [
       uploadedAt: new Date(Date.now() - 1800000) // 30 minutes ago
     },
     createdAt: new Date(Date.now() - 7200000), // 2 hours ago
+  }
+];
+
+// Generate mock orders for boosters
+export const generateMockBoosterOrders = (boosterId: string): Order[] => [
+  {
+    id: 'order_booster_1',
+    serviceId: 'service_1',
+    buyerId: 'client_1',
+    boosterId: boosterId,
+    earningsRecipientId: 'advertiser_1',
+    status: 'assigned',
+    pricePaid: 30,
+    currency: 'usd',
+    createdAt: new Date(Date.now() - 3600000), // 1 hour ago
+  },
+  {
+    id: 'order_booster_2',
+    serviceId: 'service_2',
+    buyerId: 'client_2',
+    boosterId: boosterId,
+    earningsRecipientId: 'advertiser_1',
+    status: 'in_progress',
+    pricePaid: 75000,
+    currency: 'gold',
+    createdAt: new Date(Date.now() - 7200000), // 2 hours ago
+  },
+  {
+    id: 'order_booster_3',
+    serviceId: 'service_3',
+    buyerId: 'client_3',
+    boosterId: boosterId,
+    earningsRecipientId: 'advertiser_2',
+    status: 'evidence_submitted',
+    pricePaid: 1500000,
+    currency: 'toman',
+    evidence: {
+      orderId: 'order_booster_3',
+      imageFile: new File(['fake image data'], 'mythic_plus_completion.png', { type: 'image/png' }),
+      notes: 'Mythic+15 Necrotic Wake completed in time. Client received +16 key and loot. Screenshots show completion time and rewards.',
+      uploadedBy: boosterId,
+      uploadedAt: new Date(Date.now() - 1800000) // 30 minutes ago
+    },
+    createdAt: new Date(Date.now() - 86400000), // 1 day ago
+  },
+  {
+    id: 'order_booster_4',
+    serviceId: 'service_4',
+    buyerId: 'client_4',
+    boosterId: boosterId,
+    earningsRecipientId: 'advertiser_1',
+    status: 'completed',
+    pricePaid: 45,
+    currency: 'usd',
+    createdAt: new Date(Date.now() - 172800000), // 2 days ago
+    completedAt: new Date(Date.now() - 86400000), // 1 day ago
+  },
+  {
+    id: 'order_booster_5',
+    serviceId: 'service_5',
+    buyerId: 'client_5',
+    boosterId: boosterId,
+    earningsRecipientId: 'advertiser_2',
+    status: 'rejected',
+    pricePaid: 25,
+    currency: 'usd',
+    evidence: {
+      orderId: 'order_booster_5',
+      imageFile: new File(['fake image data'], 'incomplete_evidence.jpg', { type: 'image/jpeg' }),
+      notes: 'Leveling completed to level 80.',
+      uploadedBy: boosterId,
+      uploadedAt: new Date(Date.now() - 259200000) // 3 days ago
+    },
+    createdAt: new Date(Date.now() - 345600000), // 4 days ago
   }
 ];

@@ -1,4 +1,4 @@
-import type { Team, TeamMember, TeamInvitation, User, ActivityLogEntry } from '../types';
+import type { Team, TeamMember, TeamInvitation, ActivityLogEntry } from '../types';
 
 export class TeamService {
   // Create a new team

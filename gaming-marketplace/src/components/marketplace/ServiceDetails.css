@@ -1,0 +1,433 @@
+.service-details {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* Header */
+.service-details__header {
+  margin-bottom: 2rem;
+}
+
+.service-details__back-button {
+  margin-bottom: 1rem;
+}
+
+.service-details__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+}
+
+.service-details__breadcrumb-item {
+  color: var(--discord-text-secondary);
+}
+
+.service-details__breadcrumb-item.current {
+  color: var(--discord-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.service-details__breadcrumb-separator {
+  color: var(--discord-text-muted);
+}
+
+/* Content Layout */
+.service-details__content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Main Content */
+.service-details__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.service-details__main h2 {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+/* Service Header */
+.service-details__service-header {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.service-details__game-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.service-details__game-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.service-details__game-details {
+  flex: 1;
+}
+
+.service-details__title {
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.service-details__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.service-details__game-name {
+  font-size: 1rem;
+  color: var(--discord-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.service-details__service-type {
+  font-size: 1rem;
+  color: var(--discord-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+.service-details__team-badge {
+  background: var(--discord-accent);
+  color: var(--discord-text-primary);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.service-details__separator {
+  color: var(--discord-text-muted);
+}
+
+/* Description */
+.service-details__description {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.service-details__description p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+/* Service Type Info */
+.service-details__service-type-info {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.service-details__service-type-info p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+/* Provider */
+.service-details__provider {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.service-details__provider-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.service-details__provider-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--discord-bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-details__provider-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.service-details__provider-avatar-placeholder {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-secondary);
+}
+
+.service-details__provider-info {
+  flex: 1;
+}
+
+.service-details__provider-name {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.service-details__provider-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.service-details__provider-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-details__provider-stat-label {
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+}
+
+.service-details__provider-stat-value {
+  font-size: 0.875rem;
+  color: var(--discord-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Sidebar */
+.service-details__sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.service-details__purchase-card {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 2px solid var(--discord-accent);
+}
+
+.service-details__purchase-title {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+/* Pricing */
+.service-details__pricing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-details__price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+}
+
+.service-details__price-item--primary {
+  background: var(--discord-accent);
+  color: var(--discord-text-primary);
+}
+
+.service-details__price-label {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: inherit;
+}
+
+.service-details__price-value {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: inherit;
+}
+
+.service-details__price-item:not(.service-details__price-item--primary) .service-details__price-label {
+  color: var(--discord-text-secondary);
+}
+
+.service-details__price-item:not(.service-details__price-item--primary) .service-details__price-value {
+  color: var(--discord-text-primary);
+}
+
+/* Completion Info */
+.service-details__completion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+}
+
+.service-details__completion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.service-details__completion-icon {
+  font-size: 1rem;
+}
+
+.service-details__completion-text {
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+}
+
+/* Purchase Button */
+.service-details__purchase-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 1rem;
+}
+
+/* Purchase Note */
+.service-details__purchase-note {
+  padding: 1rem;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  border-left: 4px solid var(--discord-accent);
+}
+
+.service-details__purchase-note p {
+  font-size: 0.875rem;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Loading State */
+.service-details__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.service-details__loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--discord-bg-tertiary);
+  border-top: 3px solid var(--discord-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.service-details__loading p {
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+/* Error State */
+.service-details__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.service-details__error h2 {
+  color: var(--discord-danger);
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-semibold);
+}
+
+.service-details__error p {
+  color: var(--discord-text-secondary);
+  margin: 0 0 1.5rem 0;
+  max-width: 400px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .service-details {
+    padding: 1rem;
+  }
+
+  .service-details__content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .service-details__sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .service-details__service-header {
+    padding: 1.5rem;
+  }
+
+  .service-details__game-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .service-details__title {
+    font-size: 1.5rem;
+  }
+
+  .service-details__meta {
+    justify-content: center;
+  }
+
+  .service-details__provider-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .service-details__provider-stats {
+    align-items: center;
+  }
+
+  .service-details__provider-stat {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}

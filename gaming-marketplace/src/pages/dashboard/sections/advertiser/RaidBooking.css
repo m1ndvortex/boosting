@@ -1,0 +1,53 @@
+.raid-booking {
+  max-width: 1200px;
+}
+
+.raid-booking__header {
+  margin-bottom: 32px;
+}
+
+.raid-booking__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.raid-booking__subtitle {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.raid-booking__content {
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  padding: 60px 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.raid-booking__empty {
+  text-align: center;
+}
+
+.raid-booking__empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.raid-booking__empty-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--discord-text-primary);
+  margin: 0 0 12px 0;
+}
+
+.raid-booking__empty-text {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
