@@ -1,0 +1,46 @@
+.discord-spinner {
+  border: 2px solid transparent;
+  border-top: 2px solid var(--discord-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Sizes */
+.discord-spinner--xs {
+  width: 12px;
+  height: 12px;
+  border-width: 1px;
+}
+
+.discord-spinner--sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.discord-spinner--md {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.discord-spinner--lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.discord-spinner--xl {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

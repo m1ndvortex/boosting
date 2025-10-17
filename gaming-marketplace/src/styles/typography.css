@@ -1,0 +1,379 @@
+/* Discord Typography System */
+
+/* Font imports - Whitney font family */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Use Inter as fallback for Whitney since Whitney is proprietary */
+:root {
+  --font-family-primary: 'Inter', 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* Typography scale */
+.text-xs {
+  font-size: 12px;
+  line-height: 1.33;
+}
+
+.text-sm {
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+.text-base {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.text-lg {
+  font-size: 18px;
+  line-height: 1.56;
+}
+
+.text-xl {
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.text-2xl {
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.text-3xl {
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.text-4xl {
+  font-size: 36px;
+  line-height: 1.11;
+}
+
+/* Font weights */
+.font-light {
+  font-weight: var(--font-weight-light);
+}
+
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Text colors */
+.text-primary {
+  color: var(--discord-text-primary);
+}
+
+.text-secondary {
+  color: var(--discord-text-secondary);
+}
+
+.text-muted {
+  color: var(--discord-text-muted);
+}
+
+.text-link {
+  color: var(--discord-text-link);
+}
+
+.text-success {
+  color: var(--discord-success);
+}
+
+.text-warning {
+  color: var(--discord-warning);
+}
+
+.text-danger {
+  color: var(--discord-danger);
+}
+
+.text-accent {
+  color: var(--discord-accent);
+}
+
+/* Text alignment */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+/* Text decoration */
+.underline {
+  text-decoration: underline;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.line-through {
+  text-decoration: line-through;
+}
+
+/* Text transform */
+.uppercase {
+  text-transform: uppercase;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.normal-case {
+  text-transform: none;
+}
+
+/* Letter spacing */
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+.tracking-normal {
+  letter-spacing: 0;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+/* Line height */
+.leading-none {
+  line-height: 1;
+}
+
+.leading-tight {
+  line-height: 1.25;
+}
+
+.leading-snug {
+  line-height: 1.375;
+}
+
+.leading-normal {
+  line-height: 1.5;
+}
+
+.leading-relaxed {
+  line-height: 1.625;
+}
+
+.leading-loose {
+  line-height: 2;
+}
+
+/* Headings with Discord styling */
+h1, .h1 {
+  font-size: 36px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  line-height: 1.11;
+  margin: 0 0 var(--spacing-lg) 0;
+}
+
+h2, .h2 {
+  font-size: 30px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  line-height: 1.2;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+h3, .h3 {
+  font-size: 24px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  line-height: 1.33;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+h4, .h4 {
+  font-size: 20px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+h5, .h5 {
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+  line-height: 1.56;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+h6, .h6 {
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+/* Paragraph styling */
+p {
+  color: var(--discord-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code styling */
+code {
+  font-family: var(--font-family-mono);
+  background-color: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  padding: 2px 4px;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.875em;
+}
+
+pre {
+  font-family: var(--font-family-mono);
+  background-color: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Links */
+a {
+  color: var(--discord-text-link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--discord-accent-hover);
+  text-decoration: underline;
+}
+
+/* Lists */
+ul, ol {
+  color: var(--discord-text-secondary);
+  margin: var(--spacing-md) 0;
+  padding-left: var(--spacing-lg);
+}
+
+li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--discord-accent);
+  padding-left: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+  color: var(--discord-text-secondary);
+  font-style: italic;
+}
+
+/* Small text */
+small, .small {
+  font-size: 0.875em;
+  color: var(--discord-text-muted);
+}
+
+/* Strong and emphasis */
+strong, b {
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+em, i {
+  font-style: italic;
+  color: var(--discord-text-secondary);
+}
+
+/* Mark/highlight */
+mark {
+  background-color: var(--discord-warning);
+  color: var(--discord-bg-primary);
+  padding: 2px 4px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Truncate text */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Word break */
+.break-words {
+  word-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+/* White space */
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.whitespace-pre {
+  white-space: pre;
+}
+
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}

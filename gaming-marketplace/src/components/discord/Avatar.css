@@ -1,0 +1,130 @@
+.discord-avatar {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.discord-avatar__image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--discord-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.discord-avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discord-avatar__fallback {
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sizes */
+.discord-avatar--xs {
+  width: 16px;
+  height: 16px;
+}
+
+.discord-avatar--xs .discord-avatar__fallback {
+  font-size: 8px;
+}
+
+.discord-avatar--sm {
+  width: 24px;
+  height: 24px;
+}
+
+.discord-avatar--sm .discord-avatar__fallback {
+  font-size: 10px;
+}
+
+.discord-avatar--md {
+  width: 32px;
+  height: 32px;
+}
+
+.discord-avatar--md .discord-avatar__fallback {
+  font-size: 12px;
+}
+
+.discord-avatar--lg {
+  width: 48px;
+  height: 48px;
+}
+
+.discord-avatar--lg .discord-avatar__fallback {
+  font-size: 16px;
+}
+
+.discord-avatar--xl {
+  width: 64px;
+  height: 64px;
+}
+
+.discord-avatar--xl .discord-avatar__fallback {
+  font-size: 20px;
+}
+
+/* Status indicator */
+.discord-avatar__status {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--discord-bg-primary);
+}
+
+.discord-avatar--xs .discord-avatar__status {
+  width: 6px;
+  height: 6px;
+  border-width: 1px;
+}
+
+.discord-avatar--sm .discord-avatar__status {
+  width: 8px;
+  height: 8px;
+  border-width: 1px;
+}
+
+.discord-avatar--lg .discord-avatar__status {
+  width: 16px;
+  height: 16px;
+  border-width: 3px;
+}
+
+.discord-avatar--xl .discord-avatar__status {
+  width: 20px;
+  height: 20px;
+  border-width: 3px;
+}
+
+/* Status colors */
+.discord-avatar__status--online {
+  background-color: var(--discord-online);
+}
+
+.discord-avatar__status--idle {
+  background-color: var(--discord-idle);
+}
+
+.discord-avatar__status--dnd {
+  background-color: var(--discord-dnd);
+}
+
+.discord-avatar__status--offline {
+  background-color: var(--discord-offline);
+}

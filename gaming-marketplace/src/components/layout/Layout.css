@@ -1,0 +1,150 @@
+.discord-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+}
+
+.discord-main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--discord-bg-primary);
+}
+
+.discord-main-content--padded {
+  padding: var(--spacing-lg);
+}
+
+.discord-content-area {
+  width: 100%;
+  height: 100%;
+}
+
+.discord-content-area--centered {
+  margin: 0 auto;
+}
+
+/* Layout variants */
+.discord-layout--with-sidebar {
+  flex-direction: row;
+}
+
+.discord-layout--with-sidebar .discord-main-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Grid layouts */
+.discord-grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.discord-grid--1 {
+  grid-template-columns: 1fr;
+}
+
+.discord-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.discord-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.discord-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.discord-grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Responsive grid */
+@media (max-width: 1024px) {
+  .discord-grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .discord-grid--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .discord-grid--4,
+  .discord-grid--3,
+  .discord-grid--2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .discord-main-content--padded {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Flex layouts */
+.discord-flex {
+  display: flex;
+}
+
+.discord-flex--column {
+  flex-direction: column;
+}
+
+.discord-flex--wrap {
+  flex-wrap: wrap;
+}
+
+.discord-flex--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.discord-flex--between {
+  justify-content: space-between;
+}
+
+.discord-flex--around {
+  justify-content: space-around;
+}
+
+.discord-flex--evenly {
+  justify-content: space-evenly;
+}
+
+/* Spacing utilities */
+.discord-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.discord-stack--sm > * + * {
+  margin-top: var(--spacing-sm);
+}
+
+.discord-stack--md > * + * {
+  margin-top: var(--spacing-md);
+}
+
+.discord-stack--lg > * + * {
+  margin-top: var(--spacing-lg);
+}
+
+.discord-inline {
+  display: flex;
+  align-items: center;
+}
+
+.discord-inline--sm > * + * {
+  margin-left: var(--spacing-sm);
+}
+
+.discord-inline--md > * + * {
+  margin-left: var(--spacing-md);
+}
+
+.discord-inline--lg > * + * {
+  margin-left: var(--spacing-lg);
+}

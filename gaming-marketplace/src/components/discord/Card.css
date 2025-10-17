@@ -1,0 +1,90 @@
+.discord-card {
+  background-color: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  border: 1px solid var(--discord-border-primary);
+  width: 100%;
+  text-align: left;
+}
+
+.discord-card--hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.discord-card--clickable {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.discord-card--clickable:focus {
+  outline: 2px solid var(--discord-accent);
+  outline-offset: 2px;
+}
+
+.discord-card--clickable .discord-card {
+  width: 100%;
+  height: 100%;
+}
+
+/* Padding variants */
+.discord-card--padding-none {
+  padding: 0;
+}
+
+.discord-card--padding-sm {
+  padding: var(--spacing-sm);
+}
+
+.discord-card--padding-md {
+  padding: var(--spacing-md);
+}
+
+.discord-card--padding-lg {
+  padding: var(--spacing-lg);
+}
+
+/* Card sections */
+.discord-card__header {
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--discord-border-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.discord-card__header:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.discord-card__body {
+  flex: 1;
+}
+
+.discord-card__footer {
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--discord-border-primary);
+  margin-top: var(--spacing-md);
+}
+
+.discord-card__footer:first-child {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Card with sections should be flex */
+.discord-card:has(.discord-card__header),
+.discord-card:has(.discord-card__footer) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nested cards */
+.discord-card .discord-card {
+  background-color: var(--discord-bg-tertiary);
+  box-shadow: var(--shadow-sm);
+}

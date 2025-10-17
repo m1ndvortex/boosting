@@ -1,0 +1,123 @@
+.discord-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+  animation: fadeIn var(--transition-fast);
+}
+
+.discord-modal {
+  background-color: var(--discord-bg-floating);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp var(--transition-normal);
+}
+
+/* Modal sizes */
+.discord-modal--sm {
+  width: 100%;
+  max-width: 400px;
+}
+
+.discord-modal--md {
+  width: 100%;
+  max-width: 600px;
+}
+
+.discord-modal--lg {
+  width: 100%;
+  max-width: 800px;
+}
+
+.discord-modal--xl {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.discord-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--discord-border-primary);
+  background-color: var(--discord-bg-secondary);
+}
+
+.discord-modal__title {
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.discord-modal__close {
+  background: none;
+  border: none;
+  color: var(--discord-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.discord-modal__close:hover {
+  background-color: var(--discord-danger);
+  color: var(--discord-text-primary);
+}
+
+.discord-modal__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+}
+
+.discord-modal__body {
+  margin-bottom: var(--spacing-lg);
+}
+
+.discord-modal__footer {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--discord-border-primary);
+  margin-top: var(--spacing-lg);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .discord-modal-overlay {
+    padding: var(--spacing-sm);
+  }
+  
+  .discord-modal--sm,
+  .discord-modal--md,
+  .discord-modal--lg,
+  .discord-modal--xl {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .discord-modal__header,
+  .discord-modal__content {
+    padding: var(--spacing-md);
+  }
+}

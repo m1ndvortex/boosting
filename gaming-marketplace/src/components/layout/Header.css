@@ -1,0 +1,112 @@
+.discord-header {
+  background-color: var(--discord-bg-primary);
+  border-bottom: 1px solid var(--discord-border-primary);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.discord-header__content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.discord-header__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  font-size: 14px;
+}
+
+.discord-header__breadcrumb-separator {
+  color: var(--discord-text-muted);
+  margin: 0 var(--spacing-xs);
+}
+
+.discord-header__breadcrumb-link {
+  color: var(--discord-text-link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.discord-header__breadcrumb-link:hover {
+  color: var(--discord-accent-hover);
+  text-decoration: underline;
+}
+
+.discord-header__breadcrumb-button {
+  background: none;
+  border: none;
+  color: var(--discord-text-link);
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.discord-header__breadcrumb-button:hover {
+  color: var(--discord-accent-hover);
+  text-decoration: underline;
+}
+
+.discord-header__breadcrumb-text {
+  color: var(--discord-text-muted);
+}
+
+.discord-header__main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+.discord-header__text {
+  flex: 1;
+}
+
+.discord-header__title {
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: 1.2;
+}
+
+.discord-header__subtitle {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.discord-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .discord-header {
+    padding: var(--spacing-md);
+  }
+  
+  .discord-header__main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .discord-header__title {
+    font-size: 24px;
+  }
+  
+  .discord-header__actions {
+    justify-content: flex-end;
+  }
+  
+  .discord-header__breadcrumbs {
+    flex-wrap: wrap;
+  }
+}

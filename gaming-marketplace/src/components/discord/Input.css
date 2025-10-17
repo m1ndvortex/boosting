@@ -1,0 +1,104 @@
+.discord-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.discord-input-wrapper--full-width {
+  width: 100%;
+}
+
+.discord-input__label {
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.discord-input__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.discord-input {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-border-primary);
+  border-radius: var(--border-radius-sm);
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  line-height: 1.25;
+  transition: all var(--transition-fast);
+}
+
+.discord-input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+  box-shadow: 0 0 0 1px var(--discord-accent);
+}
+
+.discord-input::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.discord-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Icon styling */
+.discord-input__icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--discord-text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.discord-input__icon--left {
+  left: 12px;
+}
+
+.discord-input__icon--right {
+  right: 12px;
+}
+
+.discord-input-wrapper .discord-input:has(+ .discord-input__icon--left) {
+  padding-left: 40px;
+}
+
+.discord-input-wrapper .discord-input:has(+ .discord-input__icon--right) {
+  padding-right: 40px;
+}
+
+/* Helper text */
+.discord-input__helper {
+  font-size: 12px;
+  color: var(--discord-text-muted);
+  margin-top: var(--spacing-xs);
+}
+
+.discord-input__helper--error {
+  color: var(--discord-danger);
+}
+
+/* Error state */
+.discord-input-wrapper--error .discord-input {
+  border-color: var(--discord-danger);
+}
+
+.discord-input-wrapper--error .discord-input:focus {
+  border-color: var(--discord-danger);
+  box-shadow: 0 0 0 1px var(--discord-danger);
+}
+
+/* Textarea variant */
+.discord-textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
