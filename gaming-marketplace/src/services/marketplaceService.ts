@@ -1,6 +1,6 @@
 // Marketplace service for browsing and purchasing services
 
-import type { Service, ServiceFilters, SearchParams, Order, Game, ServiceType, User } from '../types';
+import type { Service, ServiceFilters, SearchParams, Order, Game, ServiceType, User, Currency } from '../types';
 import { StorageService, STORAGE_KEYS } from './storage';
 import { MOCK_GAMES, MOCK_SERVICE_TYPES } from './mockData';
 import { OrderService } from './orderService';
@@ -135,7 +135,7 @@ export class MarketplaceService {
   static async purchaseService(
     serviceId: string,
     buyerId: string,
-    currency: 'gold' | 'usd' | 'toman'
+    currency: Currency
   ): Promise<Order> {
     await new Promise(resolve => setTimeout(resolve, 500));
     

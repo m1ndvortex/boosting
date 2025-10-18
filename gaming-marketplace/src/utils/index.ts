@@ -8,9 +8,9 @@ export const generateId = (): string => {
 // Format currency values
 export const formatCurrency = (
   amount: number,
-  currency: 'gold' | 'usd' | 'toman'
+  currency: string
 ): string => {
-  const symbols = {
+  const symbols: Record<string, string> = {
     gold: 'G',
     usd: '$',
     toman: '﷼',
@@ -21,7 +21,7 @@ export const formatCurrency = (
     maximumFractionDigits: currency === 'gold' ? 0 : 2,
   }).format(amount);
 
-  return `${symbols[currency]}${formatted}`;
+  return `${symbols[currency] || currency.toUpperCase()}${formatted}`;
 };
 
 // Format dates

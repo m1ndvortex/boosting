@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout/Header';
 import { WalletBalance } from '../../components/wallet/WalletBalance';
+import { MultiWalletBalance } from '../../components/wallet/MultiWalletBalance';
 import { WalletActions } from '../../components/wallet/WalletActions';
 import { DepositForm } from '../../components/wallet/DepositForm';
 import { WithdrawalForm } from '../../components/wallet/WithdrawalForm';
 import { CurrencyConverter } from '../../components/wallet/CurrencyConverter';
 import { TransactionHistory } from '../../components/wallet/TransactionHistory';
 import { useWallet } from '../../contexts/WalletContext';
+import { useMultiWallet } from '../../hooks/useMultiWallet';
 import { useAuth } from '../../contexts/AuthContext';
 import type { Currency } from '../../types';
 import './WalletPage.css';
@@ -15,9 +17,13 @@ export const WalletPage: React.FC = () => {
   const { state: authState } = useAuth();
   const { state: walletState, deposit, requestWithdrawal, convertCurrency } = useWallet();
   
+  // Multi-wallet system
+  const multiWallet = useMultiWallet(authState.user?.id || '');
+  
   const [showDepositForm, setShowDepositForm] = useState(false);
   const [showWithdrawalForm, setShowWithdrawalForm] = useState(false);
   const [showConverter, setShowConverter] = useState(false);
+  const [useMultiWalletSystem, setUseMultiWalletSystem] = useState(true);
 
   const handleDeposit = async (amount: number, currency: Currency, paymentMethod: string) => {
     await deposit(amount, currency, paymentMethod);
@@ -64,25 +70,50 @@ export const WalletPage: React.FC = () => {
           </div>
         )}
 
+        <div className="wallet-page__system-toggle">
+          <button 
+            className={`wallet-page__toggle-btn ${!useMultiWalletSystem ? 'active' : ''}`}
+            onClick={() => setUseMultiWalletSystem(false)}
+          >
+            Legacy Wallet
+          </button>
+          <button 
+            className={`wallet-page__toggle-btn ${useMultiWalletSystem ? 'active' : ''}`}
+            onClick={() => setUseMultiWalletSystem(true)}
+          >
+            Multi-Wallet System
+          </button>
+        </div>
+
         <div className="wallet-page__grid">
           <div className="wallet-page__main">
-            <WalletBalance 
-              wallet={walletState.wallet!} 
-              loading={walletState.loading}
-            />
+            {useMultiWalletSystem ? (
+              <MultiWalletBalance 
+                wallet={multiWallet.wallet!} 
+                loading={multiWallet.loading}
+                availableRealms={multiWallet.availableRealms}
+                onAddWallet={multiWallet.addGoldWallet}
+                onRemoveWallet={multiWallet.removeGoldWallet}
+              />
+            ) : (
+              <WalletBalance 
+                wallet={walletState.wallet!} 
+                loading={walletState.loading}
+              />
+            )}
             
             <WalletActions
               onDeposit={() => setShowDepositForm(true)}
               onWithdraw={() => setShowWithdrawalForm(true)}
               onConvert={() => setShowConverter(true)}
-              disabled={walletState.loading}
+              disabled={useMultiWalletSystem ? multiWallet.loading : walletState.loading}
             />
           </div>
           
           <div className="wallet-page__sidebar">
             <TransactionHistory 
-              transactions={walletState.transactions}
-              loading={walletState.loading}
+              transactions={useMultiWalletSystem ? multiWallet.transactions : walletState.transactions}
+              loading={useMultiWalletSystem ? multiWallet.loading : walletState.loading}
             />
           </div>
         </div>

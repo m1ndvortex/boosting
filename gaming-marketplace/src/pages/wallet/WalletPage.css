@@ -10,6 +10,42 @@
   margin: 0 auto;
 }
 
+.wallet-page__system-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 4px;
+  background: var(--discord-bg-secondary);
+  border-radius: 8px;
+  width: fit-content;
+}
+
+.wallet-page__toggle-btn {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wallet-page__toggle-btn:hover {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+}
+
+.wallet-page__toggle-btn.active {
+  background: var(--discord-accent);
+  color: white;
+}
+
+.wallet-page__toggle-btn.active:hover {
+  background: var(--discord-accent-hover);
+}
+
 .wallet-page__error-banner {
   display: flex;
   align-items: center;

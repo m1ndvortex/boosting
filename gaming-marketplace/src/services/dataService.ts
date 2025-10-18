@@ -15,6 +15,7 @@ import { StorageService, STORAGE_KEYS } from './storage';
 import { ErrorService, ErrorCode } from './errorService';
 import { validateUser, validateService, validateOrder, validateTeam } from '../utils/validation';
 import { initializeMockData } from './mockData';
+import { MultiWalletInitService } from './multiWalletInitService';
 
 export class DataService {
   private static initialized = false;
@@ -26,6 +27,10 @@ export class DataService {
     try {
       // Initialize mock data if not present
       initializeMockData();
+      
+      // Initialize multi-wallet system
+      MultiWalletInitService.initialize();
+      
       this.initialized = true;
     } catch (error) {
       ErrorService.handleError(error, 'DataService.initialize');

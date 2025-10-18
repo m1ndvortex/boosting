@@ -29,13 +29,16 @@ export const MyEarnings: React.FC = () => {
 
   const calculateTotalEarnings = () => {
     const completedOrders = orders.filter(order => order.status === 'completed');
-    const totals = {
+    const totals: Record<string, number> = {
       gold: 0,
       usd: 0,
       toman: 0
     };
 
     completedOrders.forEach(order => {
+      if (!totals[order.currency]) {
+        totals[order.currency] = 0;
+      }
       totals[order.currency] += order.pricePaid;
     });
 

@@ -1,4 +1,4 @@
-import type { Order, OrderEvidence } from '../types';
+import type { Order, OrderEvidence, Currency } from '../types';
 import { generateMockOrders, generateMockBoosterOrders } from './mockData';
 
 class OrderServiceClass {
@@ -150,7 +150,7 @@ class OrderServiceClass {
     buyerId: string;
     earningsRecipientId: string;
     pricePaid: number;
-    currency: 'gold' | 'usd' | 'toman';
+    currency: Currency;
   }): Promise<Order> {
     const orders = this.getOrders();
     

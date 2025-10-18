@@ -54,7 +54,7 @@ export interface Service {
     gold: number;
     usd: number;
     toman: number;
-  };
+  } & Record<string, number>;
   workspaceType: 'personal' | 'team';
   workspaceOwnerId: string;
   createdBy: string;
@@ -77,7 +77,7 @@ export interface Order {
     | 'completed'
     | 'rejected';
   pricePaid: number;
-  currency: 'gold' | 'usd' | 'toman';
+  currency: Currency;
   evidence?: OrderEvidence;
   createdAt: Date;
   completedAt?: Date;
@@ -97,7 +97,7 @@ export interface Wallet {
     gold: number;
     usd: number;
     toman: number;
-  };
+  } & Record<string, number>;
   updatedAt: Date;
 }
 
@@ -112,7 +112,7 @@ export interface Transaction {
     | 'refund'
     | 'earning';
   amount: number;
-  currency: 'gold' | 'usd' | 'toman';
+  currency: Currency;
   status: 'pending' | 'completed' | 'failed' | 'pending_approval';
   paymentMethod?: string;
   approvedBy?: string;
@@ -149,7 +149,7 @@ export interface ShopProduct {
     gold: number;
     usd: number;
     toman: number;
-  };
+  } & Record<string, number>;
   stockType: 'unlimited' | 'limited';
   stockQuantity?: number;
   isActive: boolean;
@@ -161,7 +161,7 @@ export interface ShopOrder {
   userId: string;
   productId: string;
   pricePaid: number;
-  currencyUsed: 'gold' | 'usd' | 'toman';
+  currencyUsed: Currency;
   paymentMethod: 'wallet' | 'credit_card' | 'crypto';
   gameTimeCode?: string;
   status: 'pending' | 'completed' | 'failed' | 'refunded';
@@ -198,16 +198,192 @@ export interface WorkspaceContext {
   isTeamLeader?: boolean;
 }
 
+// Multi-Wallet System Storage Keys
+export const MULTI_WALLET_STORAGE_KEYS = {
+  MULTI_WALLETS: 'multi_wallets',
+  GAME_DEFINITIONS: 'game_definitions',
+  GAME_REALMS: 'game_realms',
+  MULTI_WALLET_TRANSACTIONS: 'multi_wallet_transactions',
+  CONVERSION_FEE_CONFIG: 'conversion_fee_config',
+  SUSPENDED_DEPOSITS: 'suspended_deposits'
+} as const;
+
+// Multi-Wallet System Error Types
+export type MultiWalletErrorType = 
+  | 'INSUFFICIENT_BALANCE'
+  | 'WALLET_NOT_FOUND'
+  | 'REALM_NOT_FOUND'
+  | 'DUPLICATE_WALLET'
+  | 'SUSPENDED_GOLD_RESTRICTION'
+  | 'CONVERSION_FEE_ERROR'
+  | 'INVALID_TRANSACTION';
+
+export interface MultiWalletErrorDetails {
+  type: MultiWalletErrorType;
+  message: string;
+  details?: Record<string, any>;
+}
+
+// Multi-Wallet System Types
+
+export interface MultiWallet {
+  userId: string;
+  staticWallets: {
+    usd: StaticWalletBalance;
+    toman: StaticWalletBalance;
+  };
+  goldWallets: Record<string, GoldWalletBalance>; // key: realmId
+  updatedAt: Date;
+}
+
+export interface StaticWalletBalance {
+  balance: number;
+  currency: 'usd' | 'toman';
+}
+
+export interface GoldWalletBalance {
+  realmId: string;
+  realmName: string;
+  gameName: string;
+  suspendedGold: number;
+  withdrawableGold: number;
+  totalGold: number; // calculated: suspended + withdrawable
+  suspendedDeposits: SuspendedDeposit[];
+}
+
+export interface SuspendedDeposit {
+  id: string;
+  amount: number;
+  depositedAt: Date;
+  withdrawableAt: Date; // depositedAt + 2 months
+  depositedBy: string; // admin user ID
+  status: 'suspended' | 'withdrawable';
+}
+
+export interface GameRealm {
+  id: string;
+  gameId: string;
+  gameName: string;
+  realmName: string;
+  displayName: string; // e.g., "Kazzak Gold"
+  isActive: boolean;
+  createdAt: Date;
+  createdBy: string;
+}
+
+export interface GameDefinition {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string;
+  isActive: boolean;
+  realms: GameRealm[];
+  createdAt: Date;
+}
+
+export interface MultiWalletTransaction {
+  id: string;
+  userId: string;
+  walletType: 'static' | 'gold';
+  walletId: string; // currency for static, realmId for gold
+  type: 'deposit' | 'withdrawal' | 'conversion' | 'purchase' | 'earning' | 'admin_deposit';
+  amount: number;
+  currency: 'usd' | 'toman' | 'gold';
+  goldType?: 'suspended' | 'withdrawable'; // for gold transactions
+  status: 'pending' | 'completed' | 'failed' | 'pending_approval';
+  conversionFee?: number; // for suspended gold conversions
+  fromWallet?: string; // for conversions
+  toWallet?: string; // for conversions
+  paymentMethod?: string;
+  approvedBy?: string;
+  metadata?: Record<string, any>;
+  createdAt: Date;
+}
+
+export interface ConversionFeeConfig {
+  id: string;
+  suspendedGoldToUsd: number; // percentage (e.g., 5.0 for 5%)
+  suspendedGoldToToman: number; // percentage
+  isActive: boolean;
+  updatedBy: string;
+  updatedAt: Date;
+}
+
 // Utility types
 export type WorkspaceType = 'personal' | 'team';
-export type Currency = 'gold' | 'usd' | 'toman';
+export type BaseCurrency = 'gold' | 'usd' | 'toman';
+export type Currency = BaseCurrency | string; // Updated to support dynamic gold wallet identifiers
 export type OrderStatus = Order['status'];
 export type UserRoleName = UserRole['name'];
+export type WalletType = 'static' | 'gold';
+export type GoldType = 'suspended' | 'withdrawable';
+export type MultiWalletTransactionType = MultiWalletTransaction['type'];
 
 // Component prop types
 export interface BaseComponentProps {
   className?: string;
   children?: React.ReactNode;
+}
+
+// Multi-Wallet Component Props
+export interface MultiWalletBalanceProps {
+  wallet: MultiWallet;
+  loading?: boolean;
+}
+
+export interface GoldWalletManagerProps {
+  availableRealms: GameRealm[];
+  userWallet: MultiWallet;
+  onAddWallet: (realmId: string) => void;
+  onRemoveWallet: (realmId: string) => void;
+}
+
+export interface SuspendedGoldDisplayProps {
+  goldWallet: GoldWalletBalance;
+  onConvertToFiat: (amount: number, currency: 'usd' | 'toman') => void;
+}
+
+export interface ConversionFeeCalculatorProps {
+  amount: number;
+  targetCurrency: 'usd' | 'toman';
+  onConfirmConversion: (amount: number, fee: number) => void;
+}
+
+// Admin Component Props
+export interface GameManagementPanelProps {
+  games: GameDefinition[];
+  onCreateGame: (game: Omit<GameDefinition, 'id' | 'createdAt'>) => void;
+  onUpdateGame: (gameId: string, updates: Partial<GameDefinition>) => void;
+  onDeactivateGame: (gameId: string) => void;
+}
+
+export interface RealmManagementPanelProps {
+  gameId: string;
+  realms: GameRealm[];
+  onCreateRealm: (realm: Omit<GameRealm, 'id' | 'createdAt'>) => void;
+  onUpdateRealm: (realmId: string, updates: Partial<GameRealm>) => void;
+  onDeactivateRealm: (realmId: string) => void;
+}
+
+export interface AdminGoldDepositPanelProps {
+  users: User[];
+  availableRealms: GameRealm[];
+  onDepositGold: (userId: string, realmId: string, amount: number) => void;
+}
+
+export interface GoldDepositHistoryPanelProps {
+  deposits: SuspendedDeposit[];
+  filters: {
+    userId?: string;
+    realmId?: string;
+    status?: 'suspended' | 'withdrawable';
+  };
+  onFilterChange: (filters: any) => void;
+}
+
+export interface ConversionFeeConfigPanelProps {
+  config: ConversionFeeConfig;
+  onUpdateFees: (usdFee: number, tomanFee: number) => void;
 }
 
 // API response types

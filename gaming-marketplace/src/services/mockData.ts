@@ -449,4 +449,17 @@ export const initializeMockData = () => {
   if (!localStorage.getItem('gaming_marketplace_activity_log')) {
     localStorage.setItem('gaming_marketplace_activity_log', JSON.stringify(mockData.activityLog));
   }
+
+  // Initialize multi-wallet system data
+  initializeMultiWalletData();
+};
+
+// Initialize multi-wallet system data
+export const initializeMultiWalletData = () => {
+  // Import GameManagementService here to avoid circular dependencies
+  import('./gameManagementService').then(({ GameManagementService }) => {
+    GameManagementService.initialize();
+  }).catch(error => {
+    console.error('Failed to initialize GameManagementService:', error);
+  });
 };

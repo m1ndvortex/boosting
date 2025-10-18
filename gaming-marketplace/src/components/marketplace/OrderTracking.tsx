@@ -99,7 +99,7 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ userId }) => {
     }
   };
 
-  const formatPrice = (price: number, currency: 'gold' | 'usd' | 'toman') => {
+  const formatPrice = (price: number, currency: string) => {
     switch (currency) {
       case 'gold':
         return `${price.toLocaleString()}G`;
