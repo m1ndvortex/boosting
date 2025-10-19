@@ -161,7 +161,7 @@ export const TeamInformation: React.FC<TeamInformationProps> = ({
             <div className="team-information__detail-item">
               <span className="team-information__detail-label">Created:</span>
               <span className="team-information__detail-value">
-                {team.createdAt.toLocaleDateString()}
+                {new Date(team.createdAt).toLocaleDateString()}
               </span>
             </div>
             <div className="team-information__detail-item">
@@ -192,7 +192,7 @@ export const TeamInformation: React.FC<TeamInformationProps> = ({
                 </div>
                 {member.joinedAt && (
                   <div className="team-information__member-joined">
-                    Joined {member.joinedAt.toLocaleDateString()}
+                    Joined {new Date(member.joinedAt).toLocaleDateString()}
                   </div>
                 )}
               </div>
@@ -224,7 +224,7 @@ export const TeamInformation: React.FC<TeamInformationProps> = ({
                     User #{invitation.invitedUserId.slice(-4)}
                   </div>
                   <div className="team-information__invitation-date">
-                    Invited {invitation.createdAt.toLocaleDateString()}
+                    Invited {new Date(invitation.createdAt).toLocaleDateString()}
                   </div>
                 </div>
                 <div className="team-information__invitation-status">

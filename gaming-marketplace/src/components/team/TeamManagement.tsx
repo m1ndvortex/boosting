@@ -133,7 +133,7 @@ export const TeamManagement: React.FC = () => {
                       </p>
                       <div className="team-management__team-stats">
                         <span>{team.members.filter(m => m.status === 'active').length} members</span>
-                        <span>Created {team.createdAt.toLocaleDateString()}</span>
+                        <span>Created {new Date(team.createdAt).toLocaleDateString()}</span>
                       </div>
                     </div>
                   ))}
