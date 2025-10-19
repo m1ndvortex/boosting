@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
-import type { Game, ServiceType } from '../../../types';
+import { GameManagementPanel } from '../../../components/admin/GameManagementPanel';
+import { RealmManagementPanel } from '../../../components/admin/RealmManagementPanel';
+import { GameManagementService } from '../../../services/gameManagementService';
+import type { Game, ServiceType, GameDefinition } from '../../../types';
 
 export const GamesManagement: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'games' | 'service-types'>('games');
-  const [showGameForm, setShowGameForm] = useState(false);
+  const [activeTab, setActiveTab] = useState<'games' | 'realms' | 'service-types'>('games');
   const [showServiceTypeForm, setShowServiceTypeForm] = useState(false);
   const [selectedGame, setSelectedGame] = useState<string>('');
+  const [selectedGameForRealms, setSelectedGameForRealms] = useState<string>('');
 
-  // Mock games data
+  // Get actual games from GameManagementService
+  const getAvailableGames = (): GameDefinition[] => {
+    GameManagementService.initialize();
+    return GameManagementService.getAllGames();
+  };
+
+  // Mock games data (for service types compatibility)
   const [games] = useState<Game[]>([
     {
       id: 'game_1',
@@ -79,12 +88,6 @@ export const GamesManagement: React.FC = () => {
     },
   ]);
 
-  const handleCreateGame = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Mock game creation
-    setShowGameForm(false);
-  };
-
   const handleCreateServiceType = (e: React.FormEvent) => {
     e.preventDefault();
     // Mock service type creation
@@ -114,6 +117,12 @@ export const GamesManagement: React.FC = () => {
             🎮 Games
           </button>
           <button
+            className={`tab-button ${activeTab === 'realms' ? 'tab-button--active' : ''}`}
+            onClick={() => setActiveTab('realms')}
+          >
+            🌍 Realms
+          </button>
+          <button
             className={`tab-button ${activeTab === 'service-types' ? 'tab-button--active' : ''}`}
             onClick={() => setActiveTab('service-types')}
           >
@@ -121,61 +130,51 @@ export const GamesManagement: React.FC = () => {
           </button>
         </div>
 
-        {/* Games Tab */}
+        {/* Games Tab - Using new GameManagementPanel */}
         {activeTab === 'games' && (
+          <GameManagementPanel />
+        )}
+
+        {/* Realms Tab - Using new RealmManagementPanel */}
+        {activeTab === 'realms' && (
           <div className="admin-card">
             <div className="admin-card__header">
-              <h3 className="admin-card__title">Games</h3>
-              <button
-                className="admin-button"
-                onClick={() => setShowGameForm(true)}
-              >
-                + Add Game
-              </button>
+              <h3 className="admin-card__title">Realm Management</h3>
+              <div className="admin-card__description">
+                Select a game to manage its realms
+              </div>
             </div>
             <div className="admin-card__content">
-              {games.length > 0 ? (
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Icon</th>
-                      <th>Name</th>
-                      <th>Slug</th>
-                      <th>Status</th>
-                      <th>Service Types</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {games.map((game) => (
-                      <tr key={game.id}>
-                        <td>{game.icon}</td>
-                        <td>{game.name}</td>
-                        <td>{game.slug}</td>
-                        <td>
-                          <span className={`status-badge ${game.isActive ? 'status-badge--active' : 'status-badge--inactive'}`}>
-                            {game.isActive ? 'Active' : 'Inactive'}
-                          </span>
-                        </td>
-                        <td>{serviceTypes.filter(st => st.gameId === game.id).length}</td>
-                        <td>
-                          <div className="action-buttons">
-                            <button className="action-button action-button--edit">Edit</button>
-                            <button className="action-button action-button--reject">
-                              {game.isActive ? 'Deactivate' : 'Activate'}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
+              {/* Game Selection */}
+              <div className="game-selector">
+                <label className="admin-form__label">Select Game:</label>
+                <select
+                  className="admin-form__input"
+                  value={selectedGameForRealms}
+                  onChange={(e) => setSelectedGameForRealms(e.target.value)}
+                >
+                  <option value="">Choose a game to manage realms</option>
+                  {getAvailableGames().filter(g => g.isActive).map((game) => (
+                    <option key={game.id} value={game.id}>
+                      {game.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Realm Management Panel */}
+              {selectedGameForRealms && (
+                <div className="realm-management-container">
+                  <RealmManagementPanel gameId={selectedGameForRealms} />
+                </div>
+              )}
+
+              {!selectedGameForRealms && (
                 <div className="empty-state">
-                  <div className="empty-state__icon">🎮</div>
-                  <div className="empty-state__title">No Games</div>
+                  <div className="empty-state__icon">🌍</div>
+                  <div className="empty-state__title">Select a Game</div>
                   <div className="empty-state__description">
-                    Add your first game to get started
+                    Choose a game from the dropdown above to manage its realms
                   </div>
                 </div>
               )}
@@ -249,53 +248,7 @@ export const GamesManagement: React.FC = () => {
           </div>
         )}
 
-        {/* Game Creation Form Modal */}
-        {showGameForm && (
-          <div className="modal-overlay" onClick={() => setShowGameForm(false)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <h3>Add New Game</h3>
-              <form onSubmit={handleCreateGame} className="admin-form">
-                <div className="admin-form__group">
-                  <label className="admin-form__label">Game Name</label>
-                  <input
-                    type="text"
-                    className="admin-form__input"
-                    placeholder="Enter game name"
-                    required
-                  />
-                </div>
-                <div className="admin-form__group">
-                  <label className="admin-form__label">Slug</label>
-                  <input
-                    type="text"
-                    className="admin-form__input"
-                    placeholder="game-slug"
-                    required
-                  />
-                </div>
-                <div className="admin-form__group">
-                  <label className="admin-form__label">Icon (Emoji)</label>
-                  <input
-                    type="text"
-                    className="admin-form__input"
-                    placeholder="🎮"
-                    required
-                  />
-                </div>
-                <div className="form-actions">
-                  <button type="submit" className="admin-button">Create Game</button>
-                  <button
-                    type="button"
-                    className="admin-button admin-button--secondary"
-                    onClick={() => setShowGameForm(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+
 
         {/* Service Type Creation Form Modal */}
         {showServiceTypeForm && (
@@ -420,6 +373,30 @@ export const GamesManagement: React.FC = () => {
           gap: 12px;
           justify-content: flex-end;
           margin-top: 20px;
+        }
+
+        .game-selector {
+          margin-bottom: 24px;
+          padding: 16px;
+          background: var(--discord-bg-tertiary);
+          border-radius: 6px;
+          border: 1px solid var(--discord-border-secondary);
+        }
+
+        .game-selector .admin-form__label {
+          display: block;
+          margin-bottom: 8px;
+          color: var(--discord-text-primary);
+          font-weight: 500;
+        }
+
+        .game-selector .admin-form__input {
+          width: 100%;
+          max-width: 400px;
+        }
+
+        .realm-management-container {
+          margin-top: 16px;
         }
       `}</style>
     </div>

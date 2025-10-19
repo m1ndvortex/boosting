@@ -1,11 +1,11 @@
 // Transaction history component
 
 import React, { useState, useMemo } from 'react';
-import type { Transaction, Currency } from '../../types';
+import type { Transaction, MultiWalletTransaction, Currency } from '../../types';
 import './TransactionHistory.css';
 
 interface TransactionHistoryProps {
-  transactions: Transaction[];
+  transactions: Transaction[] | MultiWalletTransaction[];
   loading?: boolean;
 }
 
@@ -25,6 +25,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
     { value: 'purchase', label: 'Purchases' },
     { value: 'earning', label: 'Earnings' },
     { value: 'refund', label: 'Refunds' },
+    { value: 'admin_deposit', label: 'Admin Deposits' },
   ];
 
   const currencies = [
@@ -55,6 +56,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
       case 'purchase': return '🛒';
       case 'earning': return '💰';
       case 'refund': return '↩️';
+      case 'admin_deposit': return '👨‍💼';
       default: return '📄';
     }
   };

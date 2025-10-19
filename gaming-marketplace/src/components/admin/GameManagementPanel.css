@@ -1,0 +1,324 @@
+/* Game Management Panel Styles */
+
+.game-management-panel {
+  background: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+}
+
+.game-management-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--discord-border-secondary);
+}
+
+.game-management-panel__header > div {
+  flex: 1;
+}
+
+.game-management-panel__title {
+  color: var(--discord-text-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.game-management-panel__description {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.game-management-panel__section-title {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+/* Form Styles */
+.game-management-panel__form {
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid var(--discord-border-secondary);
+}
+
+.game-management-panel__form-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.game-management-panel__form-header h4 {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.game-management-panel__form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.game-management-panel__form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Games Grid */
+.game-management-panel__games {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.game-management-panel__empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--discord-text-secondary);
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  border: 1px dashed var(--discord-border-secondary);
+}
+
+.game-management-panel__games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.game-management-panel__game-item {
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--discord-border-secondary);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.game-management-panel__game-item:hover {
+  border-color: var(--discord-interactive-normal);
+  background: var(--discord-interactive-muted);
+}
+
+.game-management-panel__game-info {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.game-management-panel__game-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  background: var(--discord-bg-primary);
+  border: 1px solid var(--discord-border-secondary);
+  flex-shrink: 0;
+}
+
+.game-management-panel__game-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.game-management-panel__game-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-management-panel__game-name {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-xs) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.game-management-panel__game-slug {
+  color: var(--discord-text-secondary);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  margin: 0 0 var(--spacing-xs) 0;
+  background: var(--discord-bg-primary);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  display: inline-block;
+}
+
+.game-management-panel__game-realms {
+  color: var(--discord-text-secondary);
+  font-size: 13px;
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.game-management-panel__game-date {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+  margin: 0;
+}
+
+.game-management-panel__game-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+/* Status Badge */
+.game-management-panel__status-badge {
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  background: var(--discord-bg-primary);
+  border: 1px solid var(--discord-border-secondary);
+}
+
+.game-management-panel__status-badge--inactive {
+  color: var(--discord-text-danger);
+  background: rgba(237, 66, 69, 0.1);
+  border-color: var(--discord-text-danger);
+}
+
+/* Edit Form */
+.game-management-panel__edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.game-management-panel__edit-header h5 {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.game-management-panel__edit-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.game-management-panel__edit-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Loading state */
+.game-management-panel .loading-overlay {
+  border-radius: var(--border-radius-md);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .game-management-panel {
+    padding: var(--spacing-md);
+  }
+  
+  .game-management-panel__header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
+  
+  .game-management-panel__games-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .game-management-panel__game-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .game-management-panel__game-icon {
+    align-self: center;
+  }
+  
+  .game-management-panel__game-actions {
+    justify-content: center;
+  }
+  
+  .game-management-panel__form-actions,
+  .game-management-panel__edit-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-management-panel__form {
+    padding: var(--spacing-md);
+  }
+  
+  .game-management-panel__game-item {
+    padding: var(--spacing-sm);
+  }
+  
+  .game-management-panel__game-actions {
+    flex-direction: column;
+  }
+  
+  .game-management-panel__edit-actions {
+    flex-direction: column;
+  }
+}
+
+/* Focus styles for accessibility */
+.game-management-panel__game-item:focus-within {
+  border-color: var(--discord-accent);
+  box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+}
+
+/* Print styles */
+@media print {
+  .game-management-panel {
+    background: white;
+    color: black;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .game-management-panel__game-actions,
+  .game-management-panel__form-actions,
+  .game-management-panel__edit-actions {
+    display: none;
+  }
+  
+  .game-management-panel__form {
+    display: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .game-management-panel__game-item {
+    border-width: 2px;
+  }
+  
+  .game-management-panel__status-badge--inactive {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .game-management-panel__game-item {
+    transition: none;
+  }
+}

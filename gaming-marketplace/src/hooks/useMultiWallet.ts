@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { MultiWalletService } from '../services/multiWalletService';
-import { ConversionFeeService } from '../services/conversionFeeService';
 import type { MultiWallet, GameRealm, MultiWalletTransaction } from '../types';
 
 interface MultiWalletState {

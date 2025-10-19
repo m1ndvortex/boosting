@@ -1,0 +1,592 @@
+/* Gold Wallet Manager Component Styles */
+.gold-wallet-manager {
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+.gold-wallet-manager__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.gold-wallet-manager__title h3 {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gold-wallet-manager__icon {
+  font-size: 28px;
+}
+
+.gold-wallet-manager__subtitle {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.gold-wallet-manager__loading {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+}
+
+/* Add Button */
+.gold-wallet-manager__add-btn {
+  background: var(--discord-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.gold-wallet-manager__add-btn:hover:not(:disabled) {
+  background: var(--discord-accent-hover);
+  transform: translateY(-1px);
+}
+
+.gold-wallet-manager__add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.gold-wallet-manager__add-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Add Form */
+.gold-wallet-manager__add-form {
+  background: var(--discord-bg-primary);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.gold-wallet-manager__form-header {
+  margin-bottom: 16px;
+}
+
+.gold-wallet-manager__form-header h4 {
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 4px 0;
+}
+
+.gold-wallet-manager__form-header p {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.gold-wallet-manager__form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gold-wallet-manager__realm-select {
+  width: 100%;
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.gold-wallet-manager__realm-select:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.gold-wallet-manager__realm-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gold-wallet-manager__form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.gold-wallet-manager__confirm-btn {
+  background: var(--discord-success);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.gold-wallet-manager__confirm-btn:hover:not(:disabled) {
+  background: var(--discord-success-hover);
+}
+
+.gold-wallet-manager__confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gold-wallet-manager__cancel-btn {
+  background: transparent;
+  color: var(--discord-text-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.gold-wallet-manager__cancel-btn:hover:not(:disabled) {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+}
+
+.gold-wallet-manager__cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Wallets Section */
+.gold-wallet-manager__wallets {
+  margin-bottom: 24px;
+}
+
+/* Empty State */
+.gold-wallet-manager__empty {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border: 2px dashed var(--discord-bg-primary);
+}
+
+.gold-wallet-manager__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.gold-wallet-manager__empty h4 {
+  font-size: 18px;
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.gold-wallet-manager__empty p {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0 0 8px 0;
+}
+
+.gold-wallet-manager__no-realms {
+  font-size: 13px;
+  color: var(--discord-text-muted);
+  font-style: italic;
+}
+
+/* Wallet Grid */
+.gold-wallet-manager__wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Wallet Card */
+.gold-wallet-manager__wallet {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+  border-left: 4px solid #57f287;
+}
+
+.gold-wallet-manager__wallet:hover {
+  transform: translateY(-2px);
+  border-color: #57f287;
+  box-shadow: 0 4px 20px rgba(87, 242, 135, 0.2);
+}
+
+.gold-wallet-manager__wallet.confirming-removal {
+  border-color: var(--discord-danger);
+  background: rgba(237, 66, 69, 0.1);
+}
+
+.gold-wallet-manager__wallet-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.gold-wallet-manager__wallet-icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--discord-bg-primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gold-wallet-manager__wallet-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gold-wallet-manager__wallet-name {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin-bottom: 4px;
+}
+
+.gold-wallet-manager__wallet-game {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+/* Remove Button */
+.gold-wallet-manager__remove-btn {
+  background: var(--discord-bg-primary);
+  border: 1px solid var(--discord-bg-tertiary);
+  color: var(--discord-text-secondary);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.gold-wallet-manager__remove-btn:hover:not(:disabled) {
+  background: var(--discord-danger);
+  color: white;
+  border-color: var(--discord-danger);
+}
+
+.gold-wallet-manager__remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Confirmation Actions */
+.gold-wallet-manager__confirm-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gold-wallet-manager__confirm-remove-btn,
+.gold-wallet-manager__cancel-remove-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.gold-wallet-manager__confirm-remove-btn {
+  background: var(--discord-danger);
+  color: white;
+}
+
+.gold-wallet-manager__confirm-remove-btn:hover:not(:disabled) {
+  background: var(--discord-danger-hover);
+}
+
+.gold-wallet-manager__cancel-remove-btn {
+  background: var(--discord-bg-primary);
+  color: var(--discord-text-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.gold-wallet-manager__cancel-remove-btn:hover:not(:disabled) {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+}
+
+.gold-wallet-manager__confirm-remove-btn:disabled,
+.gold-wallet-manager__cancel-remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Wallet Balance */
+.gold-wallet-manager__wallet-balance {
+  background: var(--discord-bg-primary);
+  border-radius: 6px;
+  padding: 16px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.gold-wallet-manager__balance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.gold-wallet-manager__balance-item.primary {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+  margin-bottom: 8px;
+}
+
+.gold-wallet-manager__balance-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.gold-wallet-manager__balance-icon {
+  font-size: 16px;
+}
+
+.gold-wallet-manager__balance-amount {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+}
+
+.gold-wallet-manager__balance-amount.total {
+  color: var(--discord-accent);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+}
+
+.gold-wallet-manager__balance-amount.withdrawable {
+  color: var(--discord-success);
+}
+
+.gold-wallet-manager__balance-amount.suspended {
+  color: var(--discord-warning);
+}
+
+.gold-wallet-manager__balance-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Removal Warning */
+.gold-wallet-manager__removal-warning {
+  background: rgba(237, 66, 69, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.gold-wallet-manager__warning-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.gold-wallet-manager__warning-text {
+  font-size: 14px;
+  color: var(--discord-text-primary);
+  line-height: 1.4;
+}
+
+.gold-wallet-manager__warning-text strong {
+  color: var(--discord-danger);
+}
+
+/* Summary Section */
+.gold-wallet-manager__summary {
+  background: var(--discord-bg-primary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.gold-wallet-manager__summary-header {
+  margin-bottom: 16px;
+}
+
+.gold-wallet-manager__summary-header h4 {
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.gold-wallet-manager__summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.gold-wallet-manager__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+}
+
+.gold-wallet-manager__stat-label {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.gold-wallet-manager__stat-value {
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+}
+
+.gold-wallet-manager__stat-value.withdrawable {
+  color: var(--discord-success);
+}
+
+.gold-wallet-manager__stat-value.suspended {
+  color: var(--discord-warning);
+}
+
+/* Loading Skeleton */
+.gold-wallet-manager__skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.skeleton-card {
+  height: 200px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gold-wallet-manager {
+    padding: 16px;
+  }
+  
+  .gold-wallet-manager__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .gold-wallet-manager__add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .gold-wallet-manager__wallet-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .gold-wallet-manager__wallet {
+    padding: 16px;
+  }
+  
+  .gold-wallet-manager__wallet-header {
+    gap: 12px;
+  }
+  
+  .gold-wallet-manager__wallet-icon {
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .gold-wallet-manager__form-actions {
+    flex-direction: column;
+  }
+  
+  .gold-wallet-manager__summary-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .gold-wallet-manager__removal-warning {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gold-wallet-manager__summary-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .gold-wallet-manager__confirm-actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .gold-wallet-manager__confirm-remove-btn,
+  .gold-wallet-manager__cancel-remove-btn {
+    width: 100%;
+    border-radius: 4px;
+    height: 36px;
+  }
+}

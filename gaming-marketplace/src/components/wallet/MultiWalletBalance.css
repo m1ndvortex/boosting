@@ -59,6 +59,13 @@
   font-weight: var(--font-weight-semibold);
   color: var(--discord-text-primary);
   margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.multi-wallet-balance__section-icon {
+  font-size: 24px;
 }
 
 .multi-wallet-balance__section-header {
@@ -66,6 +73,34 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+}
+
+.multi-wallet-balance__section-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Wallet Type Badges */
+.multi-wallet-balance__wallet-type-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.multi-wallet-balance__wallet-type-badge.static {
+  background: rgba(88, 101, 242, 0.2);
+  color: var(--discord-accent);
+  border: 1px solid rgba(88, 101, 242, 0.3);
+}
+
+.multi-wallet-balance__wallet-type-badge.dynamic {
+  background: rgba(87, 242, 135, 0.2);
+  color: #57f287;
+  border: 1px solid rgba(87, 242, 135, 0.3);
 }
 
 /* Static Wallets */
@@ -82,11 +117,29 @@
   border-radius: 8px;
   border: 2px solid transparent;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .multi-wallet-balance__wallet:hover {
-  border-color: var(--discord-accent);
   transform: translateY(-2px);
+}
+
+.multi-wallet-balance__wallet[data-wallet-type="static"] {
+  border-left: 4px solid var(--discord-accent);
+}
+
+.multi-wallet-balance__wallet[data-wallet-type="static"]:hover {
+  border-color: var(--discord-accent);
+  box-shadow: 0 4px 20px rgba(88, 101, 242, 0.2);
+}
+
+.multi-wallet-balance__wallet[data-wallet-type="gold"] {
+  border-left: 4px solid #57f287;
+}
+
+.multi-wallet-balance__wallet[data-wallet-type="gold"]:hover {
+  border-color: #57f287;
+  box-shadow: 0 4px 20px rgba(87, 242, 135, 0.2);
 }
 
 .multi-wallet-balance__wallet.static {
@@ -129,6 +182,32 @@
   font-weight: var(--font-weight-semibold);
   color: var(--discord-text-primary);
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Wallet Status Badges */
+.multi-wallet-balance__wallet-status-badge {
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.multi-wallet-balance__wallet-status-badge.permanent {
+  background: rgba(88, 101, 242, 0.2);
+  color: var(--discord-accent);
+  border: 1px solid rgba(88, 101, 242, 0.3);
+}
+
+.multi-wallet-balance__wallet-status-badge.removable {
+  background: rgba(87, 242, 135, 0.2);
+  color: #57f287;
+  border: 1px solid rgba(87, 242, 135, 0.3);
 }
 
 .multi-wallet-balance__wallet-game {
@@ -177,21 +256,40 @@
 .multi-wallet-balance__gold-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   padding: 16px;
   background: var(--discord-bg-primary);
   border-radius: 6px;
+  border: 1px solid var(--discord-bg-tertiary);
 }
 
 .multi-wallet-balance__gold-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 8px 0;
+}
+
+.multi-wallet-balance__gold-item.primary {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+  margin-bottom: 4px;
+}
+
+.multi-wallet-balance__gold-label-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.multi-wallet-balance__gold-icon {
+  font-size: 16px;
 }
 
 .multi-wallet-balance__gold-label {
   font-size: 14px;
   color: var(--discord-text-secondary);
+  font-weight: var(--font-weight-medium);
 }
 
 .multi-wallet-balance__gold-amount {
@@ -201,7 +299,8 @@
 
 .multi-wallet-balance__gold-amount.total {
   color: var(--discord-accent);
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
 }
 
 .multi-wallet-balance__gold-amount.withdrawable {
@@ -214,29 +313,79 @@
 
 /* Suspended Deposits */
 .multi-wallet-balance__suspended-info {
-  padding: 12px;
+  padding: 16px;
   background: var(--discord-bg-primary);
   border-radius: 6px;
   border-left: 4px solid var(--discord-warning);
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.multi-wallet-balance__suspended-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.multi-wallet-balance__suspended-icon {
+  font-size: 16px;
 }
 
 .multi-wallet-balance__suspended-info h5 {
   font-size: 14px;
   color: var(--discord-text-primary);
-  margin: 0 0 8px 0;
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.multi-wallet-balance__deposits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .multi-wallet-balance__deposit {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
+  padding: 8px 12px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 4px;
   font-size: 13px;
+  border-left: 3px solid transparent;
+}
+
+.multi-wallet-balance__deposit.suspended {
+  border-left-color: var(--discord-warning);
+}
+
+.multi-wallet-balance__deposit.withdrawable {
+  border-left-color: var(--discord-success);
+}
+
+.multi-wallet-balance__deposit-amount {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-balance__deposit-icon {
+  font-size: 12px;
 }
 
 .multi-wallet-balance__deposit-status {
-  color: var(--discord-warning);
   font-weight: var(--font-weight-medium);
+  font-size: 12px;
+}
+
+.multi-wallet-balance__deposit.suspended .multi-wallet-balance__deposit-status {
+  color: var(--discord-warning);
+}
+
+.multi-wallet-balance__deposit.withdrawable .multi-wallet-balance__deposit-status {
+  color: var(--discord-success);
 }
 
 /* Add Wallet Form */
@@ -382,6 +531,18 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+  
+  .multi-wallet-balance__section-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .multi-wallet-balance__wallet-name {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
   
   .multi-wallet-balance__static-wallets,

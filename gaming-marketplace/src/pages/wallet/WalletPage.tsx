@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Header } from '../../components/layout/Header';
 import { WalletBalance } from '../../components/wallet/WalletBalance';
 import { MultiWalletBalance } from '../../components/wallet/MultiWalletBalance';
+import { GoldWalletManager } from '../../components/wallet/GoldWalletManager';
+import { SuspendedGoldDisplay } from '../../components/wallet/SuspendedGoldDisplay';
 import { WalletActions } from '../../components/wallet/WalletActions';
 import { DepositForm } from '../../components/wallet/DepositForm';
 import { WithdrawalForm } from '../../components/wallet/WithdrawalForm';
@@ -35,6 +37,54 @@ export const WalletPage: React.FC = () => {
 
   const handleConvert = async (fromCurrency: Currency, toCurrency: Currency, amount: number) => {
     await convertCurrency(fromCurrency, toCurrency, amount);
+  };
+
+  // Multi-wallet handlers
+  const handleMultiWalletDeposit = async (walletType: 'static' | 'gold', walletId: string, amount: number, paymentMethod: string) => {
+    // For now, use the legacy deposit method for static wallets
+    // In a real implementation, this would be handled by the multi-wallet service
+    if (walletType === 'static') {
+      const currency = walletId as Currency;
+      await deposit(amount, currency, paymentMethod);
+    } else {
+      // Handle gold wallet deposits - this would typically be admin-only
+      console.log('Gold wallet deposit not implemented for users');
+    }
+  };
+
+  const handleMultiWalletWithdraw = async (walletType: 'static' | 'gold', walletId: string, amount: number, paymentMethod: string) => {
+    // For now, use the legacy withdrawal method for static wallets
+    if (walletType === 'static') {
+      const currency = walletId as Currency;
+      await requestWithdrawal(amount, currency, paymentMethod);
+    } else {
+      // Handle gold wallet withdrawals
+      console.log('Gold wallet withdrawal not fully implemented');
+    }
+  };
+
+  const handleMultiWalletConvert = async (
+    fromWalletType: 'static' | 'gold', 
+    fromWalletId: string, 
+    toWalletType: 'static' | 'gold', 
+    toWalletId: string, 
+    amount: number, 
+    goldType?: 'suspended' | 'withdrawable'
+  ) => {
+    if (fromWalletType === 'gold' && toWalletType === 'static') {
+      // Convert gold to fiat
+      await multiWallet.convertSuspendedGoldToFiat(fromWalletId, amount, toWalletId as 'usd' | 'toman');
+    } else if (fromWalletType === 'gold' && toWalletType === 'gold') {
+      // Convert between gold wallets
+      await multiWallet.convertBetweenGoldWallets(fromWalletId, toWalletId, amount, goldType || 'withdrawable');
+    } else if (fromWalletType === 'static' && toWalletType === 'static') {
+      // Convert between static currencies
+      const fromCurrency = fromWalletId as Currency;
+      const toCurrency = toWalletId as Currency;
+      await convertCurrency(fromCurrency, toCurrency, amount);
+    } else {
+      console.log('Conversion type not supported');
+    }
   };
 
   if (!authState.isAuthenticated || !authState.user) {
@@ -88,13 +138,34 @@ export const WalletPage: React.FC = () => {
         <div className="wallet-page__grid">
           <div className="wallet-page__main">
             {useMultiWalletSystem ? (
-              <MultiWalletBalance 
-                wallet={multiWallet.wallet!} 
-                loading={multiWallet.loading}
-                availableRealms={multiWallet.availableRealms}
-                onAddWallet={multiWallet.addGoldWallet}
-                onRemoveWallet={multiWallet.removeGoldWallet}
-              />
+              <>
+                <MultiWalletBalance 
+                  wallet={multiWallet.wallet!} 
+                  loading={multiWallet.loading}
+                />
+                <GoldWalletManager
+                  availableRealms={multiWallet.availableRealms}
+                  userWallet={multiWallet.wallet!}
+                  onAddWallet={multiWallet.addGoldWallet}
+                  onRemoveWallet={multiWallet.removeGoldWallet}
+                  loading={multiWallet.loading}
+                />
+                
+                {/* Suspended Gold Display for each gold wallet with suspended gold */}
+                {multiWallet.wallet && Object.values(multiWallet.wallet.goldWallets)
+                  .filter(goldWallet => goldWallet.suspendedGold > 0)
+                  .map(goldWallet => (
+                    <SuspendedGoldDisplay
+                      key={goldWallet.realmId}
+                      goldWallet={goldWallet}
+                      onConvertToFiat={(amount, currency) => 
+                        multiWallet.convertSuspendedGoldToFiat(goldWallet.realmId, amount, currency)
+                      }
+                      loading={multiWallet.loading}
+                    />
+                  ))
+                }
+              </>
             ) : (
               <WalletBalance 
                 wallet={walletState.wallet!} 
@@ -103,10 +174,22 @@ export const WalletPage: React.FC = () => {
             )}
             
             <WalletActions
-              onDeposit={() => setShowDepositForm(true)}
-              onWithdraw={() => setShowWithdrawalForm(true)}
-              onConvert={() => setShowConverter(true)}
-              disabled={useMultiWalletSystem ? multiWallet.loading : walletState.loading}
+              // Legacy props for backward compatibility
+              onDeposit={useMultiWalletSystem ? undefined : () => setShowDepositForm(true)}
+              onWithdraw={useMultiWalletSystem ? undefined : () => setShowWithdrawalForm(true)}
+              onConvert={useMultiWalletSystem ? undefined : () => setShowConverter(true)}
+              disabled={useMultiWalletSystem ? false : walletState.loading}
+              
+              // Multi-wallet props
+              multiWallet={useMultiWalletSystem ? (multiWallet.wallet || undefined) : undefined}
+              availableRealms={useMultiWalletSystem ? multiWallet.availableRealms : undefined}
+              transactions={useMultiWalletSystem ? multiWallet.transactions : undefined}
+              onMultiWalletDeposit={useMultiWalletSystem ? handleMultiWalletDeposit : undefined}
+              onMultiWalletWithdraw={useMultiWalletSystem ? handleMultiWalletWithdraw : undefined}
+              onMultiWalletConvert={useMultiWalletSystem ? handleMultiWalletConvert : undefined}
+              onAddGoldWallet={useMultiWalletSystem ? multiWallet.addGoldWallet : undefined}
+              onRemoveGoldWallet={useMultiWalletSystem ? multiWallet.removeGoldWallet : undefined}
+              loading={useMultiWalletSystem ? multiWallet.loading : walletState.loading}
             />
           </div>
           

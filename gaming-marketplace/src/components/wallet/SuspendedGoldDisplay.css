@@ -1,0 +1,630 @@
+/* Suspended Gold Display Component Styles */
+.suspended-gold-display {
+  background: var(--discord-bg-secondary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid var(--discord-warning);
+}
+
+/* Header */
+.suspended-gold-display__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.suspended-gold-display__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.suspended-gold-display__title h3 {
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.suspended-gold-display__icon {
+  font-size: 24px;
+}
+
+.suspended-gold-display__amount {
+  background: rgba(250, 166, 26, 0.2);
+  color: var(--discord-warning);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  border: 1px solid rgba(250, 166, 26, 0.3);
+}
+
+.suspended-gold-display__convert-btn {
+  background: var(--discord-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.suspended-gold-display__convert-btn:hover:not(:disabled) {
+  background: var(--discord-accent-hover);
+  transform: translateY(-1px);
+}
+
+.suspended-gold-display__convert-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.suspended-gold-display__convert-icon {
+  font-size: 16px;
+}
+
+/* Info Section */
+.suspended-gold-display__info {
+  margin-bottom: 24px;
+}
+
+.suspended-gold-display__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(250, 166, 26, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(250, 166, 26, 0.2);
+}
+
+.suspended-gold-display__info-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.suspended-gold-display__info-text {
+  font-size: 14px;
+  color: var(--discord-text-primary);
+  line-height: 1.4;
+}
+
+/* Empty State */
+.suspended-gold-display__empty {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  border: 2px dashed var(--discord-bg-primary);
+}
+
+.suspended-gold-display__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.suspended-gold-display__empty h4 {
+  font-size: 18px;
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.suspended-gold-display__empty p {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+/* Deposits Section */
+.suspended-gold-display__deposits {
+  margin-bottom: 24px;
+}
+
+.suspended-gold-display__deposits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.suspended-gold-display__deposits-header h4 {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.suspended-gold-display__deposits-count {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-secondary);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+}
+
+.suspended-gold-display__deposits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Individual Deposit */
+.suspended-gold-display__deposit {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 3px solid var(--discord-warning);
+  transition: all 0.2s ease;
+}
+
+.suspended-gold-display__deposit.expired {
+  border-left-color: var(--discord-success);
+  background: rgba(87, 242, 135, 0.05);
+}
+
+.suspended-gold-display__deposit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suspended-gold-display__deposit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.suspended-gold-display__deposit-amount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.suspended-gold-display__deposit-icon {
+  font-size: 14px;
+}
+
+.suspended-gold-display__deposit-status {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.suspended-gold-display__deposit.suspended .suspended-gold-display__deposit-status {
+  background: rgba(250, 166, 26, 0.2);
+  color: var(--discord-warning);
+}
+
+.suspended-gold-display__deposit.expired .suspended-gold-display__deposit-status {
+  background: rgba(87, 242, 135, 0.2);
+  color: var(--discord-success);
+}
+
+/* Progress Bar */
+.suspended-gold-display__deposit-progress {
+  margin-bottom: 12px;
+}
+
+.suspended-gold-display__progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--discord-bg-primary);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.suspended-gold-display__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--discord-warning), var(--discord-success));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.suspended-gold-display__progress-text {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+  text-align: right;
+}
+
+.suspended-gold-display__deposit-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.suspended-gold-display__deposit-date {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+/* Conversion Form */
+.suspended-gold-display__conversion-form {
+  background: var(--discord-bg-primary);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--discord-bg-tertiary);
+}
+
+.suspended-gold-display__form-header {
+  margin-bottom: 20px;
+}
+
+.suspended-gold-display__form-header h4 {
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 4px 0;
+}
+
+.suspended-gold-display__form-header p {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.suspended-gold-display__form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.suspended-gold-display__form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.suspended-gold-display__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suspended-gold-display__form-label {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.suspended-gold-display__amount-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.suspended-gold-display__input {
+  width: 100%;
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  border-radius: 6px;
+  padding: 12px 60px 12px 12px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.suspended-gold-display__input:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.suspended-gold-display__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.suspended-gold-display__input-suffix {
+  position: absolute;
+  right: 50px;
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.suspended-gold-display__max-btn {
+  position: absolute;
+  right: 8px;
+  background: var(--discord-accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suspended-gold-display__max-btn:hover:not(:disabled) {
+  background: var(--discord-accent-hover);
+}
+
+.suspended-gold-display__max-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.suspended-gold-display__input-info {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+.suspended-gold-display__select {
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.suspended-gold-display__select:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.suspended-gold-display__select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Conversion Preview */
+.suspended-gold-display__preview {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.suspended-gold-display__preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.suspended-gold-display__preview-header h5 {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0;
+}
+
+.suspended-gold-display__preview-loading {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  font-style: italic;
+}
+
+.suspended-gold-display__preview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suspended-gold-display__preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.suspended-gold-display__preview-row.fee {
+  border-top: 1px solid var(--discord-bg-primary);
+  border-bottom: 1px solid var(--discord-bg-primary);
+  background: rgba(237, 66, 69, 0.05);
+  margin: 4px -8px;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.suspended-gold-display__preview-row.final {
+  border-top: 2px solid var(--discord-accent);
+  margin-top: 8px;
+  padding-top: 12px;
+  font-weight: var(--font-weight-semibold);
+}
+
+.suspended-gold-display__preview-label {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+}
+
+.suspended-gold-display__preview-value {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.suspended-gold-display__preview-value.fee {
+  color: var(--discord-danger);
+}
+
+.suspended-gold-display__preview-value.final {
+  color: var(--discord-accent);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+}
+
+/* Form Actions */
+.suspended-gold-display__form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.suspended-gold-display__preview-btn,
+.suspended-gold-display__confirm-btn {
+  background: var(--discord-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.suspended-gold-display__preview-btn:hover:not(:disabled),
+.suspended-gold-display__confirm-btn:hover:not(:disabled) {
+  background: var(--discord-accent-hover);
+}
+
+.suspended-gold-display__preview-btn:disabled,
+.suspended-gold-display__confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.suspended-gold-display__cancel-btn,
+.suspended-gold-display__back-btn {
+  background: transparent;
+  color: var(--discord-text-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.suspended-gold-display__cancel-btn:hover:not(:disabled),
+.suspended-gold-display__back-btn:hover:not(:disabled) {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+}
+
+.suspended-gold-display__cancel-btn:disabled,
+.suspended-gold-display__back-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Confirmation Warning */
+.suspended-gold-display__confirmation-warning {
+  background: rgba(250, 166, 26, 0.1);
+  border: 1px solid var(--discord-warning);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.suspended-gold-display__warning-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.suspended-gold-display__warning-content h5 {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.suspended-gold-display__warning-content p {
+  font-size: 14px;
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.suspended-gold-display__warning-content p:last-child {
+  margin-bottom: 0;
+}
+
+.suspended-gold-display__warning-note {
+  color: var(--discord-warning) !important;
+  font-weight: var(--font-weight-medium) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .suspended-gold-display {
+    padding: 16px;
+  }
+  
+  .suspended-gold-display__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .suspended-gold-display__title {
+    flex-wrap: wrap;
+  }
+  
+  .suspended-gold-display__convert-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .suspended-gold-display__form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .suspended-gold-display__form-actions {
+    flex-direction: column;
+  }
+  
+  .suspended-gold-display__deposit-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .suspended-gold-display__confirmation-warning {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .suspended-gold-display__conversion-form {
+    padding: 16px;
+  }
+  
+  .suspended-gold-display__deposit {
+    padding: 12px;
+  }
+  
+  .suspended-gold-display__preview {
+    padding: 12px;
+  }
+  
+  .suspended-gold-display__preview-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .suspended-gold-display__preview-row.fee {
+    margin: 4px -4px;
+    padding: 8px 4px;
+  }
+}

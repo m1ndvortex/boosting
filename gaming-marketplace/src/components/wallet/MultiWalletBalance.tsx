@@ -1,27 +1,18 @@
 // Multi-Wallet Balance Display Component
 
-import React, { useState } from 'react';
-import type { MultiWallet, GameRealm } from '../../types';
-import { MultiWalletService } from '../../services/multiWalletService';
+import React from 'react';
+import type { MultiWallet } from '../../types';
 import './MultiWalletBalance.css';
 
 interface MultiWalletBalanceProps {
   wallet: MultiWallet;
   loading?: boolean;
-  availableRealms?: GameRealm[];
-  onAddWallet?: (realmId: string) => void;
-  onRemoveWallet?: (realmId: string) => void;
 }
 
 export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
   wallet,
-  loading = false,
-  availableRealms = [],
-  onAddWallet,
-  onRemoveWallet
+  loading = false
 }) => {
-  const [showAddWallet, setShowAddWallet] = useState(false);
-  const [selectedRealm, setSelectedRealm] = useState('');
 
   const formatCurrency = (amount: number, currency: string): string => {
     switch (currency) {
@@ -36,39 +27,26 @@ export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
     }
   };
 
-  const getCurrencyIcon = (currency: string): string => {
-    switch (currency) {
-      case 'gold':
-        return '🪙';
-      case 'usd':
-        return '💵';
-      case 'toman':
-        return '﷼';
+
+
+  const getWalletTypeIndicator = (type: 'static' | 'gold'): string => {
+    return type === 'static' ? '🏦' : '🎮';
+  };
+
+  const getGoldStatusIcon = (type: 'suspended' | 'withdrawable' | 'total'): string => {
+    switch (type) {
+      case 'suspended':
+        return '⏳';
+      case 'withdrawable':
+        return '✅';
+      case 'total':
+        return '💰';
       default:
         return '💰';
     }
   };
 
-  const handleAddWallet = () => {
-    if (selectedRealm && onAddWallet) {
-      onAddWallet(selectedRealm);
-      setSelectedRealm('');
-      setShowAddWallet(false);
-    }
-  };
 
-  const handleRemoveWallet = (realmId: string) => {
-    if (onRemoveWallet) {
-      const goldWallet = wallet.goldWallets[realmId];
-      if (goldWallet.totalGold > 0) {
-        const confirmed = window.confirm(
-          `This wallet has ${goldWallet.totalGold} gold. Are you sure you want to remove it?`
-        );
-        if (!confirmed) return;
-      }
-      onRemoveWallet(realmId);
-    }
-  };
 
   const getTimeUntilWithdrawable = (withdrawableAt: Date): string => {
     const now = new Date();
@@ -101,9 +79,7 @@ export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
     );
   }
 
-  const availableRealmsForAdd = availableRealms.filter(
-    realm => !wallet.goldWallets[realm.id]
-  );
+
 
   return (
     <div className="multi-wallet-balance" data-testid="multi-wallet-balance">
@@ -116,27 +92,49 @@ export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
 
       {/* Static Wallets */}
       <div className="multi-wallet-balance__section">
-        <h3>Fiat Currencies</h3>
+        <div className="multi-wallet-balance__section-header">
+          <h3>
+            <span className="multi-wallet-balance__section-icon">{getWalletTypeIndicator('static')}</span>
+            Fiat Currencies
+          </h3>
+          <div className="multi-wallet-balance__wallet-type-badge static">
+            Static Wallets
+          </div>
+        </div>
         <div className="multi-wallet-balance__static-wallets">
-          <div className="multi-wallet-balance__wallet static">
-            <div className="multi-wallet-balance__wallet-icon">💵</div>
-            <div className="multi-wallet-balance__wallet-info">
-              <div className="multi-wallet-balance__wallet-name">USD</div>
-              <div className="multi-wallet-balance__wallet-amount">
-                {formatCurrency(wallet.staticWallets.usd.balance, 'usd')}
+          <div className="multi-wallet-balance__wallet static" data-wallet-type="static">
+            <div className="multi-wallet-balance__wallet-header">
+              <div className="multi-wallet-balance__wallet-icon">💵</div>
+              <div className="multi-wallet-balance__wallet-info">
+                <div className="multi-wallet-balance__wallet-name">
+                  USD
+                  <span className="multi-wallet-balance__wallet-status-badge permanent">
+                    Permanent
+                  </span>
+                </div>
+                <div className="multi-wallet-balance__wallet-amount">
+                  ${wallet.staticWallets.usd.balance.toFixed(2)}
+                </div>
+                <div className="multi-wallet-balance__wallet-desc">US Dollar • Always Available</div>
               </div>
-              <div className="multi-wallet-balance__wallet-desc">US Dollar</div>
             </div>
           </div>
 
-          <div className="multi-wallet-balance__wallet static">
-            <div className="multi-wallet-balance__wallet-icon">﷼</div>
-            <div className="multi-wallet-balance__wallet-info">
-              <div className="multi-wallet-balance__wallet-name">Toman</div>
-              <div className="multi-wallet-balance__wallet-amount">
-                {formatCurrency(wallet.staticWallets.toman.balance, 'toman')}
+          <div className="multi-wallet-balance__wallet static" data-wallet-type="static">
+            <div className="multi-wallet-balance__wallet-header">
+              <div className="multi-wallet-balance__wallet-icon">﷼</div>
+              <div className="multi-wallet-balance__wallet-info">
+                <div className="multi-wallet-balance__wallet-name">
+                  Toman
+                  <span className="multi-wallet-balance__wallet-status-badge permanent">
+                    Permanent
+                  </span>
+                </div>
+                <div className="multi-wallet-balance__wallet-amount">
+                  {formatCurrency(wallet.staticWallets.toman.balance, 'toman')}
+                </div>
+                <div className="multi-wallet-balance__wallet-desc">Iranian Toman • Always Available</div>
               </div>
-              <div className="multi-wallet-balance__wallet-desc">Iranian Toman</div>
             </div>
           </div>
         </div>
@@ -145,48 +143,14 @@ export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
       {/* Gold Wallets */}
       <div className="multi-wallet-balance__section">
         <div className="multi-wallet-balance__section-header">
-          <h3>Game Gold Wallets</h3>
-          {availableRealmsForAdd.length > 0 && (
-            <button 
-              className="multi-wallet-balance__add-btn"
-              onClick={() => setShowAddWallet(!showAddWallet)}
-            >
-              + Add Wallet
-            </button>
-          )}
-        </div>
-
-        {showAddWallet && (
-          <div className="multi-wallet-balance__add-form">
-            <select 
-              value={selectedRealm} 
-              onChange={(e) => setSelectedRealm(e.target.value)}
-              className="multi-wallet-balance__realm-select"
-            >
-              <option value="">Select a game realm...</option>
-              {availableRealmsForAdd.map(realm => (
-                <option key={realm.id} value={realm.id}>
-                  {realm.displayName}
-                </option>
-              ))}
-            </select>
-            <div className="multi-wallet-balance__add-actions">
-              <button 
-                onClick={handleAddWallet}
-                disabled={!selectedRealm}
-                className="multi-wallet-balance__confirm-btn"
-              >
-                Add
-              </button>
-              <button 
-                onClick={() => setShowAddWallet(false)}
-                className="multi-wallet-balance__cancel-btn"
-              >
-                Cancel
-              </button>
-            </div>
+          <h3>
+            <span className="multi-wallet-balance__section-icon">{getWalletTypeIndicator('gold')}</span>
+            Game Gold Wallets
+          </h3>
+          <div className="multi-wallet-balance__wallet-type-badge dynamic">
+            Dynamic Wallets
           </div>
-        )}
+        </div>
 
         <div className="multi-wallet-balance__gold-wallets">
           {Object.values(wallet.goldWallets).length === 0 ? (
@@ -197,43 +161,49 @@ export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
             </div>
           ) : (
             Object.values(wallet.goldWallets).map(goldWallet => (
-              <div key={goldWallet.realmId} className="multi-wallet-balance__wallet gold">
+              <div key={goldWallet.realmId} className="multi-wallet-balance__wallet gold" data-wallet-type="gold">
                 <div className="multi-wallet-balance__wallet-header">
                   <div className="multi-wallet-balance__wallet-icon">🪙</div>
                   <div className="multi-wallet-balance__wallet-info">
                     <div className="multi-wallet-balance__wallet-name">
                       {goldWallet.realmName} Gold
+                      <span className="multi-wallet-balance__wallet-status-badge removable">
+                        Removable
+                      </span>
                     </div>
                     <div className="multi-wallet-balance__wallet-game">
-                      {goldWallet.gameName}
+                      🎮 {goldWallet.gameName} • {goldWallet.realmName}
                     </div>
                   </div>
-                  <button 
-                    className="multi-wallet-balance__remove-btn"
-                    onClick={() => handleRemoveWallet(goldWallet.realmId)}
-                    title="Remove wallet"
-                  >
-                    ×
-                  </button>
+
                 </div>
 
                 <div className="multi-wallet-balance__gold-breakdown">
-                  <div className="multi-wallet-balance__gold-item">
-                    <span className="multi-wallet-balance__gold-label">Total:</span>
+                  <div className="multi-wallet-balance__gold-item primary">
+                    <div className="multi-wallet-balance__gold-label-with-icon">
+                      <span className="multi-wallet-balance__gold-icon">{getGoldStatusIcon('total')}</span>
+                      <span className="multi-wallet-balance__gold-label">Total Gold:</span>
+                    </div>
                     <span className="multi-wallet-balance__gold-amount total">
                       {formatCurrency(goldWallet.totalGold, 'gold')}
                     </span>
                   </div>
                   
                   <div className="multi-wallet-balance__gold-item">
-                    <span className="multi-wallet-balance__gold-label">Withdrawable:</span>
+                    <div className="multi-wallet-balance__gold-label-with-icon">
+                      <span className="multi-wallet-balance__gold-icon">{getGoldStatusIcon('withdrawable')}</span>
+                      <span className="multi-wallet-balance__gold-label">Withdrawable:</span>
+                    </div>
                     <span className="multi-wallet-balance__gold-amount withdrawable">
                       {formatCurrency(goldWallet.withdrawableGold, 'gold')}
                     </span>
                   </div>
                   
                   <div className="multi-wallet-balance__gold-item">
-                    <span className="multi-wallet-balance__gold-label">Suspended:</span>
+                    <div className="multi-wallet-balance__gold-label-with-icon">
+                      <span className="multi-wallet-balance__gold-icon">{getGoldStatusIcon('suspended')}</span>
+                      <span className="multi-wallet-balance__gold-label">Suspended:</span>
+                    </div>
                     <span className="multi-wallet-balance__gold-amount suspended">
                       {formatCurrency(goldWallet.suspendedGold, 'gold')}
                     </span>
@@ -242,18 +212,28 @@ export const MultiWalletBalance: React.FC<MultiWalletBalanceProps> = ({
 
                 {goldWallet.suspendedDeposits.length > 0 && (
                   <div className="multi-wallet-balance__suspended-info">
-                    <h5>Suspended Deposits:</h5>
-                    {goldWallet.suspendedDeposits.map(deposit => (
-                      <div key={deposit.id} className="multi-wallet-balance__deposit">
-                        <span>{formatCurrency(deposit.amount, 'gold')}</span>
-                        <span className="multi-wallet-balance__deposit-status">
-                          {deposit.status === 'suspended' 
-                            ? getTimeUntilWithdrawable(new Date(deposit.withdrawableAt))
-                            : 'Available'
-                          }
-                        </span>
-                      </div>
-                    ))}
+                    <div className="multi-wallet-balance__suspended-header">
+                      <span className="multi-wallet-balance__suspended-icon">⏳</span>
+                      <h5>Suspended Deposits</h5>
+                    </div>
+                    <div className="multi-wallet-balance__deposits-list">
+                      {goldWallet.suspendedDeposits.map(deposit => (
+                        <div key={deposit.id} className={`multi-wallet-balance__deposit ${deposit.status}`}>
+                          <div className="multi-wallet-balance__deposit-amount">
+                            <span className="multi-wallet-balance__deposit-icon">
+                              {deposit.status === 'suspended' ? '⏳' : '✅'}
+                            </span>
+                            {formatCurrency(deposit.amount, 'gold')}
+                          </div>
+                          <div className="multi-wallet-balance__deposit-status">
+                            {deposit.status === 'suspended' 
+                              ? getTimeUntilWithdrawable(new Date(deposit.withdrawableAt))
+                              : 'Available Now'
+                            }
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

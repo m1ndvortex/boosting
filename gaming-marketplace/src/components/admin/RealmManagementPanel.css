@@ -1,0 +1,308 @@
+/* Realm Management Panel Styles */
+
+.realm-management-panel {
+  background: var(--discord-bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+}
+
+.realm-management-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--discord-border-secondary);
+}
+
+.realm-management-panel__header > div {
+  flex: 1;
+}
+
+.realm-management-panel__title {
+  color: var(--discord-text-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.realm-management-panel__description {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.realm-management-panel__section-title {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.realm-management-panel__error {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--discord-text-danger);
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--discord-text-danger);
+}
+
+/* Form Styles */
+.realm-management-panel__form {
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid var(--discord-border-secondary);
+}
+
+.realm-management-panel__form-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.realm-management-panel__form-header h4 {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.realm-management-panel__form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.realm-management-panel__form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Realms Grid */
+.realm-management-panel__realms {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.realm-management-panel__empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--discord-text-secondary);
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  border: 1px dashed var(--discord-border-secondary);
+}
+
+.realm-management-panel__realms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.realm-management-panel__realm-item {
+  background: var(--discord-bg-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--discord-border-secondary);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.realm-management-panel__realm-item:hover {
+  border-color: var(--discord-interactive-normal);
+  background: var(--discord-interactive-muted);
+}
+
+.realm-management-panel__realm-info {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.realm-management-panel__realm-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.realm-management-panel__realm-name {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-xs) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.realm-management-panel__realm-display {
+  color: var(--discord-text-secondary);
+  font-size: 13px;
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.realm-management-panel__realm-date {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.realm-management-panel__realm-creator {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+  margin: 0;
+}
+
+.realm-management-panel__realm-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+/* Status Badge */
+.realm-management-panel__status-badge {
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  background: var(--discord-bg-primary);
+  border: 1px solid var(--discord-border-secondary);
+}
+
+.realm-management-panel__status-badge--inactive {
+  color: var(--discord-text-danger);
+  background: rgba(237, 66, 69, 0.1);
+  border-color: var(--discord-text-danger);
+}
+
+/* Edit Form */
+.realm-management-panel__edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.realm-management-panel__edit-header h5 {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+}
+
+.realm-management-panel__edit-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.realm-management-panel__edit-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Loading state */
+.realm-management-panel .loading-overlay {
+  border-radius: var(--border-radius-md);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .realm-management-panel {
+    padding: var(--spacing-md);
+  }
+  
+  .realm-management-panel__header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
+  
+  .realm-management-panel__realms-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .realm-management-panel__realm-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .realm-management-panel__realm-actions {
+    justify-content: center;
+  }
+  
+  .realm-management-panel__form-actions,
+  .realm-management-panel__edit-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .realm-management-panel__form {
+    padding: var(--spacing-md);
+  }
+  
+  .realm-management-panel__realm-item {
+    padding: var(--spacing-sm);
+  }
+  
+  .realm-management-panel__realm-actions {
+    flex-direction: column;
+  }
+  
+  .realm-management-panel__edit-actions {
+    flex-direction: column;
+  }
+}
+
+/* Focus styles for accessibility */
+.realm-management-panel__realm-item:focus-within {
+  border-color: var(--discord-accent);
+  box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+}
+
+/* Print styles */
+@media print {
+  .realm-management-panel {
+    background: white;
+    color: black;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .realm-management-panel__realm-actions,
+  .realm-management-panel__form-actions,
+  .realm-management-panel__edit-actions {
+    display: none;
+  }
+  
+  .realm-management-panel__form {
+    display: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .realm-management-panel__realm-item {
+    border-width: 2px;
+  }
+  
+  .realm-management-panel__status-badge--inactive {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .realm-management-panel__realm-item {
+    transition: none;
+  }
+}

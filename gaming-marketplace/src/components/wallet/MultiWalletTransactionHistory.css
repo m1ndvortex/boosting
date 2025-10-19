@@ -1,0 +1,274 @@
+/* Multi-Wallet Transaction History Styles */
+.multi-wallet-transaction-history {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
+}
+
+.multi-wallet-transaction-history__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.multi-wallet-transaction-history__count {
+  font-size: 14px;
+  color: var(--discord-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.multi-wallet-transaction-history__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.multi-wallet-transaction-history__filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.multi-wallet-transaction-history__select {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--discord-text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.multi-wallet-transaction-history__select:focus {
+  outline: none;
+  border-color: var(--discord-primary);
+}
+
+.multi-wallet-transaction-history__search {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--discord-text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.multi-wallet-transaction-history__search:focus {
+  outline: none;
+  border-color: var(--discord-primary);
+}
+
+.multi-wallet-transaction-history__search::placeholder {
+  color: var(--discord-text-muted);
+}
+
+.multi-wallet-transaction-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.multi-wallet-transaction-history__list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.multi-wallet-transaction-history__list::-webkit-scrollbar-track {
+  background: var(--discord-bg-tertiary);
+  border-radius: 3px;
+}
+
+.multi-wallet-transaction-history__list::-webkit-scrollbar-thumb {
+  background: var(--discord-text-muted);
+  border-radius: 3px;
+}
+
+.multi-wallet-transaction-history__list::-webkit-scrollbar-thumb:hover {
+  background: var(--discord-text-secondary);
+}
+
+.multi-wallet-transaction-history__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.multi-wallet-transaction-history__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.multi-wallet-transaction-history__empty-text {
+  font-size: 16px;
+  color: var(--discord-text-secondary);
+}
+
+.multi-wallet-transaction-history__item {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.multi-wallet-transaction-history__item:hover {
+  background: var(--discord-bg-secondary);
+}
+
+.multi-wallet-transaction-history__item-icon {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.multi-wallet-transaction-history__item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.multi-wallet-transaction-history__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.multi-wallet-transaction-history__item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.multi-wallet-transaction-history__item-type {
+  font-size: 15px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-transaction-history__item-wallet {
+  font-size: 13px;
+  color: var(--discord-text-secondary);
+}
+
+.multi-wallet-transaction-history__item-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.multi-wallet-transaction-history__amount {
+  font-size: 15px;
+  font-weight: var(--font-weight-semibold);
+}
+
+.multi-wallet-transaction-history__amount.positive {
+  color: var(--discord-success);
+}
+
+.multi-wallet-transaction-history__amount.negative {
+  color: var(--discord-danger);
+}
+
+.multi-wallet-transaction-history__item-status {
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+}
+
+.multi-wallet-transaction-history__item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--discord-text-muted);
+}
+
+.multi-wallet-transaction-history__item-id {
+  font-family: var(--font-mono);
+}
+
+.multi-wallet-transaction-history__item-date {
+  flex-shrink: 0;
+}
+
+.multi-wallet-transaction-history__item-details-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.multi-wallet-transaction-history__item-detail {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: var(--discord-text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .multi-wallet-transaction-history__filter-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .multi-wallet-transaction-history__item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .multi-wallet-transaction-history__item-amount {
+    align-items: flex-start;
+  }
+  
+  .multi-wallet-transaction-history__item-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .multi-wallet-transaction-history__item-details-list {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .multi-wallet-transaction-history__item {
+    padding: 12px;
+  }
+  
+  .multi-wallet-transaction-history__item-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+}

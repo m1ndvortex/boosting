@@ -1,0 +1,283 @@
+.gold-deposit-history-panel {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+}
+
+.gold-deposit-history-panel__header {
+  margin-bottom: 24px;
+}
+
+.gold-deposit-history-panel__title {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.gold-deposit-history-panel__description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Filters */
+.gold-deposit-history-panel__filters {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.gold-deposit-history-panel__filters-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.gold-deposit-history-panel__filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gold-deposit-history-panel__filter-label {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.gold-deposit-history-panel__filter-select {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  transition: all 0.2s ease;
+}
+
+.gold-deposit-history-panel__filter-select:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+}
+
+.gold-deposit-history-panel__filter-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.gold-deposit-history-panel__filters-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Summary */
+.gold-deposit-history-panel__summary {
+  margin-bottom: 16px;
+}
+
+.gold-deposit-history-panel__summary-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Table */
+.gold-deposit-history-panel__table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.gold-deposit-history-panel__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-primary);
+}
+
+.gold-deposit-history-panel__table th {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.gold-deposit-history-panel__table-row {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.gold-deposit-history-panel__table-row:hover {
+  background: var(--bg-secondary);
+}
+
+.gold-deposit-history-panel__table-row:last-child {
+  border-bottom: none;
+}
+
+.gold-deposit-history-panel__table-cell {
+  padding: 12px 16px;
+  vertical-align: top;
+}
+
+/* Table Cell Content */
+.gold-deposit-history-panel__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gold-deposit-history-panel__username {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.gold-deposit-history-panel__realm-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gold-deposit-history-panel__game-name {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.gold-deposit-history-panel__realm-name {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.gold-deposit-history-panel__amount {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gold-deposit-history-panel__status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gold-deposit-history-panel__status-badge--suspended {
+  background: rgba(255, 193, 7, 0.2);
+  color: var(--warning-color);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.gold-deposit-history-panel__status-badge--withdrawable {
+  background: rgba(40, 167, 69, 0.2);
+  color: var(--success-color);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.gold-deposit-history-panel__date {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  display: block;
+}
+
+.gold-deposit-history-panel__time {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  display: block;
+}
+
+.gold-deposit-history-panel__time-remaining {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.gold-deposit-history-panel__deposited-by {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* Empty State */
+.gold-deposit-history-panel__empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.gold-deposit-history-panel__empty p {
+  margin: 0 0 16px 0;
+  font-size: 0.9rem;
+}
+
+/* Pagination */
+.gold-deposit-history-panel__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.gold-deposit-history-panel__pagination-info {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .gold-deposit-history-panel__filters-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gold-deposit-history-panel__filters-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+/* Mobile Table Adjustments */
+@media (max-width: 767px) {
+  .gold-deposit-history-panel__table {
+    font-size: 0.8rem;
+  }
+  
+  .gold-deposit-history-panel__table th,
+  .gold-deposit-history-panel__table-cell {
+    padding: 8px 12px;
+  }
+  
+  .gold-deposit-history-panel__table th {
+    font-size: 0.75rem;
+  }
+}
+
+/* Loading State */
+.gold-deposit-history-panel--loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Hover Effects */
+.gold-deposit-history-panel__filter-select:hover:not(:disabled) {
+  border-color: var(--accent-color-hover);
+}
+
+.gold-deposit-history-panel__filter-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

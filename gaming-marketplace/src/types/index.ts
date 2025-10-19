@@ -110,7 +110,8 @@ export interface Transaction {
     | 'conversion'
     | 'purchase'
     | 'refund'
-    | 'earning';
+    | 'earning'
+    | 'admin_deposit';
   amount: number;
   currency: Currency;
   status: 'pending' | 'completed' | 'failed' | 'pending_approval';

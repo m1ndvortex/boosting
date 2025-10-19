@@ -1,0 +1,256 @@
+.admin-gold-deposit-panel {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+}
+
+.admin-gold-deposit-panel__header {
+  margin-bottom: 24px;
+}
+
+.admin-gold-deposit-panel__title {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.admin-gold-deposit-panel__description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.admin-gold-deposit-panel__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-gold-deposit-panel__form-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.admin-gold-deposit-panel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-gold-deposit-panel__label {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.admin-gold-deposit-panel__select {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.admin-gold-deposit-panel__select:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+}
+
+.admin-gold-deposit-panel__select--error {
+  border-color: var(--error-color);
+}
+
+.admin-gold-deposit-panel__select option {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.admin-gold-deposit-panel__error {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.admin-gold-deposit-panel__summary {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.admin-gold-deposit-panel__summary-title {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.admin-gold-deposit-panel__summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-gold-deposit-panel__summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-gold-deposit-panel__summary-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.admin-gold-deposit-panel__summary-value {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.admin-gold-deposit-panel__summary-value--suspended {
+  color: var(--warning-color);
+  font-weight: 600;
+}
+
+.admin-gold-deposit-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Dialog Styles */
+.admin-gold-deposit-panel__dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.admin-gold-deposit-panel__dialog {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.admin-gold-deposit-panel__dialog-header {
+  padding: 20px 24px 0 24px;
+}
+
+.admin-gold-deposit-panel__dialog-header h4 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-gold-deposit-panel__dialog-content {
+  padding: 16px 24px;
+}
+
+.admin-gold-deposit-panel__dialog-content p {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.admin-gold-deposit-panel__dialog-content p:last-child {
+  margin-bottom: 0;
+}
+
+.admin-gold-deposit-panel__dialog-warning {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 4px;
+  padding: 12px;
+  margin-top: 16px;
+}
+
+.admin-gold-deposit-panel__dialog-warning p {
+  color: var(--warning-color);
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+}
+
+.admin-gold-deposit-panel__dialog-warning p:last-child {
+  margin-bottom: 0;
+}
+
+.admin-gold-deposit-panel__dialog-actions {
+  padding: 0 24px 20px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .admin-gold-deposit-panel__form-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .admin-gold-deposit-panel__field:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .admin-gold-deposit-panel__form-fields {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
+  .admin-gold-deposit-panel__field:last-child {
+    grid-column: 1 / 2;
+  }
+}
+
+/* Loading State */
+.admin-gold-deposit-panel--loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Focus and Hover States */
+.admin-gold-deposit-panel__select:hover:not(:disabled) {
+  border-color: var(--accent-color-hover);
+}
+
+.admin-gold-deposit-panel__select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animation for dialog */
+.admin-gold-deposit-panel__dialog {
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

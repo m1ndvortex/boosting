@@ -79,7 +79,12 @@ export class GameManagementService {
    */
   static getAllGames(): GameDefinition[] {
     try {
-      return StorageService.getItem<GameDefinition[]>(MULTI_WALLET_STORAGE_KEYS.GAME_DEFINITIONS) || [];
+      const games = StorageService.getItem<GameDefinition[]>(MULTI_WALLET_STORAGE_KEYS.GAME_DEFINITIONS) || [];
+      // Ensure dates are properly parsed
+      return games.map(game => ({
+        ...game,
+        createdAt: new Date(game.createdAt)
+      }));
     } catch (error) {
       ErrorService.handleError(error, 'GameManagementService.getAllGames');
       return [];
@@ -246,7 +251,12 @@ export class GameManagementService {
    */
   static getAllRealms(): GameRealm[] {
     try {
-      return StorageService.getItem<GameRealm[]>(MULTI_WALLET_STORAGE_KEYS.GAME_REALMS) || [];
+      const realms = StorageService.getItem<GameRealm[]>(MULTI_WALLET_STORAGE_KEYS.GAME_REALMS) || [];
+      // Ensure dates are properly parsed
+      return realms.map(realm => ({
+        ...realm,
+        createdAt: new Date(realm.createdAt)
+      }));
     } catch (error) {
       ErrorService.handleError(error, 'GameManagementService.getAllRealms');
       return [];

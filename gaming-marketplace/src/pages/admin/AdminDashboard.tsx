@@ -10,6 +10,7 @@ import { ExchangeRates } from './sections/ExchangeRates';
 import { ShopManagement } from './sections/ShopManagement';
 import { OrderReview } from './sections/OrderReview';
 import { SystemSettings } from './sections/SystemSettings';
+import { MultiWalletManagement } from './sections/MultiWalletManagement';
 import './AdminDashboard.css';
 
 type AdminSection = 
@@ -18,6 +19,7 @@ type AdminSection =
   | 'users-roles'
   | 'pending-requests'
   | 'financial-management'
+  | 'multi-wallet-management'
   | 'exchange-rates'
   | 'shop-management'
   | 'order-review'
@@ -64,6 +66,13 @@ export const AdminDashboard: React.FC = () => {
       onClick: () => setActiveSection('financial-management'),
     },
     {
+      id: 'multi-wallet-management',
+      label: 'Multi-Wallet Management',
+      icon: '🏦',
+      active: activeSection === 'multi-wallet-management',
+      onClick: () => setActiveSection('multi-wallet-management'),
+    },
+    {
       id: 'exchange-rates',
       label: 'Exchange Rates',
       icon: '💱',
@@ -105,6 +114,8 @@ export const AdminDashboard: React.FC = () => {
         return <PendingRoleRequests />;
       case 'financial-management':
         return <FinancialManagement />;
+      case 'multi-wallet-management':
+        return <MultiWalletManagement />;
       case 'exchange-rates':
         return <ExchangeRates />;
       case 'shop-management':

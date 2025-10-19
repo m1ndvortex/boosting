@@ -1,0 +1,305 @@
+/* Multi-Wallet Withdrawal Form Styles */
+.multi-wallet-withdrawal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.multi-wallet-withdrawal-form__error {
+  background: rgba(237, 66, 69, 0.1);
+  border: 1px solid var(--discord-danger);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--discord-danger);
+  font-size: 14px;
+  text-align: center;
+}
+
+.multi-wallet-withdrawal-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.multi-wallet-withdrawal-form__label {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-withdrawal-form__wallet-type-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.multi-wallet-withdrawal-form__wallet-type-tab {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.multi-wallet-withdrawal-form__wallet-type-tab:hover:not(:disabled) {
+  background: var(--discord-bg-secondary);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-withdrawal-form__wallet-type-tab.active {
+  background: rgba(114, 137, 218, 0.1);
+  border-color: var(--discord-primary);
+  color: var(--discord-primary);
+}
+
+.multi-wallet-withdrawal-form__wallet-type-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.multi-wallet-withdrawal-form__wallet-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.multi-wallet-withdrawal-form__no-wallets {
+  background: var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+}
+
+.multi-wallet-withdrawal-form__wallet-option {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.multi-wallet-withdrawal-form__wallet-option:hover:not(:disabled) {
+  background: var(--discord-bg-secondary);
+  border-color: var(--discord-text-muted);
+}
+
+.multi-wallet-withdrawal-form__wallet-option.active {
+  background: rgba(114, 137, 218, 0.1);
+  border-color: var(--discord-primary);
+}
+
+.multi-wallet-withdrawal-form__wallet-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.multi-wallet-withdrawal-form__wallet-icon {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.multi-wallet-withdrawal-form__wallet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.multi-wallet-withdrawal-form__wallet-name {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-withdrawal-form__wallet-game {
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+}
+
+.multi-wallet-withdrawal-form__wallet-balances {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.multi-wallet-withdrawal-form__withdrawable {
+  font-size: 12px;
+  color: var(--discord-success);
+  font-weight: var(--font-weight-medium);
+}
+
+.multi-wallet-withdrawal-form__suspended {
+  font-size: 12px;
+  color: var(--discord-warning);
+}
+
+.multi-wallet-withdrawal-form__amount-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.multi-wallet-withdrawal-form__max-button {
+  background: transparent;
+  border: 1px solid var(--discord-text-muted);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--discord-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.multi-wallet-withdrawal-form__max-button:hover:not(:disabled) {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-withdrawal-form__max-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.multi-wallet-withdrawal-form__input {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  color: var(--discord-text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.multi-wallet-withdrawal-form__input:focus {
+  outline: none;
+  border-color: var(--discord-primary);
+}
+
+.multi-wallet-withdrawal-form__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.multi-wallet-withdrawal-form__payment-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.multi-wallet-withdrawal-form__payment-method {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.multi-wallet-withdrawal-form__payment-method:hover:not(:disabled) {
+  background: var(--discord-bg-secondary);
+  border-color: var(--discord-text-muted);
+}
+
+.multi-wallet-withdrawal-form__payment-method.active {
+  background: rgba(114, 137, 218, 0.1);
+  border-color: var(--discord-primary);
+}
+
+.multi-wallet-withdrawal-form__payment-method:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.multi-wallet-withdrawal-form__payment-icon {
+  font-size: 20px;
+}
+
+.multi-wallet-withdrawal-form__payment-name {
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-withdrawal-form__info {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.multi-wallet-withdrawal-form__info-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.multi-wallet-withdrawal-form__info-text {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--discord-text-primary);
+}
+
+.multi-wallet-withdrawal-form__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .multi-wallet-withdrawal-form {
+    max-width: none;
+  }
+  
+  .multi-wallet-withdrawal-form__wallet-type-tabs {
+    grid-template-columns: 1fr;
+  }
+  
+  .multi-wallet-withdrawal-form__payment-methods {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  
+  .multi-wallet-withdrawal-form__actions {
+    flex-direction: column-reverse;
+  }
+  
+  .multi-wallet-withdrawal-form__amount-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

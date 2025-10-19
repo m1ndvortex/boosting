@@ -512,9 +512,9 @@ export class MultiWalletService {
   /**
    * Get all suspended deposits across all wallets for a user
    */
-  static getAllSuspendedDeposits(userId: string): Array<SuspendedDeposit & { realmId: string; realmName: string }> {
+  static getAllSuspendedDeposits(userId: string): Array<SuspendedDeposit & { realmId: string; realmName: string; gameName: string }> {
     const wallet = this.getMultiWallet(userId);
-    const allDeposits: Array<SuspendedDeposit & { realmId: string; realmName: string }> = [];
+    const allDeposits: Array<SuspendedDeposit & { realmId: string; realmName: string; gameName: string }> = [];
     
     Object.values(wallet.goldWallets).forEach(goldWallet => {
       goldWallet.suspendedDeposits.forEach(deposit => {
@@ -522,6 +522,7 @@ export class MultiWalletService {
           ...deposit,
           realmId: goldWallet.realmId,
           realmName: goldWallet.realmName,
+          gameName: goldWallet.gameName,
           depositedAt: new Date(deposit.depositedAt),
           withdrawableAt: new Date(deposit.withdrawableAt)
         });
