@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../discord/Button';
-import { Input } from '../discord/Input';
 import { MultiWalletService } from '../../services/multiWalletService';
 import { GameManagementService } from '../../services/gameManagementService';
+import { MultiWalletValidationService } from '../../services/multiWalletValidationService';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useAdminOperation } from '../../hooks/useAsyncOperation';
+import { useFormValidation } from '../../hooks/useFormValidation';
 import { LoadingOverlay } from '../common/LoadingStates';
+import { FormField, AmountField } from '../common/FormField';
+import { UIErrorHandler } from '../../utils/errorHandling';
 import type { User, GameRealm } from '../../types';
 import './AdminGoldDepositPanel.css';
 
@@ -12,11 +16,7 @@ interface AdminGoldDepositPanelProps {
   className?: string;
 }
 
-interface DepositFormData {
-  userId: string;
-  realmId: string;
-  amount: string;
-}
+
 
 // Mock users for now - in a real app this would come from a user service
 const MOCK_USERS: User[] = [
@@ -53,16 +53,69 @@ const MOCK_USERS: User[] = [
 ];
 
 export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ className = '' }) => {
-  const { showSuccess, showError } = useNotifications();
-  const [loading, setLoading] = useState(false);
+  const { showError } = useNotifications();
+  const { state: asyncState, executeAdminOperation } = useAdminOperation();
   const [availableRealms, setAvailableRealms] = useState<GameRealm[]>([]);
-  const [formData, setFormData] = useState<DepositFormData>({
-    userId: '',
-    realmId: '',
-    amount: ''
-  });
-  const [formErrors, setFormErrors] = useState<Partial<DepositFormData>>({});
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [depositPreview, setDepositPreview] = useState<{
+    user: User;
+    realm: GameRealm;
+    amount: number;
+  } | null>(null);
+
+  // Form validation setup
+  const [formState, formActions] = useFormValidation({
+    initialValues: {
+      userId: '',
+      realmId: '',
+      amount: ''
+    },
+    validators: {
+      userId: (value) => {
+        if (!value || value.toString().trim().length === 0) {
+          return {
+            isValid: false,
+            errors: [{
+              field: 'userId',
+              code: 'REQUIRED_FIELD_MISSING',
+              message: 'Please select a user'
+            }]
+          };
+        }
+        return { isValid: true, errors: [] };
+      },
+      realmId: (value) => {
+        if (!value || value.toString().trim().length === 0) {
+          return {
+            isValid: false,
+            errors: [{
+              field: 'realmId',
+              code: 'REQUIRED_FIELD_MISSING',
+              message: 'Please select a realm'
+            }]
+          };
+        }
+        return { isValid: true, errors: [] };
+      },
+      amount: (value, formData) => {
+        const validation = MultiWalletValidationService.validateAdminGoldDeposit(
+          formData.userId || '',
+          formData.realmId || '',
+          parseFloat(value.toString()) || 0,
+          'admin' // Mock admin ID
+        );
+        
+        return {
+          isValid: validation.errors.filter(e => e.field === 'amount').length === 0,
+          errors: validation.errors.filter(e => e.field === 'amount'),
+          warnings: validation.warnings?.filter(w => w.field === 'amount')
+        };
+      }
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    debounceDelay: 500
+  });
 
   // Load available realms on component mount
   useEffect(() => {
@@ -70,113 +123,85 @@ export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ cl
   }, []);
 
   const loadAvailableRealms = async () => {
-    try {
+    const { error } = await UIErrorHandler.withErrorHandling(async () => {
       // Initialize the service if needed
       GameManagementService.initialize();
       const realms = GameManagementService.getAllActiveRealms();
       setAvailableRealms(realms);
-    } catch (error) {
-      console.error('Failed to load realms:', error);
-      showError('Load Failed', 'Failed to load available realms. Please try again.');
+      return realms;
+    }, {
+      context: 'load_realms',
+      showNotification: true,
+      fallbackMessage: 'Failed to load available realms'
+    });
+
+    if (error) {
+      showError('Load Failed', UIErrorHandler.getUserFriendlyMessage(error));
     }
   };
 
-  const validateForm = (data: DepositFormData): boolean => {
-    const errors: Partial<DepositFormData> = {};
-
-    if (!data.userId.trim()) {
-      errors.userId = 'Please select a user';
+  const handleFormSubmit = async () => {
+    // Validate form
+    const validationResult = await formActions.validateForm();
+    if (!validationResult.isValid) {
+      showError('Validation Error', 'Please fix the form errors before submitting.');
+      return;
     }
 
-    if (!data.realmId.trim()) {
-      errors.realmId = 'Please select a realm';
+    // Prepare deposit preview
+    const selectedUser = MOCK_USERS.find(u => u.id === formState.values.userId);
+    const selectedRealm = availableRealms.find(r => r.id === formState.values.realmId);
+    const amount = parseFloat(formState.values.amount);
+
+    if (!selectedUser || !selectedRealm) {
+      showError('Invalid Selection', 'Please select valid user and realm.');
+      return;
     }
 
-    if (!data.amount.trim()) {
-      errors.amount = 'Amount is required';
-    } else {
-      const amount = parseFloat(data.amount);
-      if (isNaN(amount) || amount <= 0) {
-        errors.amount = 'Amount must be a positive number';
-      } else if (amount > 1000000) {
-        errors.amount = 'Amount cannot exceed 1,000,000 gold';
-      }
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (field: keyof DepositFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear error for this field
-    if (formErrors[field]) {
-      setFormErrors(prev => ({ ...prev, [field]: undefined }));
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!validateForm(formData)) return;
+    setDepositPreview({
+      user: selectedUser,
+      realm: selectedRealm,
+      amount
+    });
     setShowConfirmDialog(true);
   };
 
-  const handleConfirmDeposit = async () => {
-    if (!validateForm(formData)) return;
+  const confirmDeposit = async () => {
+    if (!depositPreview) return;
 
-    setLoading(true);
-    setShowConfirmDialog(false);
-
-    try {
-      const amount = parseFloat(formData.amount);
-      const selectedUser = MOCK_USERS.find(u => u.id === formData.userId);
-      const selectedRealm = availableRealms.find(r => r.id === formData.realmId);
-
-      if (!selectedUser || !selectedRealm) {
-        throw new Error('Invalid user or realm selection');
+    const result = await executeAdminOperation(
+      () => MultiWalletService.addSuspendedGold(
+        depositPreview.user.id,
+        depositPreview.realm.id,
+        depositPreview.amount,
+        'admin' // Mock admin ID
+      ),
+      'deposit_gold',
+      {
+        successMessage: `Successfully deposited ${depositPreview.amount} gold to ${depositPreview.user.username}'s ${depositPreview.realm.displayName} wallet`
       }
+    );
 
-      // Deposit gold using MultiWalletService
-      await MultiWalletService.addSuspendedGold(
-        formData.userId,
-        formData.realmId,
-        amount,
-        'admin' // TODO: Get actual admin ID from auth context
-      );
-
+    if (result.success) {
       // Reset form
-      setFormData({
-        userId: '',
-        realmId: '',
-        amount: ''
-      });
-
-      showSuccess(
-        'Gold Deposited',
-        `Successfully deposited ${amount.toLocaleString()} gold to ${selectedUser.username}'s ${selectedRealm.displayName} wallet. The gold will be suspended for 2 months.`
-      );
-    } catch (error: any) {
-      console.error('Failed to deposit gold:', error);
-      showError(
-        'Deposit Failed',
-        error.message || 'Failed to deposit gold. Please try again.'
-      );
-    } finally {
-      setLoading(false);
+      formActions.reset();
+      setShowConfirmDialog(false);
+      setDepositPreview(null);
     }
   };
 
-  const handleCancelConfirm = () => {
+  const cancelDeposit = () => {
     setShowConfirmDialog(false);
+    setDepositPreview(null);
   };
 
-  const selectedUser = MOCK_USERS.find(u => u.id === formData.userId);
-  const selectedRealm = availableRealms.find(r => r.id === formData.realmId);
-  const depositAmount = parseFloat(formData.amount) || 0;
+  const selectedUser = MOCK_USERS.find(u => u.id === formState.values.userId);
+  const selectedRealm = availableRealms.find(r => r.id === formState.values.realmId);
+  const depositAmount = parseFloat(formState.values.amount) || 0;
 
   return (
-    <LoadingOverlay isLoading={loading} message="Processing gold deposit...">
-      <div className={`admin-gold-deposit-panel ${className}`}>
+    <LoadingOverlay isLoading={asyncState.loading} message="Processing gold deposit...">
+      <div className={`admin-gold-deposit-panel ${className}`} data-testid="admin-gold-deposit-panel">
         <div className="admin-gold-deposit-panel__header">
           <h3 className="admin-gold-deposit-panel__title">Admin Gold Deposit</h3>
           <p className="admin-gold-deposit-panel__description">
@@ -185,72 +210,74 @@ export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ cl
           </p>
         </div>
 
+        {asyncState.error && (
+          <div className="admin-gold-deposit-panel__error-banner">
+            <span className="admin-gold-deposit-panel__error-icon">⚠️</span>
+            <span>{asyncState.error}</span>
+          </div>
+        )}
+
         <div className="admin-gold-deposit-panel__form">
           <div className="admin-gold-deposit-panel__form-fields">
             {/* User Selection */}
-            <div className="admin-gold-deposit-panel__field">
-              <label className="admin-gold-deposit-panel__label">
-                Select User
-              </label>
-              <select
-                className={`admin-gold-deposit-panel__select ${formErrors.userId ? 'admin-gold-deposit-panel__select--error' : ''}`}
-                value={formData.userId}
-                onChange={(e) => handleInputChange('userId', e.target.value)}
-              >
-                <option value="">Choose a user...</option>
-                {MOCK_USERS.map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.username}#{user.discriminator} ({user.roles[0]?.name || 'No role'})
-                  </option>
-                ))}
-              </select>
-              {formErrors.userId && (
-                <span className="admin-gold-deposit-panel__error">{formErrors.userId}</span>
-              )}
-            </div>
+            <FormField
+              label="Select User"
+              name="userId"
+              type="select"
+              value={formState.values.userId}
+              onChange={(value) => formActions.setValue('userId', value)}
+              onBlur={() => formActions.markFieldTouched('userId')}
+              error={formState.errors.userId}
+              required
+              disabled={asyncState.loading}
+              options={MOCK_USERS.map(user => ({
+                value: user.id,
+                label: `${user.username}#${user.discriminator} (${user.roles[0]?.name || 'No role'})`
+              }))}
+              placeholder="Choose a user..."
+              data-testid="user-select"
+            />
 
             {/* Realm Selection */}
-            <div className="admin-gold-deposit-panel__field">
-              <label className="admin-gold-deposit-panel__label">
-                Select Realm
-              </label>
-              <select
-                className={`admin-gold-deposit-panel__select ${formErrors.realmId ? 'admin-gold-deposit-panel__select--error' : ''}`}
-                value={formData.realmId}
-                onChange={(e) => handleInputChange('realmId', e.target.value)}
-              >
-                <option value="">Choose a realm...</option>
-                {availableRealms.map(realm => (
-                  <option key={realm.id} value={realm.id}>
-                    {realm.gameName} - {realm.realmName}
-                  </option>
-                ))}
-              </select>
-              {formErrors.realmId && (
-                <span className="admin-gold-deposit-panel__error">{formErrors.realmId}</span>
-              )}
-            </div>
+            <FormField
+              label="Select Realm"
+              name="realmId"
+              type="select"
+              value={formState.values.realmId}
+              onChange={(value) => formActions.setValue('realmId', value)}
+              onBlur={() => formActions.markFieldTouched('realmId')}
+              error={formState.errors.realmId}
+              required
+              disabled={asyncState.loading}
+              options={availableRealms.map(realm => ({
+                value: realm.id,
+                label: `${realm.gameName} - ${realm.realmName}`
+              }))}
+              placeholder="Choose a realm..."
+              data-testid="realm-select"
+            />
 
             {/* Amount Input */}
-            <div className="admin-gold-deposit-panel__field">
-              <Input
-                label="Gold Amount"
-                type="number"
-                value={formData.amount}
-                onChange={(e) => handleInputChange('amount', e.target.value)}
-                error={formErrors.amount}
-                placeholder="Enter amount (e.g., 10000)"
-                helperText="Gold will be suspended for 2 months from deposit date"
-                min="1"
-                max="1000000"
-                step="1"
-                fullWidth
-              />
-            </div>
+            <AmountField
+              label="Gold Amount"
+              name="amount"
+              value={formState.values.amount}
+              onChange={(value) => formActions.setValue('amount', value)}
+              onBlur={() => formActions.markFieldTouched('amount')}
+              error={formState.errors.amount}
+              warning={formState.warnings.amount?.[0]}
+              required
+              disabled={asyncState.loading}
+              currency="gold"
+              minAmount={1}
+              maxAmount={1000000}
+              helpText="Gold will be suspended for 2 months from deposit date"
+              data-testid="amount-input"
+            />
           </div>
 
           {/* Deposit Summary */}
-          {formData.userId && formData.realmId && depositAmount > 0 && (
+          {formState.values.userId && formState.values.realmId && depositAmount > 0 && (
             <div className="admin-gold-deposit-panel__summary">
               <h4 className="admin-gold-deposit-panel__summary-title">Deposit Summary</h4>
               <div className="admin-gold-deposit-panel__summary-details">
@@ -291,8 +318,10 @@ export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ cl
           <div className="admin-gold-deposit-panel__actions">
             <Button
               variant="primary"
-              onClick={handleSubmit}
-              disabled={!formData.userId || !formData.realmId || !formData.amount || depositAmount <= 0}
+              onClick={handleFormSubmit}
+              disabled={!formState.isValid || asyncState.loading}
+              loading={asyncState.loading}
+              data-testid="deposit-button"
             >
               Deposit Gold
             </Button>
@@ -300,7 +329,7 @@ export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ cl
         </div>
 
         {/* Confirmation Dialog */}
-        {showConfirmDialog && (
+        {showConfirmDialog && depositPreview && (
           <div className="admin-gold-deposit-panel__dialog-overlay">
             <div className="admin-gold-deposit-panel__dialog">
               <div className="admin-gold-deposit-panel__dialog-header">
@@ -308,9 +337,9 @@ export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ cl
               </div>
               <div className="admin-gold-deposit-panel__dialog-content">
                 <p>
-                  Are you sure you want to deposit <strong>{depositAmount.toLocaleString()} gold</strong> to{' '}
-                  <strong>{selectedUser?.username}#{selectedUser?.discriminator}</strong>'s{' '}
-                  <strong>{selectedRealm?.displayName}</strong> wallet?
+                  Are you sure you want to deposit <strong>{depositPreview.amount.toLocaleString()} gold</strong> to{' '}
+                  <strong>{depositPreview.user.username}#{depositPreview.user.discriminator}</strong>'s{' '}
+                  <strong>{depositPreview.realm.displayName}</strong> wallet?
                 </p>
                 <div className="admin-gold-deposit-panel__dialog-warning">
                   <p>⚠️ This gold will be suspended for 2 months and cannot be directly withdrawn until {new Date(Date.now() + (2 * 30 * 24 * 60 * 60 * 1000)).toLocaleDateString()}.</p>
@@ -318,10 +347,19 @@ export const AdminGoldDepositPanel: React.FC<AdminGoldDepositPanelProps> = ({ cl
                 </div>
               </div>
               <div className="admin-gold-deposit-panel__dialog-actions">
-                <Button variant="secondary" onClick={handleCancelConfirm}>
+                <Button 
+                  variant="secondary" 
+                  onClick={cancelDeposit}
+                  disabled={asyncState.loading}
+                >
                   Cancel
                 </Button>
-                <Button variant="primary" onClick={handleConfirmDeposit}>
+                <Button 
+                  variant="primary" 
+                  onClick={confirmDeposit}
+                  loading={asyncState.loading}
+                  data-testid="confirm-deposit-button"
+                >
                   Confirm Deposit
                 </Button>
               </div>

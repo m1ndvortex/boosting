@@ -44,20 +44,18 @@ export const useMultiWallet = (userId: string): MultiWalletState & MultiWalletAc
       setLoading(true);
       setError(null);
 
-      // Get or create multi-wallet
-      const wallet = MultiWalletService.getWalletWithMigration(userId);
-      
-      // Get available realms
-      const availableRealms = MultiWalletService.getAvailableRealms();
-      
-      // Get transactions
-      const transactions = MultiWalletService.getMultiWalletTransactions(userId);
+      // Use optimized data loading
+      const [walletResult, realmsResult, transactionsResult] = await Promise.all([
+        MultiWalletService.getMultiWalletAsync(userId),
+        MultiWalletService.getAvailableRealmsAsync(),
+        MultiWalletService.getRecentTransactions(userId, 50) // Load more for hook
+      ]);
 
       setState(prev => ({
         ...prev,
-        wallet,
-        availableRealms,
-        transactions,
+        wallet: walletResult,
+        availableRealms: realmsResult,
+        transactions: transactionsResult,
         loading: false,
         error: null
       }));
@@ -193,14 +191,21 @@ export const useMultiWallet = (userId: string): MultiWalletState & MultiWalletAc
     }
   }, [userId, refreshWallet]);
 
-  // Process suspended gold expiry periodically
+  // Process suspended gold expiry periodically and preload dashboard data
   useEffect(() => {
     const processExpiry = async () => {
       try {
-        await MultiWalletService.processSuspendedGoldExpiry();
-        // Refresh wallet if user has suspended gold
-        if (state.wallet && MultiWalletService.getTotalSuspendedGold(userId) > 0) {
-          refreshWallet();
+        // Preload dashboard data for better performance
+        await MultiWalletService.preloadDashboardData(userId);
+        
+        // Process suspended gold expiry (if method exists)
+        if ('processSuspendedGoldExpiry' in MultiWalletService) {
+          await (MultiWalletService as any).processSuspendedGoldExpiry();
+          
+          // Check if refresh is needed (simplified check)
+          if (state.wallet && Object.values(state.wallet.goldWallets).some(gw => gw.suspendedGold > 0)) {
+            refreshWallet();
+          }
         }
       } catch (error) {
         console.error('Error processing suspended gold expiry:', error);

@@ -183,7 +183,6 @@ export const WalletPage: React.FC = () => {
               // Multi-wallet props
               multiWallet={useMultiWalletSystem ? (multiWallet.wallet || undefined) : undefined}
               availableRealms={useMultiWalletSystem ? multiWallet.availableRealms : undefined}
-              transactions={useMultiWalletSystem ? multiWallet.transactions : undefined}
               onMultiWalletDeposit={useMultiWalletSystem ? handleMultiWalletDeposit : undefined}
               onMultiWalletWithdraw={useMultiWalletSystem ? handleMultiWalletWithdraw : undefined}
               onMultiWalletConvert={useMultiWalletSystem ? handleMultiWalletConvert : undefined}

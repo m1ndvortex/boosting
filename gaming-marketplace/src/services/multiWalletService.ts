@@ -10,7 +10,12 @@ import type {
 } from '../types';
 import { StorageService } from './storage';
 import { MULTI_WALLET_STORAGE_KEYS } from '../types';
-import { WalletService } from './walletService';
+import { ErrorService, ErrorCode } from './errorService';
+import { MultiWalletValidationService } from './multiWalletValidationService';
+import { OptimizedDataLoader } from './optimizedDataLoader';
+import { CacheService } from './cacheService';
+import { TransactionIndexService } from './transactionIndexService';
+// import { WalletService } from './walletService'; // Unused import
 
 // Multi-Wallet Error Class
 export class MultiWalletError extends Error {
@@ -34,8 +39,16 @@ export class MultiWalletService {
   
   /**
    * Get user's multi-wallet, creating default if doesn't exist
+   * Uses optimized data loading with caching
    */
   static getMultiWallet(userId: string): MultiWallet {
+    // Try to get from cache first
+    const cacheKey = CacheService.getWalletCacheKey(userId);
+    const cached = CacheService.get<MultiWallet>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const walletKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLETS}-${userId}`;
     const existingWallet = StorageService.getItem<MultiWallet>(walletKey);
     
@@ -51,6 +64,8 @@ export class MultiWalletService {
         });
       });
       
+      // Cache the wallet
+      CacheService.set(cacheKey, existingWallet);
       return existingWallet;
     }
     
@@ -65,289 +80,567 @@ export class MultiWalletService {
       updatedAt: new Date()
     };
     
-    // Save and return
+    // Save and cache
     this.saveMultiWallet(defaultWallet);
+    CacheService.set(cacheKey, defaultWallet);
     return defaultWallet;
+  }
+
+  /**
+   * Get user's multi-wallet asynchronously with optimized loading
+   */
+  static async getMultiWalletAsync(userId: string): Promise<MultiWallet> {
+    const result = await OptimizedDataLoader.loadUserWallet(userId);
+    return result.data;
   }
   
   /**
-   * Save multi-wallet to storage
+   * Save multi-wallet to storage and update cache
    */
   private static saveMultiWallet(wallet: MultiWallet): void {
     const walletKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLETS}-${wallet.userId}`;
     wallet.updatedAt = new Date();
     StorageService.setItem(walletKey, wallet);
+    
+    // Update cache
+    const cacheKey = CacheService.getWalletCacheKey(wallet.userId);
+    CacheService.set(cacheKey, wallet);
   }
   
   /**
    * Create a new gold wallet for a specific realm
    */
   static async createGoldWallet(userId: string, realmId: string): Promise<MultiWallet> {
-    const wallet = this.getMultiWallet(userId);
-    
-    // Check if wallet already exists
-    if (wallet.goldWallets[realmId]) {
-      throw new MultiWalletError(
-        'DUPLICATE_WALLET',
-        'Gold wallet for this realm already exists',
-        { realmId }
-      );
+    try {
+      const wallet = this.getMultiWallet(userId);
+      
+      // Validate wallet creation request
+      const validation = MultiWalletValidationService.validateWalletCreation(userId, realmId, wallet);
+      if (!validation.isValid) {
+        const error = validation.errors[0];
+        throw ErrorService.createError(
+          error.code as any,
+          error.details,
+          error.message,
+          userId,
+          'wallet_creation'
+        );
+      }
+      
+      // Get realm information
+      const realm = this.getGameRealm(realmId);
+      if (!realm) {
+        throw ErrorService.createError(
+          'REALM_NOT_FOUND',
+          { realmId },
+          'Game realm not found',
+          userId,
+          'wallet_creation'
+        );
+      }
+
+      if (!realm.isActive) {
+        throw ErrorService.createError(
+          'REALM_NOT_FOUND',
+          { realmId, isActive: realm.isActive },
+          'Game realm is not active',
+          userId,
+          'wallet_creation'
+        );
+      }
+      
+      // Create new gold wallet
+      const goldWallet: GoldWalletBalance = {
+        realmId: realm.id,
+        realmName: realm.realmName,
+        gameName: realm.gameName,
+        suspendedGold: 0,
+        withdrawableGold: 0,
+        totalGold: 0,
+        suspendedDeposits: []
+      };
+      
+      wallet.goldWallets[realmId] = goldWallet;
+      this.saveMultiWallet(wallet);
+      
+      return wallet;
+    } catch (error) {
+      throw ErrorService.handleError(error, 'MultiWalletService.createGoldWallet', userId);
     }
-    
-    // Get realm information
-    const realm = this.getGameRealm(realmId);
-    if (!realm) {
-      throw new MultiWalletError(
-        'REALM_NOT_FOUND',
-        'Game realm not found',
-        { realmId }
-      );
-    }
-    
-    // Create new gold wallet
-    const goldWallet: GoldWalletBalance = {
-      realmId: realm.id,
-      realmName: realm.realmName,
-      gameName: realm.gameName,
-      suspendedGold: 0,
-      withdrawableGold: 0,
-      totalGold: 0,
-      suspendedDeposits: []
-    };
-    
-    wallet.goldWallets[realmId] = goldWallet;
-    this.saveMultiWallet(wallet);
-    
-    return wallet;
   }
   
   /**
-   * Remove a gold wallet (only if balance is zero or with confirmation)
+   * Remove a gold wallet
    */
   static async removeGoldWallet(userId: string, realmId: string, forceRemove: boolean = false): Promise<MultiWallet> {
-    const wallet = this.getMultiWallet(userId);
-    
-    const goldWallet = wallet.goldWallets[realmId];
-    if (!goldWallet) {
-      throw new MultiWalletError(
-        'WALLET_NOT_FOUND',
-        'Gold wallet not found',
-        { realmId }
-      );
+    try {
+      const wallet = this.getMultiWallet(userId);
+      
+      // Validate wallet removal request
+      const validation = MultiWalletValidationService.validateWalletRemoval(userId, realmId, wallet);
+      if (!validation.isValid) {
+        const error = validation.errors[0];
+        throw ErrorService.createError(
+          error.code as any,
+          error.details,
+          error.message,
+          userId,
+          'wallet_removal'
+        );
+      }
+      
+      const goldWallet = wallet.goldWallets[realmId];
+      
+      // Check if wallet has balance (unless forced)
+      if (!forceRemove && goldWallet.totalGold > 0) {
+        throw ErrorService.createError(
+          'WALLET_HAS_BALANCE',
+          { 
+            realmId, 
+            balance: goldWallet.totalGold,
+            suspendedGold: goldWallet.suspendedGold,
+            withdrawableGold: goldWallet.withdrawableGold
+          },
+          `Cannot remove wallet with ${goldWallet.totalGold} gold balance. Transfer or withdraw funds first.`,
+          userId,
+          'wallet_removal'
+        );
+      }
+      
+      delete wallet.goldWallets[realmId];
+      this.saveMultiWallet(wallet);
+      
+      return wallet;
+    } catch (error) {
+      throw ErrorService.handleError(error, 'MultiWalletService.removeGoldWallet', userId);
     }
-    
-    // Check if wallet has balance
-    if (goldWallet.totalGold > 0 && !forceRemove) {
-      throw new MultiWalletError(
-        'INSUFFICIENT_BALANCE',
-        'Cannot remove wallet with non-zero balance without confirmation',
-        { balance: goldWallet.totalGold, realmId }
-      );
-    }
-    
-    // Remove the wallet
-    delete wallet.goldWallets[realmId];
-    this.saveMultiWallet(wallet);
-    
-    return wallet;
   }
-  
-  // ===== BALANCE OPERATIONS =====
+
+  /**
+   * Get available realms for creating gold wallets with caching
+   */
+  static getAvailableRealms(): GameRealm[] {
+    // Try cache first
+    const cacheKey = CacheService.getRealmsCacheKey();
+    const cached = CacheService.get<GameRealm[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    // Load from storage
+    const realms = StorageService.getItem<GameRealm[]>(MULTI_WALLET_STORAGE_KEYS.GAME_REALMS) || [];
+    const activeRealms = realms.filter(realm => realm.isActive);
+    
+    // Cache the result
+    CacheService.set(cacheKey, activeRealms);
+    return activeRealms;
+  }
+
+  /**
+   * Get available realms asynchronously with optimized loading
+   */
+  static async getAvailableRealmsAsync(): Promise<GameRealm[]> {
+    const result = await OptimizedDataLoader.loadActiveRealms();
+    return result.data;
+  }
+
+  // ===== TRANSACTION METHODS =====
   
   /**
-   * Update static wallet balance (USD, Toman)
+   * Deduct amount for purchase
    */
-  static async updateStaticBalance(
-    userId: string, 
-    currency: 'usd' | 'toman', 
-    amount: number
-  ): Promise<MultiWallet> {
-    const wallet = this.getMultiWallet(userId);
+  static async deductForPurchase(
+    userId: string,
+    amount: number,
+    walletType: 'static' | 'gold',
+    walletId: string,
+    orderId: string,
+    goldType?: 'suspended' | 'withdrawable'
+  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
+    return await MultiWalletTransactionService.createPurchaseTransaction(
+      userId,
+      walletType,
+      walletId,
+      amount,
+      walletType === 'gold' ? 'gold' : (walletId as 'usd' | 'toman'),
+      goldType,
+      orderId
+    );
+  }
+
+  /**
+   * Add earnings to wallet
+   */
+  static async addEarnings(
+    userId: string,
+    amount: number,
+    walletType: 'static' | 'gold',
+    walletId: string,
+    orderId: string
+  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
+    return await MultiWalletTransactionService.createEarningTransaction(
+      userId,
+      walletType,
+      walletId,
+      amount,
+      walletType === 'gold' ? 'gold' : (walletId as 'usd' | 'toman'),
+      'withdrawable', // Earnings are always withdrawable
+      orderId
+    );
+  }
+
+  /**
+   * Deposit to wallet
+   */
+  static async deposit(
+    userId: string,
+    amount: number,
+    walletType: 'static' | 'gold',
+    walletId: string,
+    paymentMethod: string
+  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
     
-    const newBalance = wallet.staticWallets[currency].balance + amount;
-    if (newBalance < 0) {
-      throw new MultiWalletError(
-        'INSUFFICIENT_BALANCE',
-        `Insufficient ${currency.toUpperCase()} balance`,
-        { currentBalance: wallet.staticWallets[currency].balance, requestedAmount: amount }
+    if (walletType === 'static') {
+      return await MultiWalletTransactionService.createStaticWalletDeposit(
+        userId,
+        walletId as 'usd' | 'toman',
+        amount,
+        paymentMethod
+      );
+    } else {
+      return await MultiWalletTransactionService.createGoldWalletDeposit(
+        userId,
+        walletId,
+        amount,
+        'withdrawable'
       );
     }
-    
-    wallet.staticWallets[currency].balance = newBalance;
-    this.saveMultiWallet(wallet);
-    
-    return wallet;
   }
+
+  /**
+   * Request withdrawal from wallet
+   */
+  static async requestWithdrawal(
+    userId: string,
+    amount: number,
+    walletType: 'static' | 'gold',
+    walletId: string,
+    paymentMethod: string
+  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
+    
+    if (walletType === 'static') {
+      return await MultiWalletTransactionService.createStaticWalletWithdrawal(
+        userId,
+        walletId as 'usd' | 'toman',
+        amount,
+        paymentMethod
+      );
+    } else {
+      return await MultiWalletTransactionService.createGoldWalletWithdrawal(
+        userId,
+        walletId,
+        amount,
+        'withdrawable'
+      );
+    }
+  }
+
+  /**
+   * Convert between wallets
+   */
+  static async convertBetweenWallets(
+    userId: string,
+    fromWalletId: string,
+    toWalletId: string,
+    amount: number,
+    goldType?: 'suspended' | 'withdrawable'
+  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
+    
+    // Determine wallet types and currencies based on wallet IDs
+    const fromWalletType = ['usd', 'toman'].includes(fromWalletId) ? 'static' : 'gold';
+    const toWalletType = ['usd', 'toman'].includes(toWalletId) ? 'static' : 'gold';
+    const fromCurrency = fromWalletType === 'static' ? (fromWalletId as 'usd' | 'toman') : 'gold';
+    const toCurrency = toWalletType === 'static' ? (toWalletId as 'usd' | 'toman') : 'gold';
+    
+    return await MultiWalletTransactionService.createConversionTransaction(
+      userId,
+      fromWalletType,
+      fromWalletId,
+      toWalletType,
+      toWalletId,
+      amount,
+      fromCurrency,
+      toCurrency,
+      goldType
+    );
+  }
+
+  /**
+   * Convert suspended gold to fiat currency
+   */
+  static async convertSuspendedGoldToFiat(
+    userId: string,
+    realmId: string,
+    amount: number,
+    targetCurrency: 'usd' | 'toman'
+  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
+    const { ConversionFeeService } = await import('./conversionFeeService');
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
+    
+    // Calculate conversion with fees
+    const { convertedAmount, feeAmount } = ConversionFeeService.applyConversionFee(amount, targetCurrency);
+    
+    // Create conversion transaction
+    const result = await MultiWalletTransactionService.createConversionTransaction(
+      userId,
+      'gold',
+      realmId,
+      'static',
+      targetCurrency,
+      amount,
+      'gold',
+      targetCurrency,
+      'suspended'
+    );
+    
+    // Update the transaction with fee information
+    result.transaction.conversionFee = feeAmount;
+    result.transaction.amount = convertedAmount;
+    
+    return result;
+  }
+
+  /**
+   * Get user transactions with caching
+   */
+  static getTransactions(userId: string): MultiWalletTransaction[] {
+    // Try cache first
+    const cacheKey = CacheService.getTransactionsCacheKey(userId);
+    const cached = CacheService.get<MultiWalletTransaction[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    // Load from storage
+    const userTransactionKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLET_TRANSACTIONS}-${userId}`;
+    let transactions = StorageService.getItem<MultiWalletTransaction[]>(userTransactionKey) || [];
+
+    // Parse dates
+    transactions = transactions.map(transaction => ({
+      ...transaction,
+      createdAt: new Date(transaction.createdAt)
+    }));
+
+    const sortedTransactions = transactions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    
+    // Cache the result
+    CacheService.set(cacheKey, sortedTransactions);
+    return sortedTransactions;
+  }
+
+  /**
+   * Get user transactions asynchronously with pagination and optimized queries
+   */
+  static async getTransactionsAsync(
+    userId: string,
+    options?: {
+      page?: number;
+      limit?: number;
+      walletType?: 'static' | 'gold';
+      walletId?: string;
+      type?: MultiWalletTransaction['type'];
+      status?: MultiWalletTransaction['status'];
+    }
+  ): Promise<{
+    transactions: MultiWalletTransaction[];
+    total: number;
+    hasMore: boolean;
+    queryTime: number;
+  }> {
+    const result = await TransactionIndexService.queryTransactions({
+      userId,
+      ...options,
+      offset: options?.page ? (options.page - 1) * (options.limit || 20) : 0,
+      limit: options?.limit || 20
+    });
+
+    return result;
+  }
+
+  /**
+   * Get recent transactions for dashboard (optimized)
+   */
+  static async getRecentTransactions(userId: string, limit: number = 10): Promise<MultiWalletTransaction[]> {
+    const result = await OptimizedDataLoader.loadRecentTransactions(userId, limit);
+    return result.data;
+  }
+
+  // ===== BALANCE UPDATE METHODS =====
   
+  /**
+   * Update static wallet balance
+   */
+  static async updateStaticBalance(
+    userId: string,
+    currency: 'usd' | 'toman',
+    amount: number
+  ): Promise<MultiWallet> {
+    try {
+      const wallet = this.getMultiWallet(userId);
+      
+      // Validate transaction if it's a debit
+      if (amount < 0) {
+        const validation = MultiWalletValidationService.validateTransaction(
+          Math.abs(amount),
+          'static',
+          currency,
+          wallet,
+          'debit'
+        );
+        
+        if (!validation.isValid) {
+          const error = validation.errors[0];
+          throw ErrorService.createError(
+            error.code as any,
+            error.details,
+            error.message,
+            userId,
+            'static_balance_update'
+          );
+        }
+      }
+      
+      const newBalance = wallet.staticWallets[currency].balance + amount;
+      
+      // Additional safety check
+      if (newBalance < 0) {
+        throw ErrorService.createError(
+          ErrorCode.INSUFFICIENT_BALANCE,
+          { 
+            current: wallet.staticWallets[currency].balance, 
+            requested: Math.abs(amount),
+            currency,
+            newBalance
+          },
+          `Insufficient ${currency.toUpperCase()} balance`,
+          userId,
+          'static_balance_update'
+        );
+      }
+      
+      wallet.staticWallets[currency].balance = newBalance;
+      this.saveMultiWallet(wallet);
+      return wallet;
+    } catch (error) {
+      throw ErrorService.handleError(error, 'MultiWalletService.updateStaticBalance', userId);
+    }
+  }
+
   /**
    * Update gold wallet balance
    */
   static async updateGoldBalance(
-    userId: string, 
-    realmId: string, 
-    suspendedAmount: number, 
+    userId: string,
+    realmId: string,
+    suspendedAmount: number,
     withdrawableAmount: number
   ): Promise<MultiWallet> {
-    const wallet = this.getMultiWallet(userId);
-    
-    const goldWallet = wallet.goldWallets[realmId];
-    if (!goldWallet) {
-      throw new MultiWalletError(
-        'WALLET_NOT_FOUND',
-        'Gold wallet not found',
-        { realmId }
-      );
-    }
-    
-    const newSuspended = goldWallet.suspendedGold + suspendedAmount;
-    const newWithdrawable = goldWallet.withdrawableGold + withdrawableAmount;
-    
-    if (newSuspended < 0 || newWithdrawable < 0) {
-      throw new MultiWalletError(
-        'INSUFFICIENT_BALANCE',
-        'Insufficient gold balance',
-        { 
-          currentSuspended: goldWallet.suspendedGold, 
-          currentWithdrawable: goldWallet.withdrawableGold,
-          requestedSuspended: suspendedAmount,
-          requestedWithdrawable: withdrawableAmount
+    try {
+      const wallet = this.getMultiWallet(userId);
+      const goldWallet = wallet.goldWallets[realmId];
+      
+      if (!goldWallet) {
+        throw ErrorService.createError(
+          'WALLET_NOT_FOUND',
+          { realmId },
+          'Gold wallet not found',
+          userId,
+          'gold_balance_update'
+        );
+      }
+      
+      // Validate transactions if they are debits
+      if (suspendedAmount < 0) {
+        const validation = MultiWalletValidationService.validateTransaction(
+          Math.abs(suspendedAmount),
+          'gold',
+          realmId,
+          wallet,
+          'debit',
+          'suspended'
+        );
+        
+        if (!validation.isValid) {
+          const error = validation.errors[0];
+          throw ErrorService.createError(
+            error.code as any,
+            error.details,
+            error.message,
+            userId,
+            'gold_balance_update'
+          );
         }
-      );
+      }
+      
+      if (withdrawableAmount < 0) {
+        const validation = MultiWalletValidationService.validateTransaction(
+          Math.abs(withdrawableAmount),
+          'gold',
+          realmId,
+          wallet,
+          'debit',
+          'withdrawable'
+        );
+        
+        if (!validation.isValid) {
+          const error = validation.errors[0];
+          throw ErrorService.createError(
+            error.code as any,
+            error.details,
+            error.message,
+            userId,
+            'gold_balance_update'
+          );
+        }
+      }
+      
+      const newSuspended = goldWallet.suspendedGold + suspendedAmount;
+      const newWithdrawable = goldWallet.withdrawableGold + withdrawableAmount;
+      
+      // Additional safety checks
+      if (newSuspended < 0 || newWithdrawable < 0) {
+        throw ErrorService.createError(
+          ErrorCode.INSUFFICIENT_BALANCE,
+          { 
+            currentSuspended: goldWallet.suspendedGold, 
+            currentWithdrawable: goldWallet.withdrawableGold,
+            requestedSuspended: suspendedAmount,
+            requestedWithdrawable: withdrawableAmount,
+            newSuspended,
+            newWithdrawable
+          },
+          'Insufficient gold balance for this operation',
+          userId,
+          'gold_balance_update'
+        );
+      }
+      
+      goldWallet.suspendedGold = newSuspended;
+      goldWallet.withdrawableGold = newWithdrawable;
+      goldWallet.totalGold = newSuspended + newWithdrawable;
+      
+      this.saveMultiWallet(wallet);
+      return wallet;
+    } catch (error) {
+      throw ErrorService.handleError(error, 'MultiWalletService.updateGoldBalance', userId);
     }
-    
-    goldWallet.suspendedGold = newSuspended;
-    goldWallet.withdrawableGold = newWithdrawable;
-    goldWallet.totalGold = newSuspended + newWithdrawable;
-    
-    this.saveMultiWallet(wallet);
-    return wallet;
   }
-  
-  // ===== MIGRATION UTILITIES =====
-  
-  /**
-   * Migrate old wallet format to multi-wallet format
-   */
-  static migrateToMultiWallet(userId: string): MultiWallet {
-    // Get existing wallet using old service
-    const oldWallet = WalletService.getWallet(userId);
-    
-    // Create multi-wallet structure
-    const multiWallet: MultiWallet = {
-      userId,
-      staticWallets: {
-        usd: { balance: oldWallet.balances.usd || 0, currency: 'usd' },
-        toman: { balance: oldWallet.balances.toman || 0, currency: 'toman' }
-      },
-      goldWallets: {},
-      updatedAt: new Date()
-    };
-    
-    // If there's existing gold, create a default gold wallet
-    if (oldWallet.balances.gold && oldWallet.balances.gold > 0) {
-      multiWallet.goldWallets['default-gold'] = {
-        realmId: 'default-gold',
-        realmName: 'General Gold',
-        gameName: 'Multi-Game',
-        suspendedGold: 0,
-        withdrawableGold: oldWallet.balances.gold,
-        totalGold: oldWallet.balances.gold,
-        suspendedDeposits: []
-      };
-    }
-    
-    // Save the new wallet
-    this.saveMultiWallet(multiWallet);
-    
-    return multiWallet;
-  }
-  
-  /**
-   * Check if user needs migration
-   */
-  static needsMigration(userId: string): boolean {
-    const walletKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLETS}-${userId}`;
-    return !StorageService.hasItem(walletKey);
-  }
-  
-  /**
-   * Get wallet with automatic migration if needed
-   */
-  static getWalletWithMigration(userId: string): MultiWallet {
-    if (this.needsMigration(userId)) {
-      return this.migrateToMultiWallet(userId);
-    }
-    return this.getMultiWallet(userId);
-  }
-  
-  // ===== HELPER METHODS =====
-  
-  /**
-   * Get game realm information
-   */
-  private static getGameRealm(realmId: string): GameRealm | null {
-    const realms = StorageService.getItem<GameRealm[]>(MULTI_WALLET_STORAGE_KEYS.GAME_REALMS) || [];
-    return realms.find(realm => realm.id === realmId) || null;
-  }
-  
-  /**
-   * Get all available game realms
-   */
-  static getAvailableRealms(): GameRealm[] {
-    const realms = StorageService.getItem<GameRealm[]>(MULTI_WALLET_STORAGE_KEYS.GAME_REALMS) || [];
-    return realms.filter(realm => realm.isActive);
-  }
-  
-  /**
-   * Get user's gold wallet IDs
-   */
-  static getUserGoldWalletIds(userId: string): string[] {
-    const wallet = this.getMultiWallet(userId);
-    return Object.keys(wallet.goldWallets);
-  }
-  
-  /**
-   * Get total balance across all wallets for a currency type
-   */
-  static getTotalBalance(userId: string, currency: 'usd' | 'toman' | 'gold'): number {
-    const wallet = this.getMultiWallet(userId);
-    
-    if (currency === 'usd' || currency === 'toman') {
-      return wallet.staticWallets[currency].balance;
-    }
-    
-    if (currency === 'gold') {
-      return Object.values(wallet.goldWallets).reduce(
-        (total, goldWallet) => total + goldWallet.totalGold, 
-        0
-      );
-    }
-    
-    return 0;
-  }
-  
-  /**
-   * Get withdrawable gold balance across all gold wallets
-   */
-  static getTotalWithdrawableGold(userId: string): number {
-    const wallet = this.getMultiWallet(userId);
-    return Object.values(wallet.goldWallets).reduce(
-      (total, goldWallet) => total + goldWallet.withdrawableGold, 
-      0
-    );
-  }
-  
-  /**
-   * Get suspended gold balance across all gold wallets
-   */
-  static getTotalSuspendedGold(userId: string): number {
-    const wallet = this.getMultiWallet(userId);
-    return Object.values(wallet.goldWallets).reduce(
-      (total, goldWallet) => total + goldWallet.suspendedGold, 
-      0
-    );
-  }
-  
+
   // ===== SUSPENDED GOLD MANAGEMENT =====
   
   /**
@@ -359,512 +652,124 @@ export class MultiWalletService {
     amount: number, 
     adminId: string
   ): Promise<MultiWallet> {
-    if (amount <= 0) {
-      throw new MultiWalletError(
-        'INVALID_TRANSACTION',
-        'Deposit amount must be positive',
-        { amount }
+    try {
+      // Validate admin gold deposit
+      const validation = MultiWalletValidationService.validateAdminGoldDeposit(
+        userId, 
+        realmId, 
+        amount, 
+        adminId
       );
-    }
-    
-    const wallet = this.getMultiWallet(userId);
-    
-    // Ensure gold wallet exists
-    if (!wallet.goldWallets[realmId]) {
-      await this.createGoldWallet(userId, realmId);
-      // Refresh wallet after creation
-      const updatedWallet = this.getMultiWallet(userId);
-      wallet.goldWallets[realmId] = updatedWallet.goldWallets[realmId];
-    }
-    
-    const goldWallet = wallet.goldWallets[realmId];
-    
-    // Create suspended deposit record
-    const depositId = `dep_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-    const depositedAt = new Date();
-    const withdrawableAt = new Date(depositedAt.getTime() + (2 * 30 * 24 * 60 * 60 * 1000)); // 2 months
-    
-    const suspendedDeposit: SuspendedDeposit = {
-      id: depositId,
-      amount,
-      depositedAt,
-      withdrawableAt,
-      depositedBy: adminId,
-      status: 'suspended'
-    };
-    
-    // Add to suspended deposits
-    goldWallet.suspendedDeposits.push(suspendedDeposit);
-    
-    // Update balances
-    goldWallet.suspendedGold += amount;
-    goldWallet.totalGold = goldWallet.suspendedGold + goldWallet.withdrawableGold;
-    
-    // Save wallet
-    this.saveMultiWallet(wallet);
-    
-    // Create transaction record
-    const transaction: MultiWalletTransaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-      userId,
-      walletType: 'gold',
-      walletId: realmId,
-      type: 'admin_deposit',
-      amount,
-      currency: 'gold',
-      goldType: 'suspended',
-      status: 'completed',
-      approvedBy: adminId,
-      metadata: {
-        depositId,
-        suspensionPeriodMonths: 2,
-        withdrawableAt: withdrawableAt.toISOString()
-      },
-      createdAt: new Date()
-    };
-    
-    this.saveMultiWalletTransaction(transaction);
-    
-    return wallet;
-  }
-  
-  /**
-   * Process suspended gold expiry (convert suspended to withdrawable)
-   */
-  static async processSuspendedGoldExpiry(): Promise<void> {
-    const now = new Date();
-    const allWalletKeys = this.getAllMultiWalletKeys();
-    
-    for (const walletKey of allWalletKeys) {
-      const wallet = StorageService.getItem<MultiWallet>(walletKey);
-      if (!wallet) continue;
       
-      let walletUpdated = false;
-      
-      // Process each gold wallet
-      for (const goldWallet of Object.values(wallet.goldWallets)) {
-        let goldWalletUpdated = false;
-        
-        // Check each suspended deposit
-        for (const deposit of goldWallet.suspendedDeposits) {
-          if (deposit.status === 'suspended' && new Date(deposit.withdrawableAt) <= now) {
-            // Convert to withdrawable
-            deposit.status = 'withdrawable';
-            goldWallet.suspendedGold -= deposit.amount;
-            goldWallet.withdrawableGold += deposit.amount;
-            goldWalletUpdated = true;
-            
-            // Create transaction record for the conversion
-            const transaction: MultiWalletTransaction = {
-              id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-              userId: wallet.userId,
-              walletType: 'gold',
-              walletId: goldWallet.realmId,
-              type: 'conversion',
-              amount: deposit.amount,
-              currency: 'gold',
-              goldType: 'withdrawable',
-              status: 'completed',
-              metadata: {
-                conversionType: 'suspended_to_withdrawable',
-                originalDepositId: deposit.id,
-                autoProcessed: true
-              },
-              createdAt: new Date()
-            };
-            
-            this.saveMultiWalletTransaction(transaction);
-          }
-        }
-        
-        if (goldWalletUpdated) {
-          // Recalculate total
-          goldWallet.totalGold = goldWallet.suspendedGold + goldWallet.withdrawableGold;
-          walletUpdated = true;
-        }
+      if (!validation.isValid) {
+        const error = validation.errors[0];
+        throw ErrorService.createError(
+          error.code as any,
+          error.details,
+          error.message,
+          adminId,
+          'admin_gold_deposit'
+        );
       }
       
-      if (walletUpdated) {
-        wallet.updatedAt = new Date();
-        StorageService.setItem(walletKey, wallet);
+      const wallet = this.getMultiWallet(userId);
+      
+      // Ensure gold wallet exists
+      if (!wallet.goldWallets[realmId]) {
+        await this.createGoldWallet(userId, realmId);
+        // Refresh wallet after creation
+        const updatedWallet = this.getMultiWallet(userId);
+        wallet.goldWallets[realmId] = updatedWallet.goldWallets[realmId];
       }
+      
+      const goldWallet = wallet.goldWallets[realmId];
+      
+      // Create suspended deposit record
+      const depositId = `dep_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+      const depositedAt = new Date();
+      const withdrawableAt = new Date(depositedAt.getTime() + (2 * 30 * 24 * 60 * 60 * 1000)); // 2 months
+      
+      const suspendedDeposit: SuspendedDeposit = {
+        id: depositId,
+        amount,
+        depositedAt,
+        withdrawableAt,
+        depositedBy: adminId,
+        status: 'suspended'
+      };
+      
+      // Add to suspended deposits
+      goldWallet.suspendedDeposits.push(suspendedDeposit);
+      
+      // Update balances
+      goldWallet.suspendedGold += amount;
+      goldWallet.totalGold = goldWallet.suspendedGold + goldWallet.withdrawableGold;
+      
+      this.saveMultiWallet(wallet);
+      return wallet;
+    } catch (error) {
+      throw ErrorService.handleError(error, 'MultiWalletService.addSuspendedGold', adminId);
     }
   }
+
+  // ===== HELPER METHODS =====
   
   /**
-   * Get suspended gold status for a specific wallet
+   * Get game realm information with caching
    */
-  static getSuspendedGoldStatus(userId: string, realmId: string): SuspendedDeposit[] {
-    const wallet = this.getMultiWallet(userId);
-    const goldWallet = wallet.goldWallets[realmId];
-    
-    if (!goldWallet) {
-      return [];
+  private static getGameRealm(realmId: string): GameRealm | null {
+    // Try to get from cached realms first
+    const cachedRealms = CacheService.get<GameRealm[]>(CacheService.getRealmsCacheKey());
+    if (cachedRealms) {
+      return cachedRealms.find(realm => realm.id === realmId) || null;
     }
-    
-    return goldWallet.suspendedDeposits.map(deposit => ({
-      ...deposit,
-      depositedAt: new Date(deposit.depositedAt),
-      withdrawableAt: new Date(deposit.withdrawableAt)
-    }));
+
+    // Fallback to storage
+    const realms = StorageService.getItem<GameRealm[]>(MULTI_WALLET_STORAGE_KEYS.GAME_REALMS) || [];
+    return realms.find(realm => realm.id === realmId) || null;
   }
-  
+
+  // ===== CACHE MANAGEMENT =====
+
   /**
-   * Get all suspended deposits across all wallets for a user
+   * Invalidate user-specific cache when wallet data changes
    */
-  static getAllSuspendedDeposits(userId: string): Array<SuspendedDeposit & { realmId: string; realmName: string; gameName: string }> {
-    const wallet = this.getMultiWallet(userId);
-    const allDeposits: Array<SuspendedDeposit & { realmId: string; realmName: string; gameName: string }> = [];
-    
-    Object.values(wallet.goldWallets).forEach(goldWallet => {
-      goldWallet.suspendedDeposits.forEach(deposit => {
-        allDeposits.push({
-          ...deposit,
-          realmId: goldWallet.realmId,
-          realmName: goldWallet.realmName,
-          gameName: goldWallet.gameName,
-          depositedAt: new Date(deposit.depositedAt),
-          withdrawableAt: new Date(deposit.withdrawableAt)
-        });
-      });
-    });
-    
-    return allDeposits.sort((a, b) => b.depositedAt.getTime() - a.depositedAt.getTime());
+  static invalidateUserCache(userId: string): void {
+    OptimizedDataLoader.invalidateUserCache(userId);
   }
-  
+
   /**
-   * Get time remaining until gold becomes withdrawable
+   * Invalidate game/realm cache when game data changes
    */
-  static getTimeUntilWithdrawable(deposit: SuspendedDeposit): number {
-    const now = new Date();
-    const withdrawableAt = new Date(deposit.withdrawableAt);
-    return Math.max(0, withdrawableAt.getTime() - now.getTime());
+  static invalidateGameCache(): void {
+    OptimizedDataLoader.invalidateGameCache();
   }
-  
+
   /**
-   * Check if suspended gold can be withdrawn
+   * Get cache statistics for monitoring
    */
-  static canWithdrawSuspendedGold(deposit: SuspendedDeposit): boolean {
-    return new Date() >= new Date(deposit.withdrawableAt);
+  static getCacheStats() {
+    return OptimizedDataLoader.getCacheStats();
   }
-  
-  // ===== TRANSACTION MANAGEMENT =====
-  
+
   /**
-   * Save multi-wallet transaction
+   * Preload dashboard data for better performance
    */
-  private static saveMultiWalletTransaction(transaction: MultiWalletTransaction): void {
-    // Save individual user transactions
-    const userTransactionKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLET_TRANSACTIONS}-${transaction.userId}`;
-    const userTransactions = StorageService.getItem<MultiWalletTransaction[]>(userTransactionKey) || [];
-    userTransactions.push(transaction);
-    StorageService.setItem(userTransactionKey, userTransactions);
-    
-    // Save all transactions for admin access
-    const allTransactions = StorageService.getItem<MultiWalletTransaction[]>(MULTI_WALLET_STORAGE_KEYS.MULTI_WALLET_TRANSACTIONS) || [];
-    allTransactions.push(transaction);
-    StorageService.setItem(MULTI_WALLET_STORAGE_KEYS.MULTI_WALLET_TRANSACTIONS, allTransactions);
+  static async preloadDashboardData(userId: string): Promise<void> {
+    await OptimizedDataLoader.preloadDashboardData(userId);
   }
-  
+
   /**
-   * Get user's multi-wallet transactions
+   * Get transaction statistics using optimized indexes
    */
-  static getMultiWalletTransactions(userId: string): MultiWalletTransaction[] {
-    const userTransactionKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLET_TRANSACTIONS}-${userId}`;
-    const transactions = StorageService.getItem<MultiWalletTransaction[]>(userTransactionKey) || [];
-    
-    // Ensure dates are properly parsed
-    return transactions.map(transaction => ({
-      ...transaction,
-      createdAt: new Date(transaction.createdAt)
-    })).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }
-  
-  /**
-   * Get all wallet keys for processing
-   */
-  private static getAllMultiWalletKeys(): string[] {
-    const keys: string[] = [];
-    const prefix = MULTI_WALLET_STORAGE_KEYS.MULTI_WALLETS;
-    
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith(prefix)) {
-        keys.push(key);
-      }
-    }
-    
-    return keys;
-  }
-  
-  // ===== CONVERSION SYSTEM =====
-  
-  /**
-   * Convert suspended gold to fiat currency with fees
-   */
-  static async convertSuspendedGoldToFiat(
-    userId: string, 
-    realmId: string, 
-    amount: number, 
-    targetCurrency: 'usd' | 'toman'
-  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
-    if (amount <= 0) {
-      throw new MultiWalletError(
-        'INVALID_TRANSACTION',
-        'Conversion amount must be positive',
-        { amount }
-      );
-    }
-    
-    const wallet = this.getMultiWallet(userId);
-    const goldWallet = wallet.goldWallets[realmId];
-    
-    if (!goldWallet) {
-      throw new MultiWalletError(
-        'WALLET_NOT_FOUND',
-        'Gold wallet not found',
-        { realmId }
-      );
-    }
-    
-    if (goldWallet.suspendedGold < amount) {
-      throw new MultiWalletError(
-        'INSUFFICIENT_BALANCE',
-        'Insufficient suspended gold balance',
-        { 
-          available: goldWallet.suspendedGold, 
-          requested: amount,
-          realmId 
-        }
-      );
-    }
-    
-    // Import ConversionFeeService dynamically to avoid circular dependency
-    const { ConversionFeeService } = await import('./conversionFeeService');
-    const { EXCHANGE_RATES } = await import('./walletService');
-    
-    // Calculate conversion with fees
-    const feeCalculation = ConversionFeeService.applyConversionFee(amount, targetCurrency);
-    
-    // Get exchange rate from gold to target currency
-    const exchangeRateKey = `gold_to_${targetCurrency}` as keyof typeof EXCHANGE_RATES;
-    const exchangeRate = EXCHANGE_RATES[exchangeRateKey];
-    
-    if (!exchangeRate) {
-      throw new MultiWalletError(
-        'CONVERSION_FEE_ERROR',
-        'Exchange rate not available',
-        { fromCurrency: 'gold', toCurrency: targetCurrency }
-      );
-    }
-    
-    // Calculate final amounts
-    const goldAfterFee = feeCalculation.netAmount;
-    const fiatAmount = goldAfterFee * exchangeRate;
-    
-    // Update gold wallet
-    goldWallet.suspendedGold -= amount;
-    goldWallet.totalGold = goldWallet.suspendedGold + goldWallet.withdrawableGold;
-    
-    // Update static wallet
-    wallet.staticWallets[targetCurrency].balance += fiatAmount;
-    
-    // Save wallet
-    this.saveMultiWallet(wallet);
-    
-    // Create transaction record
-    const transaction: MultiWalletTransaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-      userId,
-      walletType: 'static',
-      walletId: targetCurrency,
-      type: 'conversion',
-      amount: fiatAmount,
-      currency: targetCurrency,
-      status: 'completed',
-      conversionFee: feeCalculation.feeAmount,
-      fromWallet: realmId,
-      toWallet: targetCurrency,
-      metadata: {
-        originalGoldAmount: amount,
-        goldAfterFee: goldAfterFee,
-        exchangeRate,
-        feePercentage: ConversionFeeService.getConversionFeePercentage(targetCurrency),
-        conversionType: 'suspended_gold_to_fiat'
-      },
-      createdAt: new Date()
-    };
-    
-    this.saveMultiWalletTransaction(transaction);
-    
-    return { transaction, wallet };
-  }
-  
-  /**
-   * Convert between gold wallets (realm to realm)
-   */
-  static async convertBetweenGoldWallets(
-    userId: string, 
-    fromRealmId: string, 
-    toRealmId: string, 
-    amount: number, 
-    goldType: 'suspended' | 'withdrawable'
-  ): Promise<{ transaction: MultiWalletTransaction; wallet: MultiWallet }> {
-    if (amount <= 0) {
-      throw new MultiWalletError(
-        'INVALID_TRANSACTION',
-        'Conversion amount must be positive',
-        { amount }
-      );
-    }
-    
-    if (fromRealmId === toRealmId) {
-      throw new MultiWalletError(
-        'INVALID_TRANSACTION',
-        'Cannot convert to the same wallet',
-        { fromRealmId, toRealmId }
-      );
-    }
-    
-    const wallet = this.getMultiWallet(userId);
-    
-    // Check source wallet
-    const fromWallet = wallet.goldWallets[fromRealmId];
-    if (!fromWallet) {
-      throw new MultiWalletError(
-        'WALLET_NOT_FOUND',
-        'Source gold wallet not found',
-        { realmId: fromRealmId }
-      );
-    }
-    
-    // Check balance
-    const availableBalance = goldType === 'suspended' 
-      ? fromWallet.suspendedGold 
-      : fromWallet.withdrawableGold;
-    
-    if (availableBalance < amount) {
-      throw new MultiWalletError(
-        'INSUFFICIENT_BALANCE',
-        `Insufficient ${goldType} gold balance`,
-        { 
-          available: availableBalance, 
-          requested: amount,
-          goldType,
-          fromRealmId 
-        }
-      );
-    }
-    
-    // Ensure destination wallet exists
-    if (!wallet.goldWallets[toRealmId]) {
-      await this.createGoldWallet(userId, toRealmId);
-      // Refresh wallet after creation
-      const updatedWallet = this.getMultiWallet(userId);
-      wallet.goldWallets[toRealmId] = updatedWallet.goldWallets[toRealmId];
-    }
-    
-    const toWallet = wallet.goldWallets[toRealmId];
-    
-    // Perform conversion (1:1 ratio for gold to gold)
-    if (goldType === 'suspended') {
-      fromWallet.suspendedGold -= amount;
-      toWallet.suspendedGold += amount;
-    } else {
-      fromWallet.withdrawableGold -= amount;
-      toWallet.withdrawableGold += amount;
-    }
-    
-    // Update totals
-    fromWallet.totalGold = fromWallet.suspendedGold + fromWallet.withdrawableGold;
-    toWallet.totalGold = toWallet.suspendedGold + toWallet.withdrawableGold;
-    
-    // Save wallet
-    this.saveMultiWallet(wallet);
-    
-    // Create transaction record
-    const transaction: MultiWalletTransaction = {
-      id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-      userId,
-      walletType: 'gold',
-      walletId: toRealmId,
-      type: 'conversion',
-      amount,
-      currency: 'gold',
-      goldType,
-      status: 'completed',
-      fromWallet: fromRealmId,
-      toWallet: toRealmId,
-      metadata: {
-        conversionType: 'gold_to_gold',
-        goldType,
-        exchangeRate: 1.0
-      },
-      createdAt: new Date()
-    };
-    
-    this.saveMultiWalletTransaction(transaction);
-    
-    return { transaction, wallet };
-  }
-  
-  /**
-   * Get conversion preview (without executing)
-   */
-  static async getConversionPreview(
-    amount: number, 
-    fromCurrency: 'gold', 
-    toCurrency: 'usd' | 'toman',
-    goldType: 'suspended' | 'withdrawable'
-  ): Promise<{
-    originalAmount: number;
-    feeAmount: number;
-    netGoldAmount: number;
-    exchangeRate: number;
-    finalFiatAmount: number;
-    feePercentage: number;
+  static async getTransactionStats(userId: string): Promise<{
+    totalTransactions: number;
+    byType: Record<string, number>;
+    byStatus: Record<string, number>;
+    byWallet: Record<string, number>;
+    totalAmount: number;
+    averageAmount: number;
   }> {
-    if (amount <= 0) {
-      throw new MultiWalletError(
-        'INVALID_TRANSACTION',
-        'Amount must be positive',
-        { amount }
-      );
-    }
-    
-    // Import services
-    const { ConversionFeeService } = await import('./conversionFeeService');
-    const { EXCHANGE_RATES } = await import('./walletService');
-    
-    // Calculate fees (only for suspended gold)
-    const feeCalculation = goldType === 'suspended' 
-      ? ConversionFeeService.applyConversionFee(amount, toCurrency)
-      : { convertedAmount: amount, feeAmount: 0, netAmount: amount };
-    
-    // Get exchange rate
-    const exchangeRateKey = `${fromCurrency}_to_${toCurrency}` as keyof typeof EXCHANGE_RATES;
-    const exchangeRate = EXCHANGE_RATES[exchangeRateKey];
-    
-    if (!exchangeRate) {
-      throw new MultiWalletError(
-        'CONVERSION_FEE_ERROR',
-        'Exchange rate not available',
-        { fromCurrency, toCurrency }
-      );
-    }
-    
-    const finalFiatAmount = feeCalculation.netAmount * exchangeRate;
-    const feePercentage = goldType === 'suspended' 
-      ? ConversionFeeService.getConversionFeePercentage(toCurrency)
-      : 0;
-    
-    return {
-      originalAmount: amount,
-      feeAmount: feeCalculation.feeAmount,
-      netGoldAmount: feeCalculation.netAmount,
-      exchangeRate,
-      finalFiatAmount,
-      feePercentage
-    };
+    return await TransactionIndexService.getTransactionStats(userId);
   }
 }

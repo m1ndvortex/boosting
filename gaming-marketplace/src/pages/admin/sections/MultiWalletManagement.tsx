@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { AdminGoldDepositPanel } from '../../../components/admin/AdminGoldDepositPanel';
 import { GoldDepositHistoryPanel } from '../../../components/admin/GoldDepositHistoryPanel';
 import { ConversionFeeConfigPanel } from '../../../components/admin/ConversionFeeConfigPanel';
+import { WalletMigrationPanel } from '../../../components/admin/WalletMigrationPanel';
 
-type MultiWalletTab = 'gold-deposit' | 'deposit-history' | 'conversion-fees';
+type MultiWalletTab = 'gold-deposit' | 'deposit-history' | 'conversion-fees' | 'migration';
 
 export const MultiWalletManagement: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<MultiWalletTab>('gold-deposit');
+  const [activeTab, setActiveTab] = useState<MultiWalletTab>('migration');
 
   return (
     <div className="admin-section">
@@ -20,6 +21,12 @@ export const MultiWalletManagement: React.FC = () => {
       <div className="admin-section__content">
         {/* Tab Navigation */}
         <div className="tab-navigation">
+          <button
+            className={`tab-button ${activeTab === 'migration' ? 'tab-button--active' : ''}`}
+            onClick={() => setActiveTab('migration')}
+          >
+            🔄 Migration
+          </button>
           <button
             className={`tab-button ${activeTab === 'gold-deposit' ? 'tab-button--active' : ''}`}
             onClick={() => setActiveTab('gold-deposit')}
@@ -42,6 +49,10 @@ export const MultiWalletManagement: React.FC = () => {
 
         {/* Tab Content */}
         <div className="tab-content">
+          {activeTab === 'migration' && (
+            <WalletMigrationPanel />
+          )}
+          
           {activeTab === 'gold-deposit' && (
             <AdminGoldDepositPanel />
           )}

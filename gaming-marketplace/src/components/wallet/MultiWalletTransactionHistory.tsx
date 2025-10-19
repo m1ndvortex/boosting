@@ -1,27 +1,52 @@
 // Multi-Wallet Transaction History Component
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Modal } from '../discord/Modal';
+import { MultiWalletTransactionService } from '../../services/multiWalletTransactionService';
 import type { MultiWalletTransaction, MultiWallet } from '../../types';
 import './MultiWalletTransactionHistory.css';
 
 interface MultiWalletTransactionHistoryProps {
   isOpen: boolean;
   onClose: () => void;
-  transactions: MultiWalletTransaction[];
+  userId: string;
   multiWallet: MultiWallet;
 }
 
 export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHistoryProps> = ({
   isOpen,
   onClose,
-  transactions,
+  userId,
   multiWallet,
 }) => {
+  const [transactions, setTransactions] = useState<MultiWalletTransaction[]>([]);
+  const [loading, setLoading] = useState(false);
   const [filterType, setFilterType] = useState<string>('all');
   const [filterWallet, setFilterWallet] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterGoldType, setFilterGoldType] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+
+  // Load transactions when component opens
+  useEffect(() => {
+    if (isOpen && userId) {
+      loadTransactions();
+    }
+  }, [isOpen, userId]);
+
+  const loadTransactions = () => {
+    setLoading(true);
+    try {
+      const userTransactions = MultiWalletTransactionService.getUserTransactions(userId);
+      setTransactions(userTransactions);
+    } catch (error) {
+      console.error('Failed to load transactions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const transactionTypes = [
     { value: 'all', label: 'All Types' },
@@ -39,6 +64,12 @@ export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHisto
     { value: 'pending', label: 'Pending' },
     { value: 'pending_approval', label: 'Pending Approval' },
     { value: 'failed', label: 'Failed' },
+  ];
+
+  const goldTypes = [
+    { value: 'all', label: 'All Gold Types' },
+    { value: 'suspended', label: 'Suspended Gold' },
+    { value: 'withdrawable', label: 'Withdrawable Gold' },
   ];
 
   // Get all available wallets for filtering
@@ -76,14 +107,26 @@ export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHisto
         matchesWallet = walletKey === filterWallet;
       }
       
+      // Gold type filtering
+      const matchesGoldType = filterGoldType === 'all' || 
+        (transaction.goldType && transaction.goldType === filterGoldType) ||
+        (filterGoldType === 'all' && !transaction.goldType);
+      
+      // Date filtering
+      const transactionDate = new Date(transaction.createdAt);
+      const matchesDateFrom = !dateFrom || transactionDate >= new Date(dateFrom);
+      const matchesDateTo = !dateTo || transactionDate <= new Date(dateTo + 'T23:59:59');
+      
       const matchesSearch = searchQuery === '' || 
         transaction.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
         transaction.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (transaction.paymentMethod && transaction.paymentMethod.toLowerCase().includes(searchQuery.toLowerCase()));
+        (transaction.paymentMethod && transaction.paymentMethod.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (transaction.fromWallet && transaction.fromWallet.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (transaction.toWallet && transaction.toWallet.toLowerCase().includes(searchQuery.toLowerCase()));
       
-      return matchesType && matchesWallet && matchesStatus && matchesSearch;
+      return matchesType && matchesWallet && matchesStatus && matchesGoldType && matchesDateFrom && matchesDateTo && matchesSearch;
     });
-  }, [transactions, filterType, filterWallet, filterStatus, searchQuery]);
+  }, [transactions, filterType, filterWallet, filterStatus, filterGoldType, dateFrom, dateTo, searchQuery]);
 
   const getTransactionIcon = (type: string): string => {
     switch (type) {
@@ -142,16 +185,21 @@ export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHisto
     
     if (transaction.type === 'conversion') {
       if (transaction.fromWallet && transaction.toWallet) {
-        details.push(`From: ${transaction.fromWallet}`);
-        details.push(`To: ${transaction.toWallet}`);
+        const fromWalletName = getWalletDisplayName(transaction.fromWallet);
+        const toWalletName = getWalletDisplayName(transaction.toWallet);
+        details.push(`From: ${fromWalletName}`);
+        details.push(`To: ${toWalletName}`);
       }
       if (transaction.conversionFee && transaction.conversionFee > 0) {
         details.push(`Fee: ${formatCurrency(transaction.conversionFee, transaction.currency)}`);
       }
+      if (transaction.metadata?.exchangeRate) {
+        details.push(`Rate: ${transaction.metadata.exchangeRate}`);
+      }
     }
     
     if (transaction.goldType) {
-      details.push(`Gold Type: ${transaction.goldType}`);
+      details.push(`Gold Type: ${transaction.goldType.charAt(0).toUpperCase() + transaction.goldType.slice(1)}`);
     }
     
     if (transaction.paymentMethod) {
@@ -162,8 +210,41 @@ export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHisto
       details.push(`Approved by: ${transaction.approvedBy}`);
     }
     
+    if (transaction.type === 'admin_deposit' && transaction.metadata?.suspensionMonths) {
+      details.push(`Suspension: ${transaction.metadata.suspensionMonths} months`);
+    }
+    
+    if (transaction.metadata?.orderId) {
+      details.push(`Order: ${transaction.metadata.orderId}`);
+    }
+    
+    // Show suspended gold restrictions
+    if (transaction.goldType === 'suspended' && (transaction.type === 'withdrawal' || transaction.type === 'purchase')) {
+      details.push('⚠️ Suspended gold restriction applied');
+    }
+    
     return details;
   };
+
+  const getWalletDisplayName = (walletId: string): string => {
+    if (walletId === 'usd') return 'USD Wallet';
+    if (walletId === 'toman') return 'Toman Wallet';
+    
+    const goldWallet = multiWallet.goldWallets[walletId];
+    return goldWallet ? `${goldWallet.realmName} Gold` : walletId;
+  };
+
+  const clearFilters = () => {
+    setFilterType('all');
+    setFilterWallet('all');
+    setFilterStatus('all');
+    setFilterGoldType('all');
+    setSearchQuery('');
+    setDateFrom('');
+    setDateTo('');
+  };
+
+
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Multi-Wallet Transaction History" size="lg">
@@ -171,6 +252,22 @@ export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHisto
         <div className="multi-wallet-transaction-history__header">
           <div className="multi-wallet-transaction-history__count">
             {filteredTransactions.length} of {transactions.length} transactions
+          </div>
+          <div className="multi-wallet-transaction-history__actions">
+            <button
+              onClick={clearFilters}
+              className="multi-wallet-transaction-history__clear-btn"
+              disabled={filterType === 'all' && filterWallet === 'all' && filterStatus === 'all' && filterGoldType === 'all' && !searchQuery && !dateFrom && !dateTo}
+            >
+              Clear Filters
+            </button>
+            <button
+              onClick={loadTransactions}
+              className="multi-wallet-transaction-history__refresh-btn"
+              disabled={loading}
+            >
+              {loading ? '⟳' : '↻'} Refresh
+            </button>
           </div>
         </div>
 
@@ -211,19 +308,52 @@ export const MultiWalletTransactionHistory: React.FC<MultiWalletTransactionHisto
                 </option>
               ))}
             </select>
+
+            <select
+              value={filterGoldType}
+              onChange={(e) => setFilterGoldType(e.target.value)}
+              className="multi-wallet-transaction-history__select"
+            >
+              {goldTypes.map((goldType) => (
+                <option key={goldType.value} value={goldType.value}>
+                  {goldType.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search transactions..."
-            className="multi-wallet-transaction-history__search"
-          />
+          <div className="multi-wallet-transaction-history__filter-row">
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="multi-wallet-transaction-history__date-input"
+              placeholder="From date"
+            />
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="multi-wallet-transaction-history__date-input"
+              placeholder="To date"
+            />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search transactions, IDs, wallets..."
+              className="multi-wallet-transaction-history__search"
+            />
+          </div>
         </div>
 
         <div className="multi-wallet-transaction-history__list">
-          {filteredTransactions.length === 0 ? (
+          {loading ? (
+            <div className="multi-wallet-transaction-history__loading">
+              <div className="multi-wallet-transaction-history__loading-spinner">⟳</div>
+              <div className="multi-wallet-transaction-history__loading-text">Loading transactions...</div>
+            </div>
+          ) : filteredTransactions.length === 0 ? (
             <div className="multi-wallet-transaction-history__empty">
               <div className="multi-wallet-transaction-history__empty-icon">📄</div>
               <div className="multi-wallet-transaction-history__empty-text">

@@ -164,15 +164,24 @@
     - ✅ Add proper form validation and error handling
     - _Requirements: 9.1, 9.2, 9.5, 12.1, 12.2_
 
-- [ ] 6. Implement transaction system updates
-  - [ ] 6.1 Extend transaction model and service
+- [x] 6. Implement transaction system updates
+
+
+
+
+
+  - [x] 6.1 Extend transaction model and service
+
+
     - Update transaction types to support multi-wallet operations
     - Add wallet-specific transaction tracking
     - Implement conversion transactions with fee tracking
     - Add admin deposit transaction type with metadata
     - _Requirements: 9.5, 10.5, 12.4_
 
-  - [ ] 6.2 Update transaction history components
+  - [x] 6.2 Update transaction history components
+
+
     - Modify TransactionHistory to support multiple wallets
     - Add filtering by wallet type and specific gold wallets
     - Display conversion fees in transaction details
@@ -180,7 +189,14 @@
     - _Requirements: 9.5, 10.5_
 
 - [ ] 7. Add comprehensive Playwright test coverage
-  - [ ] 7.1 Create admin interface tests
+  - [ ] 7.7 Create admin interface tests
+
+
+
+
+
+
+
     - Test game creation, editing, and deactivation
     - Test realm management within games
     - Test gold deposit functionality with restrictions
@@ -209,29 +225,56 @@
     - _Requirements: 8.5_
 
 - [ ] 8. Integration and migration
-  - [ ] 8.1 Implement data migration utilities
+  - [x] 8.1 Implement data migration utilities
+
+
+
+
+
     - Create migration service to convert existing wallets to multi-wallet format
     - Preserve existing USD, Toman, and gold balances
     - Add backward compatibility for existing transaction history
     - Implement gradual rollout mechanism
     - _Requirements: 2.1, 2.2, 2.5_
+-
 
-  - [ ] 8.2 Update existing components to use new wallet system
+  - [x] 8.2 Update existing components to use new wallet system
+
+
+
+
+
+
+
+
     - Update marketplace components to work with multi-wallet system
     - Modify purchase flows to support gold wallet selection
     - Update earning distribution to specific gold wallets
     - Ensure existing functionality remains intact
     - _Requirements: 9.1, 9.2_
+-
 
-  - [ ] 8.3 Add error handling and validation
+
+
+  - [x] 8.3 Add error handling and validation
+
+
+
+
+
     - Implement comprehensive error handling for wallet operations
     - Add validation for all user inputs and admin operations
     - Create user-friendly error messages and notifications
     - Add loading states for all async operations
     - _Requirements: 3.4, 4.4, 9.3_
 
-- [ ]* 9. Performance optimization and polish
+- [ ] 9. Performance optimization and polish
+
+
   - [ ]* 9.1 Optimize wallet data loading and caching
+
+
+
     - Implement efficient loading for users with many gold wallets
     - Add caching for frequently accessed game/realm data
     - Optimize transaction history queries and pagination

@@ -135,7 +135,9 @@ export class MarketplaceService {
   static async purchaseService(
     serviceId: string,
     buyerId: string,
-    currency: Currency
+    currency: Currency,
+    walletId?: string,
+    goldType?: 'suspended' | 'withdrawable'
   ): Promise<Order> {
     await new Promise(resolve => setTimeout(resolve, 500));
     
@@ -146,7 +148,7 @@ export class MarketplaceService {
 
     const pricePaid = service.prices[currency];
     
-    // Create order through OrderService
+    // Create order through OrderService with wallet information
     const order = await OrderService.createOrder({
       serviceId,
       buyerId,
@@ -154,7 +156,9 @@ export class MarketplaceService {
         ? service.workspaceOwnerId 
         : service.createdBy,
       pricePaid,
-      currency
+      currency,
+      walletId,
+      goldType
     });
 
     return order;

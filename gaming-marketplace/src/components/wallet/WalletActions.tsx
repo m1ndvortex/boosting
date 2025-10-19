@@ -6,7 +6,7 @@ import { MultiWalletDepositForm } from './MultiWalletDepositForm';
 import { MultiWalletWithdrawalForm } from './MultiWalletWithdrawalForm';
 import { MultiWalletConverter } from './MultiWalletConverter';
 import { MultiWalletTransactionHistory } from './MultiWalletTransactionHistory';
-import type { MultiWallet, GameRealm, MultiWalletTransaction } from '../../types';
+import type { MultiWallet, GameRealm } from '../../types';
 import './WalletActions.css';
 
 interface WalletActionsProps {
@@ -19,7 +19,7 @@ interface WalletActionsProps {
   // Multi-wallet props
   multiWallet?: MultiWallet;
   availableRealms?: GameRealm[];
-  transactions?: MultiWalletTransaction[];
+
   onMultiWalletDeposit?: (walletType: 'static' | 'gold', walletId: string, amount: number, paymentMethod: string) => Promise<void>;
   onMultiWalletWithdraw?: (walletType: 'static' | 'gold', walletId: string, amount: number, paymentMethod: string) => Promise<void>;
   onMultiWalletConvert?: (fromWalletType: 'static' | 'gold', fromWalletId: string, toWalletType: 'static' | 'gold', toWalletId: string, amount: number, goldType?: 'suspended' | 'withdrawable') => Promise<void>;
@@ -38,7 +38,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
   // Multi-wallet props
   multiWallet,
   availableRealms = [],
-  transactions = [],
+
   onMultiWalletDeposit,
   onMultiWalletWithdraw,
   onMultiWalletConvert,
@@ -214,7 +214,7 @@ export const WalletActions: React.FC<WalletActionsProps> = ({
           <MultiWalletTransactionHistory
             isOpen={showTransactionHistory}
             onClose={() => setShowTransactionHistory(false)}
-            transactions={transactions}
+            userId={multiWallet.userId}
             multiWallet={multiWallet}
           />
         </>

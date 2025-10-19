@@ -2,7 +2,7 @@
 
 import type { ShopProduct, ShopOrder, Currency } from '../types';
 import { StorageService, STORAGE_KEYS } from './storage';
-import { WalletService } from './walletService';
+import { MultiWalletService } from './multiWalletService';
 
 // Mock shop products
 export const SHOP_PRODUCTS: ShopProduct[] = [
@@ -84,7 +84,9 @@ export class ShopService {
   static async purchaseWithWallet(
     userId: string,
     productId: string,
-    currency: Currency
+    currency: Currency,
+    walletId?: string,
+    goldType?: 'suspended' | 'withdrawable'
   ): Promise<ShopOrder> {
     const product = this.getProduct(productId);
     if (!product) {
@@ -92,14 +94,52 @@ export class ShopService {
     }
 
     const price = product.prices[currency];
-    const wallet = WalletService.getWallet(userId);
+    const multiWallet = MultiWalletService.getMultiWallet(userId);
 
-    if (wallet.balances[currency] < price) {
+    // Check balance based on currency type
+    let hasInsufficientBalance = false;
+    if (currency === 'usd') {
+      hasInsufficientBalance = multiWallet.staticWallets.usd.balance < price;
+    } else if (currency === 'toman') {
+      hasInsufficientBalance = multiWallet.staticWallets.toman.balance < price;
+    } else if (currency === 'gold' && walletId) {
+      const goldWallet = multiWallet.goldWallets[walletId];
+      if (!goldWallet) {
+        throw new Error('Gold wallet not found');
+      }
+      const availableBalance = goldType === 'suspended' ? goldWallet.suspendedGold : goldWallet.withdrawableGold;
+      hasInsufficientBalance = availableBalance < price;
+    } else {
+      throw new Error('Invalid currency or missing wallet information');
+    }
+
+    if (hasInsufficientBalance) {
       throw new Error('Insufficient balance');
     }
 
-    // Deduct from wallet
-    await WalletService.deductForPurchase(userId, price, currency, `shop_${productId}`);
+    // Determine wallet type and ID for deduction
+    let walletType: 'static' | 'gold';
+    let deductionWalletId: string;
+
+    if (currency === 'gold' && walletId) {
+      walletType = 'gold';
+      deductionWalletId = walletId;
+    } else {
+      walletType = 'static';
+      deductionWalletId = currency;
+    }
+
+    // Deduct from wallet using the transaction service
+    const { MultiWalletTransactionService } = await import('./multiWalletTransactionService');
+    await MultiWalletTransactionService.createPurchaseTransaction(
+      userId,
+      walletType,
+      deductionWalletId,
+      price,
+      currency,
+      goldType,
+      `shop_${productId}`
+    );
 
     // Generate game time code
     const gameTimeCode = this.generateGameTimeCode();

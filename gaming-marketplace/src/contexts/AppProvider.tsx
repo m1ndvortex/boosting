@@ -3,6 +3,7 @@
 import React from 'react';
 import { AuthProvider } from './AuthContext';
 import { WalletProvider } from './WalletContext';
+import { MultiWalletProvider } from './MultiWalletContext';
 import { WorkspaceProvider } from './WorkspaceContext';
 import { OrderProvider } from './OrderContext';
 import { GameProvider } from './GameContext';
@@ -20,11 +21,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     <AuthProvider>
       <GameProvider>
         <WalletProvider>
-          <WorkspaceProvider>
-            <OrderProvider>
-              {children}
-            </OrderProvider>
-          </WorkspaceProvider>
+          <MultiWalletProvider>
+            <WorkspaceProvider>
+              <OrderProvider>
+                {children}
+              </OrderProvider>
+            </WorkspaceProvider>
+          </MultiWalletProvider>
         </WalletProvider>
       </GameProvider>
     </AuthProvider>
@@ -34,6 +37,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 // Export all context hooks for convenience
 export { useAuth } from './AuthContext';
 export { useWallet } from './WalletContext';
+export { useMultiWallet } from './MultiWalletContext';
 export { useWorkspace } from './WorkspaceContext';
 export { useOrders } from './OrderContext';
 export { useGames } from './GameContext';

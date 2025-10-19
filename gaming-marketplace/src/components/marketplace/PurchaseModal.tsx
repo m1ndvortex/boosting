@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { MarketplaceService } from '../../services/marketplaceService';
 import type { ServiceListing } from '../../services/marketplaceService';
 import { useAuth } from '../../contexts/AuthContext';
-import { useWallet } from '../../contexts/WalletContext';
+import { useMultiWallet } from '../../contexts/MultiWalletContext';
 import { Modal } from '../discord/Modal';
-import type { Currency } from '../../types';
+import type { Currency, GoldWalletBalance } from '../../types';
 import './PurchaseModal.css';
 
 interface PurchaseModalProps {
@@ -19,8 +19,10 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
   onPurchaseComplete
 }) => {
   const { state: authState } = useAuth();
-  const { state: walletState, deductForPurchase } = useWallet();
+  const { state: multiWalletState, deductForPurchase } = useMultiWallet();
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>('usd');
+  const [selectedGoldWallet, setSelectedGoldWallet] = useState<string>('');
+  const [selectedGoldType, setSelectedGoldType] = useState<'suspended' | 'withdrawable'>('withdrawable');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,8 +40,18 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
   };
 
   const getBalance = (currency: Currency): number => {
-    if (!walletState.wallet) return 0;
-    return walletState.wallet.balances[currency];
+    if (!multiWalletState.wallet) return 0;
+    
+    if (currency === 'usd') {
+      return multiWalletState.wallet.staticWallets.usd.balance;
+    } else if (currency === 'toman') {
+      return multiWalletState.wallet.staticWallets.toman.balance;
+    } else if (currency === 'gold' && selectedGoldWallet) {
+      const goldWallet = multiWalletState.wallet.goldWallets[selectedGoldWallet];
+      if (!goldWallet) return 0;
+      return selectedGoldType === 'suspended' ? goldWallet.suspendedGold : goldWallet.withdrawableGold;
+    }
+    return 0;
   };
 
   const getPrice = (currency: Currency): number => {
@@ -48,6 +60,11 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
 
   const hasInsufficientFunds = (currency: Currency): boolean => {
     return getBalance(currency) < getPrice(currency);
+  };
+
+  const getAvailableGoldWallets = (): GoldWalletBalance[] => {
+    if (!multiWalletState.wallet) return [];
+    return Object.values(multiWalletState.wallet.goldWallets);
   };
 
   const handlePurchase = async () => {
@@ -61,22 +78,45 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
       return;
     }
 
+    if (selectedCurrency === 'gold' && !selectedGoldWallet) {
+      setError('Please select a gold wallet');
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
+      // Determine wallet type and ID
+      let walletType: 'static' | 'gold';
+      let walletId: string;
+      let goldType: 'suspended' | 'withdrawable' | undefined;
+
+      if (selectedCurrency === 'gold') {
+        walletType = 'gold';
+        walletId = selectedGoldWallet;
+        goldType = selectedGoldType;
+      } else {
+        walletType = 'static';
+        walletId = selectedCurrency;
+      }
+
       // Deduct payment from wallet
       await deductForPurchase(
         getPrice(selectedCurrency),
-        selectedCurrency,
-        `service_${service.id}`
+        walletType,
+        walletId,
+        `service_${service.id}`,
+        goldType
       );
 
       // Create order
       await MarketplaceService.purchaseService(
         service.id,
         authState.user.id,
-        selectedCurrency
+        selectedCurrency,
+        selectedCurrency === 'gold' ? selectedGoldWallet : undefined,
+        selectedCurrency === 'gold' ? selectedGoldType : undefined
       );
 
       onPurchaseComplete();
@@ -123,8 +163,23 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
           <div className="purchase-modal__currency-options">
             {(['usd', 'gold', 'toman'] as Currency[]).map(currency => {
               const price = getPrice(currency);
-              const balance = getBalance(currency);
-              const insufficient = hasInsufficientFunds(currency);
+              let balance = 0;
+              let insufficient = true;
+              
+              if (currency === 'gold') {
+                // For gold, we need to check if any gold wallet has sufficient funds
+                const goldWallets = getAvailableGoldWallets();
+                const hasGoldWallets = goldWallets.length > 0;
+                if (hasGoldWallets && selectedGoldWallet) {
+                  balance = getBalance(currency);
+                  insufficient = hasInsufficientFunds(currency);
+                } else {
+                  insufficient = !hasGoldWallets;
+                }
+              } else {
+                balance = getBalance(currency);
+                insufficient = hasInsufficientFunds(currency);
+              }
               
               return (
                 <label
@@ -138,7 +193,15 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
                     name="currency"
                     value={currency}
                     checked={selectedCurrency === currency}
-                    onChange={(e) => setSelectedCurrency(e.target.value as Currency)}
+                    onChange={(e) => {
+                      setSelectedCurrency(e.target.value as Currency);
+                      if (e.target.value === 'gold') {
+                        const goldWallets = getAvailableGoldWallets();
+                        if (goldWallets.length > 0) {
+                          setSelectedGoldWallet(goldWallets[0].realmId);
+                        }
+                      }
+                    }}
                     disabled={insufficient}
                   />
                   
@@ -146,10 +209,17 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
                     <div className="purchase-modal__currency-price">
                       {formatPrice(price, currency)}
                     </div>
-                    <div className="purchase-modal__currency-balance">
-                      Balance: {formatPrice(balance, currency)}
-                    </div>
-                    {insufficient && (
+                    {currency !== 'gold' && (
+                      <div className="purchase-modal__currency-balance">
+                        Balance: {formatPrice(balance, currency)}
+                      </div>
+                    )}
+                    {currency === 'gold' && getAvailableGoldWallets().length === 0 && (
+                      <div className="purchase-modal__insufficient-notice">
+                        No gold wallets available
+                      </div>
+                    )}
+                    {currency !== 'gold' && insufficient && (
                       <div className="purchase-modal__insufficient-notice">
                         Insufficient funds
                       </div>
@@ -160,6 +230,75 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
             })}
           </div>
         </div>
+
+        {/* Gold Wallet Selection */}
+        {selectedCurrency === 'gold' && (
+          <div className="purchase-modal__gold-wallet-selection">
+            <h4 className="purchase-modal__section-title">Select Gold Wallet</h4>
+            
+            <div className="purchase-modal__gold-wallets">
+              {getAvailableGoldWallets().map(goldWallet => (
+                <label
+                  key={goldWallet.realmId}
+                  className={`purchase-modal__gold-wallet-option ${
+                    selectedGoldWallet === goldWallet.realmId ? 'selected' : ''
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="goldWallet"
+                    value={goldWallet.realmId}
+                    checked={selectedGoldWallet === goldWallet.realmId}
+                    onChange={(e) => setSelectedGoldWallet(e.target.value)}
+                  />
+                  
+                  <div className="purchase-modal__gold-wallet-info">
+                    <div className="purchase-modal__gold-wallet-name">
+                      {`${goldWallet.realmName} Gold`}
+                    </div>
+                    <div className="purchase-modal__gold-wallet-balances">
+                      <div className="purchase-modal__gold-balance">
+                        <span>Withdrawable: {goldWallet.withdrawableGold.toLocaleString()}G</span>
+                      </div>
+                      <div className="purchase-modal__gold-balance">
+                        <span>Suspended: {goldWallet.suspendedGold.toLocaleString()}G</span>
+                      </div>
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            {/* Gold Type Selection */}
+            {selectedGoldWallet && (
+              <div className="purchase-modal__gold-type-selection">
+                <h5 className="purchase-modal__subsection-title">Gold Type</h5>
+                <div className="purchase-modal__gold-type-options">
+                  <label className={`purchase-modal__gold-type-option ${selectedGoldType === 'withdrawable' ? 'selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="goldType"
+                      value="withdrawable"
+                      checked={selectedGoldType === 'withdrawable'}
+                      onChange={(e) => setSelectedGoldType(e.target.value as 'suspended' | 'withdrawable')}
+                    />
+                    <span>Use Withdrawable Gold</span>
+                  </label>
+                  <label className={`purchase-modal__gold-type-option ${selectedGoldType === 'suspended' ? 'selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="goldType"
+                      value="suspended"
+                      checked={selectedGoldType === 'suspended'}
+                      onChange={(e) => setSelectedGoldType(e.target.value as 'suspended' | 'withdrawable')}
+                    />
+                    <span>Use Suspended Gold</span>
+                  </label>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Purchase Summary */}
         <div className="purchase-modal__summary">
@@ -175,16 +314,24 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
           <div className="purchase-modal__summary-row">
             <span>Current Balance:</span>
             <span>
-              {formatPrice(getBalance(selectedCurrency), selectedCurrency)}
+              {selectedCurrency === 'gold' && selectedGoldWallet ? (
+                `${getBalance(selectedCurrency).toLocaleString()}G (${selectedGoldType})`
+              ) : (
+                formatPrice(getBalance(selectedCurrency), selectedCurrency)
+              )}
             </span>
           </div>
           
           <div className="purchase-modal__summary-row purchase-modal__summary-row--total">
             <span>Remaining Balance:</span>
             <span className="purchase-modal__summary-remaining">
-              {formatPrice(
-                getBalance(selectedCurrency) - getPrice(selectedCurrency),
-                selectedCurrency
+              {selectedCurrency === 'gold' && selectedGoldWallet ? (
+                `${(getBalance(selectedCurrency) - getPrice(selectedCurrency)).toLocaleString()}G`
+              ) : (
+                formatPrice(
+                  getBalance(selectedCurrency) - getPrice(selectedCurrency),
+                  selectedCurrency
+                )
               )}
             </span>
           </div>

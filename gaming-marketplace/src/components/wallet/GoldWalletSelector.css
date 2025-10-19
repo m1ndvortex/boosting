@@ -1,0 +1,290 @@
+/* Gold Wallet Selector Styles */
+
+.gold-wallet-selector {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.gold-wallet-selector--empty {
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.gold-wallet-selector__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.gold-wallet-selector__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.gold-wallet-selector__toggle {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gold-wallet-selector__toggle:hover {
+  background: var(--background-hover);
+  color: var(--text-primary);
+}
+
+.gold-wallet-selector__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.gold-wallet-selector__empty-icon {
+  font-size: 32px;
+  opacity: 0.5;
+}
+
+.gold-wallet-selector__empty-text {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 14px;
+}
+
+.gold-wallet-selector__wallets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gold-wallet-selector__wallet {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.gold-wallet-selector__wallet:hover {
+  border-color: var(--accent-color);
+}
+
+.gold-wallet-selector__wallet--selected {
+  border-color: var(--accent-color);
+  background: var(--accent-color-alpha);
+}
+
+.gold-wallet-selector__wallet--empty {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gold-wallet-selector__wallet-label {
+  display: block;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.gold-wallet-selector__wallet--empty .gold-wallet-selector__wallet-label {
+  cursor: not-allowed;
+}
+
+.gold-wallet-selector__wallet-input {
+  margin-right: 12px;
+}
+
+.gold-wallet-selector__wallet-info {
+  display: inline-block;
+  width: calc(100% - 24px);
+}
+
+.gold-wallet-selector__wallet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.gold-wallet-selector__wallet-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.gold-wallet-selector__wallet-game {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--background-tertiary);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.gold-wallet-selector__wallet-balances {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.gold-wallet-selector__balance {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gold-wallet-selector__balance--insufficient {
+  opacity: 0.6;
+}
+
+.gold-wallet-selector__balance-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gold-wallet-selector__balance-amount {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.gold-wallet-selector__balance--insufficient .gold-wallet-selector__balance-amount {
+  color: var(--error-color);
+}
+
+.gold-wallet-selector__deposits {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.gold-wallet-selector__deposits-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gold-wallet-selector__deposit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+.gold-wallet-selector__deposit-amount {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.gold-wallet-selector__deposit-date {
+  color: var(--text-secondary);
+}
+
+.gold-wallet-selector__deposit-more {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 4px 0;
+}
+
+.gold-wallet-selector__gold-type {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.gold-wallet-selector__gold-type-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+.gold-wallet-selector__gold-type-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gold-wallet-selector__gold-type-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gold-wallet-selector__gold-type-option:hover {
+  border-color: var(--accent-color);
+}
+
+.gold-wallet-selector__gold-type-option--selected {
+  border-color: var(--accent-color);
+  background: var(--accent-color-alpha);
+}
+
+.gold-wallet-selector__gold-type-option--insufficient {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gold-wallet-selector__gold-type-input {
+  margin-top: 2px;
+}
+
+.gold-wallet-selector__gold-type-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.gold-wallet-selector__gold-type-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.gold-wallet-selector__gold-type-balance {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.gold-wallet-selector__insufficient-notice {
+  font-size: 11px;
+  color: var(--error-color);
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gold-wallet-selector__wallet-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .gold-wallet-selector__wallet-balances {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .gold-wallet-selector__gold-type-options {
+    gap: 12px;
+  }
+}

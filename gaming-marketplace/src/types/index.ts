@@ -217,7 +217,9 @@ export type MultiWalletErrorType =
   | 'DUPLICATE_WALLET'
   | 'SUSPENDED_GOLD_RESTRICTION'
   | 'CONVERSION_FEE_ERROR'
-  | 'INVALID_TRANSACTION';
+  | 'INVALID_TRANSACTION'
+  | 'WALLET_HAS_BALANCE'
+  | 'DUPLICATE_REALM';
 
 export interface MultiWalletErrorDetails {
   type: MultiWalletErrorType;

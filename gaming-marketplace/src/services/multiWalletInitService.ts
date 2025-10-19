@@ -4,6 +4,7 @@ import { GameManagementService } from './gameManagementService';
 import { MULTI_WALLET_STORAGE_KEYS, type ConversionFeeConfig } from '../types';
 import { StorageService } from './storage';
 import { ErrorService } from './errorService';
+import { WalletMigrationService } from './walletMigrationService';
 
 export class MultiWalletInitService {
   private static initialized = false;
@@ -31,6 +32,9 @@ export class MultiWalletInitService {
 
       // Initialize multi-wallet transactions storage
       this.initializeMultiWalletTransactionsStorage();
+
+      // Initialize migration system
+      this.initializeMigrationSystem();
 
       this.initialized = true;
       console.log('Multi-Wallet System initialized successfully');
@@ -127,11 +131,55 @@ export class MultiWalletInitService {
   }
 
   /**
+   * Initialize migration system
+   */
+  private static initializeMigrationSystem(): void {
+    try {
+      // Check migration status
+      const migrationStatus = WalletMigrationService.getMigrationStatus();
+      
+      console.log('Migration Status:', {
+        totalUsers: migrationStatus.totalUsers,
+        migratedUsers: migrationStatus.migratedUsers,
+        pendingUsers: migrationStatus.pendingUsers,
+        failedUsers: migrationStatus.failedUsers,
+        isComplete: migrationStatus.isComplete
+      });
+
+      // If there are users needing migration, log a warning
+      if (migrationStatus.pendingUsers > 0) {
+        console.warn(`${migrationStatus.pendingUsers} users need wallet migration. Use WalletMigrationService to migrate them.`);
+      }
+
+      // Process suspended gold expiry on initialization
+      this.processExpiredSuspendedGold();
+
+    } catch (error) {
+      ErrorService.handleError(error, 'MultiWalletInitService.initializeMigrationSystem');
+    }
+  }
+
+  /**
+   * Process expired suspended gold
+   */
+  private static async processExpiredSuspendedGold(): Promise<void> {
+    try {
+      const { MultiWalletService } = await import('./multiWalletService');
+      await MultiWalletService.processSuspendedGoldExpiry();
+      console.log('Processed expired suspended gold deposits');
+    } catch (error) {
+      ErrorService.handleError(error, 'MultiWalletInitService.processExpiredSuspendedGold');
+    }
+  }
+
+  /**
    * Log initialization statistics
    */
   private static logInitializationStats(): void {
     try {
       const stats = GameManagementService.getStatistics();
+      const migrationStatus = WalletMigrationService.getMigrationStatus();
+      
       console.log('Multi-Wallet System Statistics:', {
         games: {
           total: stats.totalGames,
@@ -141,7 +189,13 @@ export class MultiWalletInitService {
           total: stats.totalRealms,
           active: stats.activeRealms
         },
-        realmsPerGame: stats.realmsPerGame
+        realmsPerGame: stats.realmsPerGame,
+        migration: {
+          totalUsers: migrationStatus.totalUsers,
+          migratedUsers: migrationStatus.migratedUsers,
+          pendingUsers: migrationStatus.pendingUsers,
+          isComplete: migrationStatus.isComplete
+        }
       });
     } catch (error) {
       ErrorService.handleError(error, 'MultiWalletInitService.logInitializationStats');
@@ -183,12 +237,22 @@ export class MultiWalletInitService {
     gameManagementReady: boolean;
     storageReady: boolean;
     configurationReady: boolean;
+    migrationReady: boolean;
     errors: string[];
+    migrationStatus?: {
+      totalUsers: number;
+      migratedUsers: number;
+      pendingUsers: number;
+      failedUsers: number;
+      isComplete: boolean;
+    };
   } {
     const errors: string[] = [];
     let gameManagementReady = false;
     let storageReady = false;
     let configurationReady = false;
+    let migrationReady = false;
+    let migrationStatus;
 
     try {
       // Check game management
@@ -226,12 +290,28 @@ export class MultiWalletInitService {
       errors.push('Configuration access error');
     }
 
+    try {
+      // Check migration status
+      migrationStatus = WalletMigrationService.getMigrationStatus();
+      migrationReady = migrationStatus.isComplete;
+      if (!migrationReady && migrationStatus.pendingUsers > 0) {
+        errors.push(`${migrationStatus.pendingUsers} users need wallet migration`);
+      }
+      if (migrationStatus.failedUsers > 0) {
+        errors.push(`${migrationStatus.failedUsers} users have failed migrations`);
+      }
+    } catch (error) {
+      errors.push('Migration status check error');
+    }
+
     return {
       initialized: this.initialized,
       gameManagementReady,
       storageReady,
       configurationReady,
-      errors
+      migrationReady,
+      errors,
+      migrationStatus
     };
   }
 
@@ -366,5 +446,206 @@ export class MultiWalletInitService {
       ErrorService.handleError(error, 'MultiWalletInitService.importSystemData');
       throw error;
     }
+  }
+
+  // ===== MIGRATION UTILITIES =====
+
+  /**
+   * Migrate a specific user's wallet
+   */
+  static async migrateUserWallet(userId: string): Promise<{
+    success: boolean;
+    error?: string;
+    details?: any;
+  }> {
+    try {
+      const result = await WalletMigrationService.migrateUserWallet(userId);
+      return {
+        success: result.success,
+        error: result.error,
+        details: result.details
+      };
+    } catch (error) {
+      const appError = ErrorService.handleError(error, 'MultiWalletInitService.migrateUserWallet');
+      return {
+        success: false,
+        error: appError.message
+      };
+    }
+  }
+
+  /**
+   * Migrate all users in batches
+   */
+  static async migrateAllUsers(batchSize: number = 10): Promise<{
+    totalProcessed: number;
+    successful: number;
+    failed: number;
+    errors: string[];
+  }> {
+    try {
+      const result = await WalletMigrationService.migrateAllUsers(batchSize);
+      const errors = result.results
+        .filter(r => !r.success)
+        .map(r => r.error || 'Unknown error');
+
+      return {
+        totalProcessed: result.totalProcessed,
+        successful: result.successful,
+        failed: result.failed,
+        errors
+      };
+    } catch (error) {
+      const appError = ErrorService.handleError(error, 'MultiWalletInitService.migrateAllUsers');
+      return {
+        totalProcessed: 0,
+        successful: 0,
+        failed: 0,
+        errors: [appError.message]
+      };
+    }
+  }
+
+  /**
+   * Enable multi-wallet for a user with automatic migration
+   */
+  static async enableMultiWalletForUser(userId: string): Promise<{
+    success: boolean;
+    migrated: boolean;
+    error?: string;
+  }> {
+    try {
+      // Check if migration is needed
+      const needsMigration = WalletMigrationService.needsMigration(userId);
+      let migrated = false;
+
+      if (needsMigration) {
+        const migrationResult = await WalletMigrationService.migrateUserWallet(userId);
+        if (!migrationResult.success) {
+          return {
+            success: false,
+            migrated: false,
+            error: migrationResult.error
+          };
+        }
+        migrated = true;
+      }
+
+      // Enable multi-wallet for the user
+      WalletMigrationService.enableMultiWalletForUser(userId);
+
+      return {
+        success: true,
+        migrated
+      };
+    } catch (error) {
+      const appError = ErrorService.handleError(error, 'MultiWalletInitService.enableMultiWalletForUser');
+      return {
+        success: false,
+        migrated: false,
+        error: appError.message
+      };
+    }
+  }
+
+  /**
+   * Get migration status for the system
+   */
+  static getMigrationStatus() {
+    return WalletMigrationService.getMigrationStatus();
+  }
+
+  /**
+   * Get migration log
+   */
+  static getMigrationLog() {
+    return WalletMigrationService.getMigrationLog();
+  }
+
+  /**
+   * Validate migration for a user
+   */
+  static validateUserMigration(userId: string) {
+    return WalletMigrationService.validateMigration(userId);
+  }
+
+  /**
+   * Clean up old wallet data after successful migration
+   */
+  static cleanupOldWalletData(userId: string): {
+    success: boolean;
+    error?: string;
+  } {
+    try {
+      WalletMigrationService.cleanupOldWalletData(userId);
+      return { success: true };
+    } catch (error) {
+      const appError = ErrorService.handleError(error, 'MultiWalletInitService.cleanupOldWalletData');
+      return {
+        success: false,
+        error: appError.message
+      };
+    }
+  }
+
+  /**
+   * Get users needing migration
+   */
+  static getUsersNeedingMigration(): string[] {
+    return WalletMigrationService.getUsersNeedingMigration();
+  }
+
+  /**
+   * Check if multi-wallet is enabled for a user
+   */
+  static isMultiWalletEnabledForUser(userId: string): boolean {
+    return WalletMigrationService.isMultiWalletEnabledForUser(userId);
+  }
+
+  /**
+   * Enable multi-wallet for all users (full rollout)
+   */
+  static async enableMultiWalletForAllUsers(): Promise<{
+    success: boolean;
+    migrationResults?: {
+      totalProcessed: number;
+      successful: number;
+      failed: number;
+    };
+    error?: string;
+  }> {
+    try {
+      // First migrate all users
+      const migrationResults = await this.migrateAllUsers();
+      
+      if (migrationResults.failed > 0) {
+        console.warn(`${migrationResults.failed} users failed migration, but continuing with rollout`);
+      }
+
+      // Enable for all users
+      WalletMigrationService.enableMultiWalletForAllUsers();
+
+      return {
+        success: true,
+        migrationResults: {
+          totalProcessed: migrationResults.totalProcessed,
+          successful: migrationResults.successful,
+          failed: migrationResults.failed
+        }
+      };
+    } catch (error) {
+      const appError = ErrorService.handleError(error, 'MultiWalletInitService.enableMultiWalletForAllUsers');
+      return {
+        success: false,
+        error: appError.message
+      };
+    }
+  }
+
+  /**
+   * Disable multi-wallet for all users (rollback)
+   */
+  static disableMultiWalletForAllUsers(): void {
+    WalletMigrationService.disableMultiWalletForAllUsers();
   }
 }
