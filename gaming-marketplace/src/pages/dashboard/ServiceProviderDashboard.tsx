@@ -20,12 +20,27 @@ export const ServiceProviderDashboard: React.FC = () => {
     ) || false;
   };
 
-  // Get available tabs based on user roles
-  const availableTabs = [
-    ...(hasRole('advertiser') ? [{ id: 'advertiser' as TabType, label: '📊 Advertiser', icon: '📊' }] : []),
-    ...(hasRole('team_advertiser') ? [{ id: 'team_advertiser' as TabType, label: '👥 Team Advertiser', icon: '👥' }] : []),
-    ...(hasRole('booster') ? [{ id: 'booster' as TabType, label: '🎮 Booster', icon: '🎮' }] : [])
-  ];
+  // Get available tabs based on user roles and workspace context
+  const availableTabs = React.useMemo(() => {
+    const tabs = [];
+    
+    if (hasRole('advertiser') || hasRole('team_advertiser')) {
+      // Unified Advertiser tab that adapts to workspace context
+      tabs.push({ 
+        id: 'advertiser' as TabType, 
+        label: workspaceState.currentWorkspace.type === 'team' 
+          ? '👥 Team Services' 
+          : '📊 My Services', 
+        icon: workspaceState.currentWorkspace.type === 'team' ? '👥' : '📊' 
+      });
+    }
+    
+    if (hasRole('booster')) {
+      tabs.push({ id: 'booster' as TabType, label: '🎮 Booster', icon: '🎮' });
+    }
+    
+    return tabs;
+  }, [hasRole, workspaceState.currentWorkspace.type]);
 
   // Set default active tab to first available tab
   React.useEffect(() => {
@@ -53,9 +68,10 @@ export const ServiceProviderDashboard: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'advertiser':
-        return <AdvertiserTab />;
-      case 'team_advertiser':
-        return <TeamAdvertiserTab />;
+        // Use unified advertiser tab that adapts to workspace context
+        return workspaceState.currentWorkspace.type === 'team' && hasRole('team_advertiser')
+          ? <TeamAdvertiserTab />
+          : <AdvertiserTab />;
       case 'booster':
         return <BoosterTab />;
       default:
@@ -68,15 +84,31 @@ export const ServiceProviderDashboard: React.FC = () => {
       {/* Workspace Switcher */}
       <WorkspaceSwitcher />
 
-      {/* Team Workspace Banner */}
-      {workspaceState.currentWorkspace.type === 'team' && (
-        <div className="service-provider-dashboard__team-banner">
-          <span className="service-provider-dashboard__team-banner-icon">👥</span>
-          <span className="service-provider-dashboard__team-banner-text">
-            Team Workspace: {workspaceState.currentWorkspace.name} - All earnings go to team leader
+      {/* Workspace Context Banner */}
+      <div className={`service-provider-dashboard__workspace-banner ${
+        workspaceState.currentWorkspace.type === 'team' 
+          ? 'service-provider-dashboard__workspace-banner--team' 
+          : 'service-provider-dashboard__workspace-banner--personal'
+      }`}>
+        <div className="service-provider-dashboard__workspace-info">
+          <span className="service-provider-dashboard__workspace-icon">
+            {workspaceState.currentWorkspace.type === 'team' ? '👥' : '👤'}
           </span>
+          <span className="service-provider-dashboard__workspace-text">
+            {workspaceState.currentWorkspace.type === 'team' 
+              ? `Team Workspace: ${workspaceState.currentWorkspace.name}` 
+              : 'Personal Workspace'}
+          </span>
+          {workspaceState.currentWorkspace.isTeamLeader && (
+            <span className="service-provider-dashboard__workspace-badge">Leader</span>
+          )}
         </div>
-      )}
+        {workspaceState.currentWorkspace.type === 'team' && (
+          <div className="service-provider-dashboard__workspace-note">
+            All earnings go to team leader
+          </div>
+        )}
+      </div>
 
       {/* Top Navigation Tabs */}
       <div className="service-provider-dashboard__tabs">

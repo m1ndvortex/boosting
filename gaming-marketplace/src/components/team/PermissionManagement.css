@@ -1,0 +1,230 @@
+.permission-management {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.permission-management__header h3 {
+  color: var(--discord-text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.permission-management__header p {
+  color: var(--discord-text-secondary);
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.permission-management__no-access {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.permission-management__no-access h3 {
+  color: var(--discord-text-primary);
+  margin-bottom: 12px;
+}
+
+.permission-management__no-access p {
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+.permission-management__content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+}
+
+/* Member List */
+.permission-management__member-list {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.permission-management__member-list h4 {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.permission-management__no-members {
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.permission-management__no-members p {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.permission-management__members {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-management__member-card {
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-primary);
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.permission-management__member-card:hover {
+  border-color: var(--discord-accent);
+}
+
+.permission-management__member-card--selected {
+  border-color: var(--discord-accent);
+  background: rgba(114, 137, 218, 0.1);
+}
+
+.permission-management__member-info {
+  margin-bottom: 8px;
+}
+
+.permission-management__member-name {
+  color: var(--discord-text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.permission-management__member-permissions-count {
+  color: var(--discord-text-secondary);
+  font-size: 12px;
+}
+
+.permission-management__template-select {
+  width: 100%;
+  background: var(--discord-bg-primary);
+  border: 1px solid var(--discord-bg-secondary);
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: var(--discord-text-primary);
+  font-size: 12px;
+}
+
+.permission-management__template-select:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+/* Permissions Panel */
+.permission-management__permissions {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.permission-management__permissions h4 {
+  color: var(--discord-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+.permission-management__category {
+  margin-bottom: 24px;
+}
+
+.permission-management__category:last-child {
+  margin-bottom: 0;
+}
+
+.permission-management__category-title {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--discord-bg-tertiary);
+}
+
+.permission-management__category-permissions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-management__permission {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.permission-management__permission:hover {
+  border-color: var(--discord-accent);
+}
+
+.permission-management__permission-checkbox {
+  margin: 0;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.permission-management__permission-info {
+  flex: 1;
+}
+
+.permission-management__permission-name {
+  color: var(--discord-text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.permission-management__permission-description {
+  color: var(--discord-text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .permission-management__content {
+    grid-template-columns: 1fr;
+  }
+  
+  .permission-management__member-list {
+    order: 2;
+  }
+  
+  .permission-management__permissions {
+    order: 1;
+  }
+  
+  .permission-management__members {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+  
+  .permission-management__member-card {
+    min-width: 200px;
+    flex-shrink: 0;
+  }
+}

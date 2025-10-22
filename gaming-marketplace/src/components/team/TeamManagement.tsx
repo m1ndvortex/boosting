@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { TeamService } from '../../services/teamService';
 import { useAuth } from '../../contexts/AuthContext';
+import { useWorkspace } from '../../contexts/WorkspaceContext';
+import { useNotificationHelpers } from '../notifications/NotificationSystem';
 import { TeamCreationForm } from './TeamCreationForm';
 import { TeamInformation } from './TeamInformation';
 import { MemberInvitation } from './MemberInvitation';
+import { TeamPerformance } from './TeamPerformance';
+import { PermissionManagement } from './PermissionManagement';
+import { WorkspaceTemplates } from './WorkspaceTemplates';
 import type { Team } from '../../types';
 import './TeamManagement.css';
 
-type TeamManagementSection = 'overview' | 'create' | 'information' | 'invite' | 'members' | 'performance';
+type TeamManagementSection = 'overview' | 'create' | 'information' | 'invite' | 'members' | 'performance' | 'permissions';
 
 export const TeamManagement: React.FC = () => {
   const { state: authState } = useAuth();
+  const { switchWorkspace, state: workspaceState } = useWorkspace();
+  const { showSuccess, showTeamActivity } = useNotificationHelpers();
   const [activeSection, setActiveSection] = useState<TeamManagementSection>('overview');
   const [userTeams, setUserTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   // Load user teams
   useEffect(() => {
@@ -32,6 +40,22 @@ export const TeamManagement: React.FC = () => {
     setUserTeams(prev => [...prev, team]);
     setSelectedTeam(team);
     setActiveSection('information');
+    showSuccess('Team Created', `Successfully created team "${team.name}"`);
+    showTeamActivity(team.name, 'Team created', authState.user?.username || 'User');
+  };
+
+  const handleTemplateApplied = (template: any) => {
+    setShowTemplates(false);
+    // Refresh teams list
+    if (authState.user) {
+      const teams = TeamService.getUserTeams(authState.user.id);
+      setUserTeams(teams);
+      if (teams.length > 0) {
+        setSelectedTeam(teams[teams.length - 1]); // Select the newly created team
+        setActiveSection('information');
+      }
+    }
+    showSuccess('Template Applied', `Team created using ${template.name} template`);
   };
 
   const isTeamLeader = (team: Team): boolean => {
@@ -80,6 +104,32 @@ export const TeamManagement: React.FC = () => {
           </div>
         );
       
+      case 'performance':
+        return selectedTeam ? (
+          <TeamPerformance team={selectedTeam} />
+        ) : (
+          <div className="team-management__no-selection">
+            <p>Please select a team to view performance.</p>
+          </div>
+        );
+      
+      case 'permissions':
+        return selectedTeam ? (
+          <PermissionManagement
+            team={selectedTeam}
+            isLeader={isTeamLeader(selectedTeam)}
+            onPermissionsUpdated={() => {
+              // Refresh team data if needed
+              const updatedTeam = TeamService.getTeam(selectedTeam.id);
+              if (updatedTeam) setSelectedTeam(updatedTeam);
+            }}
+          />
+        ) : (
+          <div className="team-management__no-selection">
+            <p>Please select a team to manage permissions.</p>
+          </div>
+        );
+      
       default:
         return (
           <div className="team-management__overview">
@@ -93,24 +143,40 @@ export const TeamManagement: React.FC = () => {
                 <div className="team-management__no-teams-content">
                   <h4>No Teams Yet</h4>
                   <p>Create a team to start collaborating with other advertisers and manage services together.</p>
-                  <button
-                    className="team-management__create-button"
-                    onClick={() => setActiveSection('create')}
-                  >
-                    Create Your First Team
-                  </button>
+                  <div className="team-management__create-options">
+                    <button
+                      className="team-management__create-button"
+                      onClick={() => setActiveSection('create')}
+                    >
+                      Create Custom Team
+                    </button>
+                    <button
+                      className="team-management__template-button"
+                      onClick={() => setShowTemplates(true)}
+                    >
+                      Use Template
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
               <div className="team-management__teams-list">
                 <div className="team-management__teams-header">
                   <h4>Your Teams ({userTeams.length})</h4>
-                  <button
-                    className="team-management__create-button team-management__create-button--small"
-                    onClick={() => setActiveSection('create')}
-                  >
-                    Create New Team
-                  </button>
+                  <div className="team-management__header-actions">
+                    <button
+                      className="team-management__template-button team-management__template-button--small"
+                      onClick={() => setShowTemplates(true)}
+                    >
+                      Use Template
+                    </button>
+                    <button
+                      className="team-management__create-button team-management__create-button--small"
+                      onClick={() => setActiveSection('create')}
+                    >
+                      Create New Team
+                    </button>
+                  </div>
                 </div>
 
                 <div className="team-management__teams-grid">
@@ -124,16 +190,51 @@ export const TeamManagement: React.FC = () => {
                     >
                       <div className="team-management__team-header">
                         <h5>{team.name}</h5>
-                        {isTeamLeader(team) && (
-                          <span className="team-management__leader-badge">Leader</span>
-                        )}
+                        <div className="team-management__team-badges">
+                          {isTeamLeader(team) && (
+                            <span className="team-management__leader-badge">Leader</span>
+                          )}
+                          <span className="team-management__member-badge">
+                            {team.members.filter(m => m.status === 'active').length} members
+                          </span>
+                        </div>
                       </div>
                       <p className="team-management__team-description">
                         {team.description || 'No description provided'}
                       </p>
                       <div className="team-management__team-stats">
-                        <span>{team.members.filter(m => m.status === 'active').length} members</span>
                         <span>Created {new Date(team.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <div className="team-management__team-actions">
+                        <button
+                          className={`team-management__quick-action ${
+                            workspaceState.currentWorkspace.type === 'team' && 
+                            workspaceState.currentWorkspace.id === team.id 
+                              ? 'team-management__quick-action--active' 
+                              : ''
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Switch to team workspace
+                            switchWorkspace({
+                              type: 'team',
+                              id: team.id,
+                              name: team.name,
+                              isTeamLeader: isTeamLeader(team)
+                            });
+                          }}
+                          title={
+                            workspaceState.currentWorkspace.type === 'team' && 
+                            workspaceState.currentWorkspace.id === team.id
+                              ? 'Currently active workspace'
+                              : 'Switch to team workspace'
+                          }
+                        >
+                          {workspaceState.currentWorkspace.type === 'team' && 
+                           workspaceState.currentWorkspace.id === team.id 
+                            ? '✓ Active Workspace' 
+                            : 'Switch Workspace'}
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -188,6 +289,26 @@ export const TeamManagement: React.FC = () => {
                 Invite Members
               </button>
             )}
+
+            <button
+              className={`team-management__nav-item ${
+                activeSection === 'performance' ? 'team-management__nav-item--active' : ''
+              }`}
+              onClick={() => setActiveSection('performance')}
+            >
+              Performance
+            </button>
+
+            {isTeamLeader(selectedTeam) && (
+              <button
+                className={`team-management__nav-item ${
+                  activeSection === 'permissions' ? 'team-management__nav-item--active' : ''
+                }`}
+                onClick={() => setActiveSection('permissions')}
+              >
+                Permissions
+              </button>
+            )}
           </>
         )}
       </div>
@@ -196,6 +317,14 @@ export const TeamManagement: React.FC = () => {
       <div className="team-management__content">
         {renderSectionContent()}
       </div>
+
+      {/* Workspace Templates Modal */}
+      {showTemplates && (
+        <WorkspaceTemplates
+          onTemplateApplied={handleTemplateApplied}
+          onClose={() => setShowTemplates(false)}
+        />
+      )}
     </div>
   );
 };

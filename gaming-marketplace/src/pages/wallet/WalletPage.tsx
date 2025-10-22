@@ -18,10 +18,10 @@ import './WalletPage.css';
 export const WalletPage: React.FC = () => {
   const { state: authState } = useAuth();
   const { state: walletState, deposit, requestWithdrawal, convertCurrency } = useWallet();
-  
+
   // Multi-wallet system
   const multiWallet = useMultiWallet(authState.user?.id || '');
-  
+
   const [showDepositForm, setShowDepositForm] = useState(false);
   const [showWithdrawalForm, setShowWithdrawalForm] = useState(false);
   const [showConverter, setShowConverter] = useState(false);
@@ -64,11 +64,11 @@ export const WalletPage: React.FC = () => {
   };
 
   const handleMultiWalletConvert = async (
-    fromWalletType: 'static' | 'gold', 
-    fromWalletId: string, 
-    toWalletType: 'static' | 'gold', 
-    toWalletId: string, 
-    amount: number, 
+    fromWalletType: 'static' | 'gold',
+    fromWalletId: string,
+    toWalletType: 'static' | 'gold',
+    toWalletId: string,
+    amount: number,
     goldType?: 'suspended' | 'withdrawable'
   ) => {
     if (fromWalletType === 'gold' && toWalletType === 'static') {
@@ -111,7 +111,7 @@ export const WalletPage: React.FC = () => {
         title="Wallet"
         subtitle="Multi-currency wallet management"
       />
-      
+
       <div className="wallet-page__content">
         {walletState.error && (
           <div className="wallet-page__error-banner">
@@ -121,13 +121,13 @@ export const WalletPage: React.FC = () => {
         )}
 
         <div className="wallet-page__system-toggle">
-          <button 
+          <button
             className={`wallet-page__toggle-btn ${!useMultiWalletSystem ? 'active' : ''}`}
             onClick={() => setUseMultiWalletSystem(false)}
           >
             Legacy Wallet
           </button>
-          <button 
+          <button
             className={`wallet-page__toggle-btn ${useMultiWalletSystem ? 'active' : ''}`}
             onClick={() => setUseMultiWalletSystem(true)}
           >
@@ -139,8 +139,8 @@ export const WalletPage: React.FC = () => {
           <div className="wallet-page__main">
             {useMultiWalletSystem ? (
               <>
-                <MultiWalletBalance 
-                  wallet={multiWallet.wallet!} 
+                <MultiWalletBalance
+                  wallet={multiWallet.wallet!}
                   loading={multiWallet.loading}
                 />
                 <GoldWalletManager
@@ -150,7 +150,7 @@ export const WalletPage: React.FC = () => {
                   onRemoveWallet={multiWallet.removeGoldWallet}
                   loading={multiWallet.loading}
                 />
-                
+
                 {/* Suspended Gold Display for each gold wallet with suspended gold */}
                 {multiWallet.wallet && Object.values(multiWallet.wallet.goldWallets)
                   .filter(goldWallet => goldWallet.suspendedGold > 0)
@@ -158,7 +158,7 @@ export const WalletPage: React.FC = () => {
                     <SuspendedGoldDisplay
                       key={goldWallet.realmId}
                       goldWallet={goldWallet}
-                      onConvertToFiat={(amount, currency) => 
+                      onConvertToFiat={(amount, currency) =>
                         multiWallet.convertSuspendedGoldToFiat(goldWallet.realmId, amount, currency)
                       }
                       loading={multiWallet.loading}
@@ -167,19 +167,19 @@ export const WalletPage: React.FC = () => {
                 }
               </>
             ) : (
-              <WalletBalance 
-                wallet={walletState.wallet!} 
+              <WalletBalance
+                wallet={walletState.wallet!}
                 loading={walletState.loading}
               />
             )}
-            
+
             <WalletActions
               // Legacy props for backward compatibility
               onDeposit={useMultiWalletSystem ? undefined : () => setShowDepositForm(true)}
               onWithdraw={useMultiWalletSystem ? undefined : () => setShowWithdrawalForm(true)}
               onConvert={useMultiWalletSystem ? undefined : () => setShowConverter(true)}
               disabled={useMultiWalletSystem ? false : walletState.loading}
-              
+
               // Multi-wallet props
               multiWallet={useMultiWalletSystem ? (multiWallet.wallet || undefined) : undefined}
               availableRealms={useMultiWalletSystem ? multiWallet.availableRealms : undefined}
@@ -191,9 +191,9 @@ export const WalletPage: React.FC = () => {
               loading={useMultiWalletSystem ? multiWallet.loading : walletState.loading}
             />
           </div>
-          
+
           <div className="wallet-page__sidebar">
-            <TransactionHistory 
+            <TransactionHistory
               transactions={useMultiWalletSystem ? multiWallet.transactions : walletState.transactions}
               loading={useMultiWalletSystem ? multiWallet.loading : walletState.loading}
             />

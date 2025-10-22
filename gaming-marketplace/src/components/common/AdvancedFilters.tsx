@@ -1,121 +1,99 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { Button } from '../discord/Button';
-import { Input } from '../discord/Input';
+import React, { useState } from 'react';
 import './AdvancedFilters.css';
 
 export interface FilterOption {
-  key: string;
+  id: string;
   label: string;
-  type: 'text' | 'select' | 'multiselect' | 'range' | 'date' | 'boolean';
-  options?: { value: string; label: string }[];
-  placeholder?: string;
+  value: any;
+  count?: number;
+}
+
+export interface FilterGroup {
+  id: string;
+  label: string;
+  type: 'select' | 'multiselect' | 'range' | 'date' | 'search';
+  options?: FilterOption[];
   min?: number;
   max?: number;
+  step?: number;
+  placeholder?: string;
 }
 
 export interface SortOption {
-  key: string;
+  id: string;
   label: string;
-  direction?: 'asc' | 'desc';
-}
-
-export interface FilterValues {
-  [key: string]: unknown;
-}
-
-export interface SortConfig {
-  key: string;
+  field: string;
   direction: 'asc' | 'desc';
 }
 
+export interface FilterState {
+  [key: string]: any;
+}
+
 interface AdvancedFiltersProps {
-  filters: FilterOption[];
+  filterGroups: FilterGroup[];
   sortOptions: SortOption[];
-  onFiltersChange: (filters: FilterValues) => void;
-  onSortChange: (sort: SortConfig) => void;
+  currentFilters: FilterState;
+  currentSort: string;
+  onFiltersChange: (filters: FilterState) => void;
+  onSortChange: (sortId: string) => void;
   onReset: () => void;
-  initialFilters?: FilterValues;
-  initialSort?: SortConfig;
-  showSearch?: boolean;
-  searchPlaceholder?: string;
-  className?: string;
+  showCount?: boolean;
+  totalCount?: number;
+  filteredCount?: number;
 }
 
 export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
-  filters,
+  filterGroups,
   sortOptions,
+  currentFilters,
+  currentSort,
   onFiltersChange,
   onSortChange,
   onReset,
-  initialFilters = {},
-  initialSort,
-  showSearch = true,
-  searchPlaceholder = 'Search...',
-  className = ''
+  showCount = false,
+  totalCount = 0,
+  filteredCount = 0
 }) => {
-  const [filterValues, setFilterValues] = useState<FilterValues>(initialFilters);
-  const [sortConfig, setSortConfig] = useState<SortConfig>(
-    initialSort || { key: sortOptions[0]?.key || '', direction: 'asc' }
-  );
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleFilterChange = useCallback((key: string, value: unknown) => {
-    const newFilters = { ...filterValues, [key]: value };
-    setFilterValues(newFilters);
+  const handleFilterChange = (groupId: string, value: any) => {
+    const newFilters = { ...currentFilters, [groupId]: value };
     onFiltersChange(newFilters);
-  }, [filterValues, onFiltersChange]);
+  };
 
-  const handleSortChange = useCallback((key: string, direction: 'asc' | 'desc') => {
-    const newSort = { key, direction };
-    setSortConfig(newSort);
-    onSortChange(newSort);
-  }, [onSortChange]);
+  const handleRangeChange = (groupId: string, type: 'min' | 'max', value: number) => {
+    const currentRange = currentFilters[groupId] || {};
+    const newRange = { ...currentRange, [type]: value };
+    handleFilterChange(groupId, newRange);
+  };
 
-  const handleReset = useCallback(() => {
-    setFilterValues({});
-    setSortConfig({ key: sortOptions[0]?.key || '', direction: 'asc' });
-    setSearchQuery('');
-    onReset();
-  }, [onReset, sortOptions]);
+  const getActiveFilterCount = () => {
+    return Object.values(currentFilters).filter(value => {
+      if (Array.isArray(value)) return value.length > 0;
+      if (typeof value === 'object' && value !== null) {
+        return Object.values(value).some(v => v !== undefined && v !== '');
+      }
+      return value !== undefined && value !== '' && value !== null;
+    }).length;
+  };
 
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchQuery(value);
-    handleFilterChange('search', value);
-  }, [handleFilterChange]);
+  const renderFilterGroup = (group: FilterGroup) => {
+    const currentValue = currentFilters[group.id];
 
-  const activeFiltersCount = useMemo(() => {
-    return Object.values(filterValues).filter(value => 
-      value !== undefined && value !== null && value !== '' && 
-      (Array.isArray(value) ? value.length > 0 : true)
-    ).length;
-  }, [filterValues]);
-
-  const renderFilterInput = (filter: FilterOption) => {
-    const value = filterValues[filter.key];
-
-    switch (filter.type) {
-      case 'text':
-        return (
-          <Input
-            type="text"
-            placeholder={filter.placeholder}
-            value={typeof value === 'string' ? value : ''}
-            onChange={(e) => handleFilterChange(filter.key, e.target.value)}
-          />
-        );
-
+    switch (group.type) {
       case 'select':
         return (
           <select
             className="advanced-filters__select"
-            value={typeof value === 'string' ? value : ''}
-            onChange={(e) => handleFilterChange(filter.key, e.target.value)}
+            value={currentValue || ''}
+            onChange={(e) => handleFilterChange(group.id, e.target.value || undefined)}
           >
-            <option value="">All</option>
-            {filter.options?.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            <option value="">All {group.label}</option>
+            {group.options?.map((option) => (
+              <option key={option.id} value={option.value}>
+                {option.label} {option.count !== undefined && `(${option.count})`}
               </option>
             ))}
           </select>
@@ -124,79 +102,86 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       case 'multiselect':
         return (
           <div className="advanced-filters__multiselect">
-            {filter.options?.map(option => (
-              <label key={option.value} className="advanced-filters__checkbox">
+            {group.options?.map((option) => (
+              <label key={option.id} className="advanced-filters__checkbox">
                 <input
                   type="checkbox"
-                  checked={Array.isArray(value) && value.includes(option.value)}
+                  checked={currentValue?.includes(option.value) || false}
                   onChange={(e) => {
-                    const currentValues = Array.isArray(value) ? value : [];
-                    const newValues = e.target.checked
-                      ? [...currentValues, option.value]
-                      : currentValues.filter(v => v !== option.value);
-                    handleFilterChange(filter.key, newValues);
+                    const currentArray = currentValue || [];
+                    const newArray = e.target.checked
+                      ? [...currentArray, option.value]
+                      : currentArray.filter((v: any) => v !== option.value);
+                    handleFilterChange(group.id, newArray.length > 0 ? newArray : undefined);
                   }}
                 />
                 <span className="advanced-filters__checkbox-label">
-                  {option.label}
+                  {option.label} {option.count !== undefined && `(${option.count})`}
                 </span>
               </label>
             ))}
           </div>
         );
 
-      case 'range': {
-        const rangeValue = (value && typeof value === 'object' && value !== null) 
-          ? value as { min?: number; max?: number }
-          : { min: filter.min, max: filter.max };
+      case 'range':
+        const rangeValue = currentValue || {};
         return (
           <div className="advanced-filters__range">
-            <Input
-              type="number"
-              placeholder="Min"
-              value={rangeValue.min?.toString() || ''}
-              min={filter.min}
-              max={filter.max}
-              onChange={(e) => handleFilterChange(filter.key, {
-                ...rangeValue,
-                min: e.target.value ? Number(e.target.value) : undefined
-              })}
+            <div className="advanced-filters__range-inputs">
+              <input
+                type="number"
+                placeholder={`Min ${group.label}`}
+                value={rangeValue.min || ''}
+                min={group.min}
+                max={group.max}
+                step={group.step}
+                onChange={(e) => handleRangeChange(group.id, 'min', parseFloat(e.target.value) || undefined)}
+                className="advanced-filters__range-input"
+              />
+              <span className="advanced-filters__range-separator">to</span>
+              <input
+                type="number"
+                placeholder={`Max ${group.label}`}
+                value={rangeValue.max || ''}
+                min={group.min}
+                max={group.max}
+                step={group.step}
+                onChange={(e) => handleRangeChange(group.id, 'max', parseFloat(e.target.value) || undefined)}
+                className="advanced-filters__range-input"
+              />
+            </div>
+          </div>
+        );
+
+      case 'date':
+        const dateValue = currentValue || {};
+        return (
+          <div className="advanced-filters__date-range">
+            <input
+              type="date"
+              value={dateValue.from || ''}
+              onChange={(e) => handleRangeChange(group.id, 'from', e.target.value || undefined)}
+              className="advanced-filters__date-input"
             />
-            <span className="advanced-filters__range-separator">to</span>
-            <Input
-              type="number"
-              placeholder="Max"
-              value={rangeValue.max?.toString() || ''}
-              min={filter.min}
-              max={filter.max}
-              onChange={(e) => handleFilterChange(filter.key, {
-                ...rangeValue,
-                max: e.target.value ? Number(e.target.value) : undefined
-              })}
+            <span className="advanced-filters__date-separator">to</span>
+            <input
+              type="date"
+              value={dateValue.to || ''}
+              onChange={(e) => handleRangeChange(group.id, 'to', e.target.value || undefined)}
+              className="advanced-filters__date-input"
             />
           </div>
         );
-      }
 
-      case 'date':
+      case 'search':
         return (
-          <Input
-            type="date"
-            value={typeof value === 'string' ? value : ''}
-            onChange={(e) => handleFilterChange(filter.key, e.target.value)}
+          <input
+            type="text"
+            placeholder={group.placeholder || `Search ${group.label}...`}
+            value={currentValue || ''}
+            onChange={(e) => handleFilterChange(group.id, e.target.value || undefined)}
+            className="advanced-filters__search"
           />
-        );
-
-      case 'boolean':
-        return (
-          <label className="advanced-filters__toggle">
-            <input
-              type="checkbox"
-              checked={typeof value === 'boolean' ? value : false}
-              onChange={(e) => handleFilterChange(filter.key, e.target.checked)}
-            />
-            <span className="advanced-filters__toggle-slider"></span>
-          </label>
         );
 
       default:
@@ -205,91 +190,73 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   };
 
   return (
-    <div className={`advanced-filters ${className}`}>
+    <div className="advanced-filters">
       <div className="advanced-filters__header">
-        {showSearch && (
-          <div className="advanced-filters__search">
-            <Input
+        <div className="advanced-filters__main-controls">
+          <div className="advanced-filters__search-sort">
+            <input
               type="text"
-              placeholder={searchPlaceholder}
+              placeholder="Search..."
               value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="advanced-filters__search-input"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="advanced-filters__main-search"
             />
+            <select
+              className="advanced-filters__sort"
+              value={currentSort}
+              onChange={(e) => onSortChange(e.target.value)}
+            >
+              {sortOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="advanced-filters__actions">
+            <button
+              className={`advanced-filters__toggle ${isExpanded ? 'advanced-filters__toggle--active' : ''}`}
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              <span className="advanced-filters__toggle-icon">🔍</span>
+              Filters
+              {getActiveFilterCount() > 0 && (
+                <span className="advanced-filters__badge">{getActiveFilterCount()}</span>
+              )}
+            </button>
+            
+            {getActiveFilterCount() > 0 && (
+              <button
+                className="advanced-filters__reset"
+                onClick={onReset}
+              >
+                Clear All
+              </button>
+            )}
+          </div>
+        </div>
+
+        {showCount && (
+          <div className="advanced-filters__count">
+            Showing {filteredCount.toLocaleString()} of {totalCount.toLocaleString()} results
           </div>
         )}
-
-        <div className="advanced-filters__sort">
-          <select
-            className="advanced-filters__sort-select"
-            value={`${sortConfig.key}-${sortConfig.direction}`}
-            onChange={(e) => {
-              const [key, direction] = e.target.value.split('-');
-              handleSortChange(key, direction as 'asc' | 'desc');
-            }}
-          >
-            {sortOptions.map(option => (
-              <React.Fragment key={option.key}>
-                <option value={`${option.key}-asc`}>
-                  {option.label} (A-Z)
-                </option>
-                <option value={`${option.key}-desc`}>
-                  {option.label} (Z-A)
-                </option>
-              </React.Fragment>
-            ))}
-          </select>
-        </div>
-
-        <div className="advanced-filters__controls">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="advanced-filters__toggle"
-          >
-            Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-            <span className={`advanced-filters__toggle-icon ${isExpanded ? 'expanded' : ''}`}>
-              ▼
-            </span>
-          </Button>
-
-          {activeFiltersCount > 0 && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
-          )}
-        </div>
       </div>
 
       {isExpanded && (
         <div className="advanced-filters__panel">
-          <div className="advanced-filters__grid">
-            {filters.map(filter => (
-              <div key={filter.key} className="advanced-filters__field">
-                <label className="advanced-filters__label">
-                  {filter.label}
+          <div className="advanced-filters__groups">
+            {filterGroups.map((group) => (
+              <div key={group.id} className="advanced-filters__group">
+                <label className="advanced-filters__group-label">
+                  {group.label}
                 </label>
-                {renderFilterInput(filter)}
+                <div className="advanced-filters__group-content">
+                  {renderFilterGroup(group)}
+                </div>
               </div>
             ))}
-          </div>
-
-          <div className="advanced-filters__panel-actions">
-            <Button variant="secondary" size="sm" onClick={handleReset}>
-              Reset All
-            </Button>
-            <Button 
-              variant="primary" 
-              size="sm" 
-              onClick={() => setIsExpanded(false)}
-            >
-              Apply Filters
-            </Button>
           </div>
         </div>
       )}

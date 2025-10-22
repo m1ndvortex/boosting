@@ -1,7 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
-import { NotificationProvider } from './contexts/NotificationContext';
-import { NotificationContainer } from './components/notifications/NotificationContainer';
+import { NotificationProvider } from './components/notifications/NotificationSystem';
 import { AppProvider } from './contexts/AppProvider';
 import { AppRouter } from './components/routing/AppRouter';
 import './styles/global.css';
@@ -17,7 +16,6 @@ function App() {
         <NotificationProvider>
           <AppProvider>
             <AppRouter />
-            <NotificationContainer />
           </AppProvider>
         </NotificationProvider>
       </Router>

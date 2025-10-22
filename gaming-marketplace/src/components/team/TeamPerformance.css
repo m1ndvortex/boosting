@@ -1,0 +1,305 @@
+.team-performance {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.team-performance__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.team-performance__header h3 {
+  color: var(--discord-text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.team-performance__time-selector {
+  display: flex;
+  gap: 4px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.team-performance__time-button {
+  background: none;
+  border: none;
+  color: var(--discord-text-secondary);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.team-performance__time-button:hover {
+  background: var(--discord-bg-secondary);
+  color: var(--discord-text-primary);
+}
+
+.team-performance__time-button--active {
+  background: var(--discord-accent);
+  color: white;
+}
+
+/* Loading and Error States */
+.team-performance__loading,
+.team-performance__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.team-performance__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--discord-bg-tertiary);
+  border-top: 3px solid var(--discord-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.team-performance__loading p,
+.team-performance__error p {
+  color: var(--discord-text-secondary);
+  margin: 0;
+}
+
+/* Metrics Grid */
+.team-performance__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.team-performance__metric-card {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.17s ease;
+}
+
+.team-performance__metric-card:hover {
+  border-color: var(--discord-accent);
+  transform: translateY(-2px);
+}
+
+.team-performance__metric-icon {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(114, 137, 218, 0.1);
+  border-radius: 50%;
+}
+
+.team-performance__metric-content {
+  flex: 1;
+}
+
+.team-performance__metric-value {
+  color: var(--discord-text-primary);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.team-performance__metric-label {
+  color: var(--discord-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sections */
+.team-performance__section {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.team-performance__section h4 {
+  color: var(--discord-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+/* Member Contributions */
+.team-performance__contributions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.team-performance__contribution-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.team-performance__member-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.team-performance__member-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--discord-accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.team-performance__member-details {
+  flex: 1;
+}
+
+.team-performance__member-name {
+  color: var(--discord-text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.team-performance__member-stats {
+  color: var(--discord-text-secondary);
+  font-size: 12px;
+}
+
+.team-performance__contribution-bar {
+  height: 6px;
+  background: var(--discord-bg-primary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.team-performance__contribution-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--discord-accent), var(--discord-success));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Activities */
+.team-performance__activities {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.team-performance__activity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: var(--discord-bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--discord-bg-primary);
+}
+
+.team-performance__activity-icon {
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(114, 137, 218, 0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-performance__activity-content {
+  flex: 1;
+}
+
+.team-performance__activity-text {
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.team-performance__activity-time {
+  color: var(--discord-text-muted);
+  font-size: 12px;
+}
+
+.team-performance__no-activities {
+  text-align: center;
+  padding: 32px;
+}
+
+.team-performance__no-activities p {
+  color: var(--discord-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .team-performance__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .team-performance__metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .team-performance__metric-card {
+    padding: 16px;
+  }
+  
+  .team-performance__metric-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .team-performance__metric-value {
+    font-size: 20px;
+  }
+  
+  .team-performance__time-selector {
+    justify-content: center;
+  }
+}

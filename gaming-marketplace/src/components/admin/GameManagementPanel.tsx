@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../discord/Button';
 import { Input } from '../discord/Input';
 import { GameManagementService } from '../../services/gameManagementService';
-import { useNotifications } from '../../contexts/NotificationContext';
+import { useNotificationHelpers } from '../notifications/NotificationSystem';
 import { LoadingOverlay } from '../common/LoadingStates';
 import type { GameDefinition } from '../../types';
 import './GameManagementPanel.css';
@@ -22,7 +22,7 @@ interface EditingGame extends GameFormData {
 }
 
 export const GameManagementPanel: React.FC<GameManagementPanelProps> = ({ className = '' }) => {
-  const { showSuccess, showError } = useNotifications();
+  const { showSuccess, showError } = useNotificationHelpers();
   const [games, setGames] = useState<GameDefinition[]>([]);
   const [loading, setLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);

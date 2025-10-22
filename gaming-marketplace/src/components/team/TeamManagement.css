@@ -123,6 +123,12 @@
   margin: 0;
 }
 
+.team-management__header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .team-management__teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -151,7 +157,7 @@
 .team-management__team-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 8px;
 }
 
@@ -160,6 +166,14 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+  flex: 1;
+}
+
+.team-management__team-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
 }
 
 .team-management__leader-badge {
@@ -169,6 +183,17 @@
   padding: 2px 8px;
   border-radius: 10px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.team-management__member-badge {
+  background: var(--discord-accent);
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
 .team-management__team-description {
@@ -199,4 +224,137 @@
   color: var(--discord-text-secondary);
   font-size: 16px;
   margin: 0;
+}
+/*
+ Team Actions */
+.team-management__team-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--discord-bg-tertiary);
+}
+
+.team-management__quick-action {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-secondary);
+  border: 1px solid var(--discord-bg-primary);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+  width: 100%;
+}
+
+.team-management__quick-action:hover {
+  background: var(--discord-accent);
+  color: white;
+  border-color: var(--discord-accent);
+}
+
+.team-management__quick-action--active {
+  background: var(--discord-success);
+  color: white;
+  border-color: var(--discord-success);
+}
+
+.team-management__quick-action--active:hover {
+  background: #3ba55c;
+  border-color: #3ba55c;
+}
+
+/* Enhanced Team Card Layout */
+.team-management__team-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.team-management__team-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.17s ease;
+}
+
+.team-management__team-card--selected::before {
+  background: var(--discord-accent);
+}
+
+.team-management__team-card:hover::before {
+  background: var(--discord-accent);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .team-management__teams-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .team-management__teams-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .team-management__team-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .team-management__team-badges {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}/* 
+Create Options */
+.team-management__create-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.team-management__template-button {
+  background: var(--discord-success);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.17s ease;
+}
+
+.team-management__template-button:hover {
+  background: #3ba55c;
+}
+
+.team-management__template-button--small {
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+/* Enhanced Header Actions */
+.team-management__header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .team-management__create-options {
+    flex-direction: column;
+  }
+  
+  .team-management__header-actions {
+    width: 100%;
+    justify-content: center;
+  }
 }

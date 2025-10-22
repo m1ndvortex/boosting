@@ -178,6 +178,8 @@ export interface ActivityLogEntry {
   action: string;
   changes: Record<string, any>;
   timestamp: Date;
+  workspaceId?: string;
+  workspaceType?: 'personal' | 'team';
 }
 
 // Team invitation system

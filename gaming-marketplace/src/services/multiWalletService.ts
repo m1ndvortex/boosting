@@ -772,4 +772,44 @@ export class MultiWalletService {
   }> {
     return await TransactionIndexService.getTransactionStats(userId);
   }
+
+  /**
+   * Process expired suspended gold deposits
+   * This method handles cleanup of expired suspended deposits
+   */
+  static async processSuspendedGoldExpiry(): Promise<void> {
+    try {
+      // Get all suspended deposits from storage
+      const suspendedDeposits = StorageService.get<SuspendedDeposit[]>(
+        MULTI_WALLET_STORAGE_KEYS.SUSPENDED_DEPOSITS
+      ) || [];
+
+      const now = new Date();
+      const expiredDeposits = suspendedDeposits.filter(deposit => {
+        const expiryDate = new Date(deposit.expiresAt);
+        return expiryDate <= now;
+      });
+
+      if (expiredDeposits.length === 0) {
+        return; // No expired deposits to process
+      }
+
+      // Remove expired deposits from storage
+      const remainingDeposits = suspendedDeposits.filter(deposit => {
+        const expiryDate = new Date(deposit.expiresAt);
+        return expiryDate > now;
+      });
+
+      StorageService.set(MULTI_WALLET_STORAGE_KEYS.SUSPENDED_DEPOSITS, remainingDeposits);
+
+      console.log(`Processed ${expiredDeposits.length} expired suspended gold deposits`);
+    } catch (error) {
+      console.error('Failed to process suspended gold expiry:', error);
+      throw new MultiWalletError(
+        'PROCESSING_ERROR',
+        'Failed to process expired suspended deposits',
+        { error: error instanceof Error ? error.message : String(error) }
+      );
+    }
+  }
 }

@@ -1,0 +1,204 @@
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.notification {
+  background: var(--discord-bg-secondary);
+  border: 1px solid var(--discord-bg-tertiary);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+  position: relative;
+}
+
+.notification--success {
+  border-left: 4px solid var(--discord-success);
+}
+
+.notification--error {
+  border-left: 4px solid var(--discord-danger);
+}
+
+.notification--warning {
+  border-left: 4px solid var(--discord-warning);
+}
+
+.notification--info {
+  border-left: 4px solid var(--discord-accent);
+}
+
+.notification__content {
+  padding: 16px;
+}
+
+.notification__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.notification__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.notification__title {
+  color: var(--discord-text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  flex: 1;
+}
+
+.notification__close {
+  background: none;
+  border: none;
+  color: var(--discord-text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.17s ease;
+}
+
+.notification__close:hover {
+  background: var(--discord-bg-tertiary);
+  color: var(--discord-text-primary);
+}
+
+.notification__message {
+  color: var(--discord-text-secondary);
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.notification__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.notification__action {
+  background: var(--discord-bg-tertiary);
+  border: 1px solid var(--discord-bg-primary);
+  color: var(--discord-text-primary);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.17s ease;
+}
+
+.notification__action:hover {
+  background: var(--discord-bg-primary);
+}
+
+.notification__action--primary {
+  background: var(--discord-accent);
+  border-color: var(--discord-accent);
+  color: white;
+}
+
+.notification__action--primary:hover {
+  background: var(--discord-accent-hover);
+  border-color: var(--discord-accent-hover);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Progress bar for timed notifications */
+.notification::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.3;
+  animation: progress 5s linear;
+}
+
+.notification--success::after {
+  background: var(--discord-success);
+}
+
+.notification--error::after {
+  background: var(--discord-danger);
+}
+
+.notification--warning::after {
+  background: var(--discord-warning);
+}
+
+.notification--info::after {
+  background: var(--discord-accent);
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .notification-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .notification__content {
+    padding: 12px;
+  }
+  
+  .notification__actions {
+    flex-direction: column;
+  }
+  
+  .notification__action {
+    width: 100%;
+    justify-content: center;
+  }
+}
