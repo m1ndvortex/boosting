@@ -523,4 +523,121 @@ export class WalletService {
 
     return updatedTransaction;
   }
+
+  // ========================================
+  // Bank Account Management Methods
+  // ========================================
+
+  // Save a new bank account for a user
+  static saveBankAccount(
+    userId: string,
+    bankInfo: import('../types').BankInformation & { nickname?: string },
+    setAsDefault: boolean = false
+  ): void {
+    const accounts = this.getBankAccounts(userId);
+    
+    const newAccount = {
+      id: `bank_${userId}_${Date.now()}`,
+      userId,
+      ...bankInfo,
+      isDefault: setAsDefault || accounts.length === 0, // First account is default
+      createdAt: new Date().toISOString(),
+    };
+
+    // If setting as default, unmark other accounts
+    if (newAccount.isDefault) {
+      accounts.forEach(acc => acc.isDefault = false);
+    }
+
+    accounts.push(newAccount);
+    
+    const key = `${STORAGE_KEYS.WALLET}-bank-accounts-${userId}`;
+    StorageService.setItem(key, accounts);
+  }
+
+  // Get all bank accounts for a user
+  static getBankAccounts(userId: string): Array<{
+    id: string;
+    userId: string;
+    nickname?: string;
+    bankName: string;
+    accountHolderName: string;
+    accountNumber: string;
+    cardNumber?: string;
+    iban?: string;
+    swiftCode?: string;
+    additionalInfo?: string;
+    isDefault: boolean;
+    createdAt: string;
+  }> {
+    const key = `${STORAGE_KEYS.WALLET}-bank-accounts-${userId}`;
+    return StorageService.getItem(key) || [];
+  }
+
+  // Update an existing bank account
+  static updateBankAccount(
+    userId: string,
+    accountId: string,
+    updates: Partial<import('../types').BankInformation & { nickname?: string }>
+  ): void {
+    const accounts = this.getBankAccounts(userId);
+    const accountIndex = accounts.findIndex(acc => acc.id === accountId);
+    
+    if (accountIndex === -1) {
+      throw new Error('Bank account not found');
+    }
+
+    accounts[accountIndex] = {
+      ...accounts[accountIndex],
+      ...updates,
+    };
+
+    const key = `${STORAGE_KEYS.WALLET}-bank-accounts-${userId}`;
+    StorageService.setItem(key, accounts);
+  }
+
+  // Delete a bank account
+  static deleteBankAccount(userId: string, accountId: string): void {
+    const accounts = this.getBankAccounts(userId);
+    const accountIndex = accounts.findIndex(acc => acc.id === accountId);
+    
+    if (accountIndex === -1) {
+      throw new Error('Bank account not found');
+    }
+
+    const wasDefault = accounts[accountIndex].isDefault;
+    accounts.splice(accountIndex, 1);
+
+    // If deleted account was default, set the first remaining as default
+    if (wasDefault && accounts.length > 0) {
+      accounts[0].isDefault = true;
+    }
+
+    const key = `${STORAGE_KEYS.WALLET}-bank-accounts-${userId}`;
+    StorageService.setItem(key, accounts);
+  }
+
+  // Set a bank account as default
+  static setDefaultBankAccount(userId: string, accountId: string): void {
+    const accounts = this.getBankAccounts(userId);
+    
+    accounts.forEach(acc => {
+      acc.isDefault = acc.id === accountId;
+    });
+
+    const key = `${STORAGE_KEYS.WALLET}-bank-accounts-${userId}`;
+    StorageService.setItem(key, accounts);
+  }
+
+  // Get default bank account
+  static getDefaultBankAccount(userId: string): any | null {
+    const accounts = this.getBankAccounts(userId);
+    return accounts.find(acc => acc.isDefault) || null;
+  }
+
+  // Get bank account by ID
+  static getBankAccountById(userId: string, accountId: string): any | null {
+    const accounts = this.getBankAccounts(userId);
+    return accounts.find(acc => acc.id === accountId) || null;
+  }
 }

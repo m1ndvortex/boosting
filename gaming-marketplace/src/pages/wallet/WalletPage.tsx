@@ -9,6 +9,8 @@ import { DepositForm } from '../../components/wallet/DepositForm';
 import { WithdrawalForm } from '../../components/wallet/WithdrawalForm';
 import { CurrencyConverter } from '../../components/wallet/CurrencyConverter';
 import { TransactionHistory } from '../../components/wallet/TransactionHistory';
+import { BankAccountManager } from '../../components/wallet/BankAccountManager';
+import { WithdrawalHistory } from '../../components/wallet/WithdrawalHistory';
 import { useWallet } from '../../contexts/WalletContext';
 import { useMultiWallet } from '../../hooks/useMultiWallet';
 import { useAuth } from '../../contexts/AuthContext';
@@ -26,6 +28,7 @@ export const WalletPage: React.FC = () => {
   const [showWithdrawalForm, setShowWithdrawalForm] = useState(false);
   const [showConverter, setShowConverter] = useState(false);
   const [useMultiWalletSystem, setUseMultiWalletSystem] = useState(true);
+  const [activeTab, setActiveTab] = useState<'overview' | 'bank-accounts' | 'withdrawals'>('overview');
 
   const handleDeposit = async (amount: number, currency: Currency, paymentMethod: string) => {
     await deposit(amount, currency, paymentMethod);
@@ -126,22 +129,46 @@ export const WalletPage: React.FC = () => {
           </div>
         )}
 
-        <div className="wallet-page__system-toggle">
-          <button
-            className={`wallet-page__toggle-btn ${!useMultiWalletSystem ? 'active' : ''}`}
-            onClick={() => setUseMultiWalletSystem(false)}
+        {/* Wallet Tabs */}
+        <div className="wallet-tabs">
+          <button 
+            className={`wallet-tab ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
           >
-            Legacy Wallet
+            💰 Overview
           </button>
-          <button
-            className={`wallet-page__toggle-btn ${useMultiWalletSystem ? 'active' : ''}`}
-            onClick={() => setUseMultiWalletSystem(true)}
+          <button 
+            className={`wallet-tab ${activeTab === 'bank-accounts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('bank-accounts')}
           >
-            Multi-Wallet System
+            🏦 Bank Accounts
+          </button>
+          <button 
+            className={`wallet-tab ${activeTab === 'withdrawals' ? 'active' : ''}`}
+            onClick={() => setActiveTab('withdrawals')}
+          >
+            📤 Withdrawal History
           </button>
         </div>
 
-        <div className="wallet-page__grid">
+        {activeTab === 'overview' && (
+          <>
+            <div className="wallet-page__system-toggle">
+              <button
+                className={`wallet-page__toggle-btn ${!useMultiWalletSystem ? 'active' : ''}`}
+                onClick={() => setUseMultiWalletSystem(false)}
+              >
+                Legacy Wallet
+              </button>
+              <button
+                className={`wallet-page__toggle-btn ${useMultiWalletSystem ? 'active' : ''}`}
+                onClick={() => setUseMultiWalletSystem(true)}
+              >
+                Multi-Wallet System
+              </button>
+            </div>
+
+            <div className="wallet-page__grid">
           <div className="wallet-page__main">
             {useMultiWalletSystem ? (
               <>
@@ -205,6 +232,20 @@ export const WalletPage: React.FC = () => {
             />
           </div>
         </div>
+          </>
+        )}
+
+        {activeTab === 'bank-accounts' && (
+          <div className="wallet-tab-content">
+            <BankAccountManager />
+          </div>
+        )}
+
+        {activeTab === 'withdrawals' && (
+          <div className="wallet-tab-content">
+            <WithdrawalHistory />
+          </div>
+        )}
       </div>
 
       {/* Modals */}
