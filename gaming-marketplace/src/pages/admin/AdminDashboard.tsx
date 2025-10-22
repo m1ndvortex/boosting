@@ -5,7 +5,7 @@ import { DashboardHome } from './sections/DashboardHome';
 import { GamesManagement } from './sections/GamesManagement';
 import { UsersAndRoles } from './sections/UsersAndRoles';
 import { PendingRoleRequests } from './sections/PendingRoleRequests';
-import { FinancialManagement } from './sections/FinancialManagement';
+import { FinancialManagementNew as FinancialManagement } from './sections/FinancialManagementNew';
 import { ExchangeRates } from './sections/ExchangeRates';
 import { ShopManagement } from './sections/ShopManagement';
 import { OrderReview } from './sections/OrderReview';

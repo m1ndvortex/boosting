@@ -29,7 +29,13 @@ interface WalletContextType {
   loadWallet: () => Promise<void>;
   refreshWallet: () => Promise<void>;
   deposit: (amount: number, currency: Currency, paymentMethod: string) => Promise<void>;
-  requestWithdrawal: (amount: number, currency: Currency, paymentMethod: string) => Promise<void>;
+  requestWithdrawal: (
+    amount: number,
+    currency: Currency,
+    paymentMethod: string,
+    bankInfo?: import('../types').BankInformation,
+    notes?: string
+  ) => Promise<void>;
   convertCurrency: (fromCurrency: Currency, toCurrency: Currency, amount: number) => Promise<void>;
   deductForPurchase: (amount: number, currency: Currency, orderId: string) => Promise<void>;
   addEarnings: (amount: number, currency: Currency, orderId: string) => Promise<void>;
@@ -157,7 +163,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
   const requestWithdrawal = async (
     amount: number,
     currency: Currency,
-    paymentMethod: string
+    paymentMethod: string,
+    bankInfo?: import('../types').BankInformation,
+    notes?: string
   ): Promise<void> => {
     if (!authState.user) throw new Error('User not authenticated');
 
@@ -166,7 +174,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
         authState.user.id,
         amount,
         currency,
-        paymentMethod
+        paymentMethod,
+        bankInfo,
+        notes,
+        authState.user.email
       );
 
       dispatch({ type: 'UPDATE_WALLET', payload: wallet });

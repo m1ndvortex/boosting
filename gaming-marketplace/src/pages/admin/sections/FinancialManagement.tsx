@@ -33,6 +33,7 @@ export const FinancialManagement: React.FC = () => {
     {
       id: 'txn_1',
       walletId: 'wallet_2',
+      userId: 'user_2',
       type: 'withdrawal',
       amount: 250,
       currency: 'usd',
@@ -43,16 +44,25 @@ export const FinancialManagement: React.FC = () => {
     {
       id: 'txn_2',
       walletId: 'wallet_3',
+      userId: 'user_3',
       type: 'withdrawal',
       amount: 150000,
       currency: 'toman',
       status: 'pending_approval',
       paymentMethod: 'Iranian Bank Card',
       createdAt: new Date('2024-01-22T14:15:00'),
+      // Bank information example
+      bankInformation: {
+        bankName: 'Bank Mellat',
+        accountHolderName: 'Service Provider',
+        accountNumber: '1234567890123456',
+        cardNumber: '6037-9971-1234-5678',
+      },
     },
     {
       id: 'txn_3',
       walletId: 'wallet_2',
+      userId: 'user_2',
       type: 'withdrawal',
       amount: 5000,
       currency: 'gold',
@@ -67,6 +77,7 @@ export const FinancialManagement: React.FC = () => {
     {
       id: 'txn_4',
       walletId: 'wallet_2',
+      userId: 'user_2',
       type: 'deposit',
       amount: 100,
       currency: 'usd',
@@ -77,6 +88,7 @@ export const FinancialManagement: React.FC = () => {
     {
       id: 'txn_5',
       walletId: 'wallet_3',
+      userId: 'user_3',
       type: 'deposit',
       amount: 50000,
       currency: 'toman',
@@ -87,6 +99,7 @@ export const FinancialManagement: React.FC = () => {
     {
       id: 'txn_6',
       walletId: 'wallet_2',
+      userId: 'user_2',
       type: 'deposit',
       amount: 2000,
       currency: 'gold',
@@ -97,6 +110,7 @@ export const FinancialManagement: React.FC = () => {
     {
       id: 'txn_7',
       walletId: 'wallet_3',
+      userId: 'user_3',
       type: 'deposit',
       amount: 75,
       currency: 'usd',

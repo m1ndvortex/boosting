@@ -201,6 +201,70 @@
   margin-top: 8px;
 }
 
+/* Bank Information Section */
+.withdrawal-form__bank-section {
+  background: var(--discord-bg-tertiary);
+  border: 2px solid var(--discord-bg-primary);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 8px 0;
+}
+
+.withdrawal-form__section-title {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--discord-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.withdrawal-form__section-description {
+  font-size: 13px;
+  color: var(--discord-text-secondary);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.withdrawal-form__bank-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.withdrawal-form__required {
+  color: var(--discord-danger);
+  margin-left: 2px;
+}
+
+.withdrawal-form__textarea {
+  width: 100%;
+  padding: 12px;
+  background: var(--discord-bg-primary);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--discord-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.withdrawal-form__textarea:focus {
+  outline: none;
+  border-color: var(--discord-accent);
+}
+
+.withdrawal-form__textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.withdrawal-form__textarea::placeholder {
+  color: var(--discord-text-muted);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .withdrawal-form {
@@ -217,6 +281,11 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+  }
+  
+  .withdrawal-form__bank-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
   
   .withdrawal-form__actions {

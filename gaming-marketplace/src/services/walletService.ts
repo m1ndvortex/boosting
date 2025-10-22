@@ -1,6 +1,6 @@
 // Wallet service for multi-currency wallet management
 
-import type { Wallet, Transaction, Currency } from '../types';
+import type { Wallet, Transaction, Currency, TransactionEvidence } from '../types';
 import { StorageService, STORAGE_KEYS } from './storage';
 
 // Exchange rates (mock data)
@@ -81,6 +81,7 @@ export class WalletService {
     const transaction: Transaction = {
       id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
+      userId,
       type: 'deposit',
       amount,
       currency,
@@ -103,7 +104,10 @@ export class WalletService {
     userId: string,
     amount: number,
     currency: Currency,
-    paymentMethod: string
+    paymentMethod: string,
+    bankInfo?: import('../types').BankInformation,
+    notes?: string,
+    userEmail?: string
   ): Promise<{ transaction: Transaction; wallet: Wallet }> {
     const wallet = this.getWallet(userId);
     
@@ -115,11 +119,15 @@ export class WalletService {
     const transaction: Transaction = {
       id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
+      userId,
+      userEmail,
       type: 'withdrawal',
       amount,
       currency,
       status: 'pending_approval', // Withdrawals require admin approval
       paymentMethod,
+      bankInformation: bankInfo,
+      requestNotes: notes,
       createdAt: new Date(),
     };
     
@@ -165,6 +173,7 @@ export class WalletService {
     const transaction: Transaction = {
       id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
+      userId,
       type: 'conversion',
       amount: convertedAmount,
       currency: toCurrency,
@@ -196,6 +205,7 @@ export class WalletService {
     const transaction: Transaction = {
       id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
+      userId,
       type: 'purchase',
       amount,
       currency,
@@ -222,6 +232,7 @@ export class WalletService {
     const transaction: Transaction = {
       id: `txn_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       walletId: userId,
+      userId,
       type: 'earning',
       amount,
       currency,
@@ -286,5 +297,230 @@ export class WalletService {
   // Get all payment methods
   static getAllPaymentMethods() {
     return PAYMENT_METHODS;
+  }
+
+  // Admin: Get all withdrawal requests (across all users)
+  static getAllWithdrawalRequests(): Transaction[] {
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    return allTransactions
+      .filter(t => t.type === 'withdrawal')
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  // Admin: Approve withdrawal with transaction evidence
+  static async approveWithdrawal(
+    transactionId: string,
+    evidence: TransactionEvidence,
+    adminUserId: string
+  ): Promise<Transaction> {
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    const transactionIndex = allTransactions.findIndex(t => t.id === transactionId);
+    
+    if (transactionIndex === -1) {
+      throw new Error('Transaction not found');
+    }
+
+    const transaction = allTransactions[transactionIndex];
+    
+    if (transaction.type !== 'withdrawal') {
+      throw new Error('Transaction is not a withdrawal');
+    }
+
+    // Update transaction
+    const updatedTransaction: Transaction = {
+      ...transaction,
+      status: 'completed',
+      transactionEvidence: {
+        ...evidence,
+        processedBy: adminUserId,
+        processedAt: new Date()
+      },
+      approvedBy: adminUserId,
+      approvedAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    // Save to all transactions
+    allTransactions[transactionIndex] = updatedTransaction;
+    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, allTransactions);
+
+    // Update in user-specific transactions
+    const userTransactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${transaction.walletId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(userTransactionKey) || [];
+    const userTxIndex = userTransactions.findIndex(t => t.id === transactionId);
+    if (userTxIndex !== -1) {
+      userTransactions[userTxIndex] = updatedTransaction;
+      StorageService.setItem(userTransactionKey, userTransactions);
+    }
+
+    // Deduct balance from wallet
+    const wallet = this.getWallet(transaction.walletId);
+    if (wallet) {
+      const currency = transaction.currency.toLowerCase();
+      const currentBalance = (wallet[`${currency}Balance` as keyof typeof wallet] as unknown) as number;
+      const newBalance = Math.max(0, currentBalance - transaction.amount);
+      
+      this.updateWallet(transaction.walletId, { [currency]: newBalance });
+    }
+
+    return updatedTransaction;
+  }
+
+  // Admin: Reject withdrawal
+  static async rejectWithdrawal(
+    transactionId: string,
+    reason: string,
+    adminUserId: string
+  ): Promise<Transaction> {
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    const transactionIndex = allTransactions.findIndex(t => t.id === transactionId);
+    
+    if (transactionIndex === -1) {
+      throw new Error('Transaction not found');
+    }
+
+    const transaction = allTransactions[transactionIndex];
+    
+    if (transaction.type !== 'withdrawal') {
+      throw new Error('Transaction is not a withdrawal');
+    }
+
+    // Update transaction
+    const updatedTransaction: Transaction = {
+      ...transaction,
+      status: 'rejected',
+      rejectionReason: reason,
+      approvedBy: adminUserId,
+      approvedAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    // Save to all transactions
+    allTransactions[transactionIndex] = updatedTransaction;
+    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, allTransactions);
+
+    // Update in user-specific transactions
+    const userTransactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${transaction.walletId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(userTransactionKey) || [];
+    const userTxIndex = userTransactions.findIndex(t => t.id === transactionId);
+    if (userTxIndex !== -1) {
+      userTransactions[userTxIndex] = updatedTransaction;
+      StorageService.setItem(userTransactionKey, userTransactions);
+    }
+
+    return updatedTransaction;
+  }
+
+  // Admin: Update transaction evidence (for editing existing evidence)
+  static async updateTransactionEvidence(
+    transactionId: string,
+    evidence: Partial<TransactionEvidence>,
+    adminUserId: string
+  ): Promise<Transaction> {
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    const transactionIndex = allTransactions.findIndex(t => t.id === transactionId);
+    
+    if (transactionIndex === -1) {
+      throw new Error('Transaction not found');
+    }
+
+    const transaction = allTransactions[transactionIndex];
+
+    // Update transaction evidence
+    const updatedTransaction: Transaction = {
+      ...transaction,
+      transactionEvidence: {
+        ...transaction.transactionEvidence,
+        ...evidence,
+        processedBy: adminUserId,
+        processedAt: new Date()
+      } as TransactionEvidence,
+      updatedAt: new Date()
+    };
+
+    // Save to all transactions
+    allTransactions[transactionIndex] = updatedTransaction;
+    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, allTransactions);
+
+    // Update in user-specific transactions
+    const userTransactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${transaction.walletId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(userTransactionKey) || [];
+    const userTxIndex = userTransactions.findIndex(t => t.id === transactionId);
+    if (userTxIndex !== -1) {
+      userTransactions[userTxIndex] = updatedTransaction;
+      StorageService.setItem(userTransactionKey, userTransactions);
+    }
+
+    return updatedTransaction;
+  }
+
+  // Admin: Delete withdrawal request (only for pending requests)
+  static async deleteWithdrawalRequest(transactionId: string): Promise<void> {
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    const transactionIndex = allTransactions.findIndex(t => t.id === transactionId);
+    
+    if (transactionIndex === -1) {
+      throw new Error('Transaction not found');
+    }
+
+    const transaction = allTransactions[transactionIndex];
+    
+    if (transaction.type !== 'withdrawal') {
+      throw new Error('Transaction is not a withdrawal');
+    }
+
+    if (transaction.status !== 'pending_approval') {
+      throw new Error('Can only delete pending withdrawal requests');
+    }
+
+    // Remove from all transactions
+    allTransactions.splice(transactionIndex, 1);
+    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, allTransactions);
+
+    // Remove from user-specific transactions
+    const userTransactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${transaction.walletId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(userTransactionKey) || [];
+    const userTxIndex = userTransactions.findIndex(t => t.id === transactionId);
+    if (userTxIndex !== -1) {
+      userTransactions.splice(userTxIndex, 1);
+      StorageService.setItem(userTransactionKey, userTransactions);
+    }
+  }
+
+  // Admin: Update withdrawal status to processing
+  static async setWithdrawalProcessing(
+    transactionId: string,
+    adminUserId: string
+  ): Promise<Transaction> {
+    const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
+    const transactionIndex = allTransactions.findIndex(t => t.id === transactionId);
+    
+    if (transactionIndex === -1) {
+      throw new Error('Transaction not found');
+    }
+
+    const transaction = allTransactions[transactionIndex];
+
+    // Update transaction
+    const updatedTransaction: Transaction = {
+      ...transaction,
+      status: 'processing',
+      updatedAt: new Date()
+    };
+
+    // Save to all transactions
+    allTransactions[transactionIndex] = updatedTransaction;
+    StorageService.setItem(STORAGE_KEYS.TRANSACTIONS, allTransactions);
+
+    // Update in user-specific transactions
+    const userTransactionKey = `${STORAGE_KEYS.TRANSACTIONS}-${transaction.walletId}`;
+    const userTransactions = StorageService.getItem<Transaction[]>(userTransactionKey) || [];
+    const userTxIndex = userTransactions.findIndex(t => t.id === transactionId);
+    if (userTxIndex !== -1) {
+      userTransactions[userTxIndex] = updatedTransaction;
+      StorageService.setItem(userTransactionKey, userTransactions);
+    }
+
+    return updatedTransaction;
   }
 }

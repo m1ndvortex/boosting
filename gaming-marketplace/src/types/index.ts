@@ -101,9 +101,34 @@ export interface Wallet {
   updatedAt: Date;
 }
 
+// Bank information for withdrawals
+export interface BankInformation {
+  bankName: string;
+  accountHolderName: string;
+  accountNumber: string;
+  cardNumber?: string;
+  iban?: string;
+  swiftCode?: string;
+  routingNumber?: string;
+  additionalInfo?: string;
+}
+
+// Transaction evidence for admin approval
+export interface TransactionEvidence {
+  transactionCode: string;
+  bankTransactionId?: string;
+  proofImage?: string; // base64 encoded image
+  proofFileName?: string;
+  adminNotes?: string;
+  processedBy?: string;
+  processedAt?: Date;
+}
+
 export interface Transaction {
   id: string;
   walletId: string;
+  userId: string;
+  userEmail?: string;
   type:
     | 'deposit'
     | 'withdrawal'
@@ -114,10 +139,23 @@ export interface Transaction {
     | 'admin_deposit';
   amount: number;
   currency: Currency;
-  status: 'pending' | 'completed' | 'failed' | 'pending_approval';
+  status: 'pending' | 'completed' | 'failed' | 'pending_approval' | 'rejected' | 'processing';
   paymentMethod?: string;
+  
+  // Bank information for withdrawals
+  bankInformation?: BankInformation;
+  
+  // Transaction evidence from admin
+  transactionEvidence?: TransactionEvidence;
+  
+  // Additional metadata
+  requestNotes?: string;
+  rejectionReason?: string;
+  
   approvedBy?: string;
+  approvedAt?: Date;
   createdAt: Date;
+  updatedAt?: Date;
 }
 
 export interface Team {

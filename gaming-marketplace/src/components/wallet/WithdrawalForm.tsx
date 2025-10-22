@@ -1,7 +1,7 @@
 // Withdrawal form component
 
 import React, { useState } from 'react';
-import type { Currency, Wallet } from '../../types';
+import type { Currency, Wallet, BankInformation } from '../../types';
 import { WalletService } from '../../services/walletService';
 import { Button } from '../discord/Button';
 import { Modal } from '../discord/Modal';
@@ -10,7 +10,13 @@ import './WithdrawalForm.css';
 interface WithdrawalFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onWithdraw: (amount: number, currency: Currency, paymentMethod: string) => Promise<void>;
+  onWithdraw: (
+    amount: number,
+    currency: Currency,
+    paymentMethod: string,
+    bankInfo?: BankInformation,
+    notes?: string
+  ) => Promise<void>;
   wallet: Wallet;
 }
 
@@ -23,8 +29,20 @@ export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<Currency>('usd');
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [requestNotes, setRequestNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Bank information state
+  const [bankInfo, setBankInfo] = useState<BankInformation>({
+    bankName: '',
+    accountHolderName: '',
+    accountNumber: '',
+    cardNumber: '',
+    iban: '',
+    swiftCode: '',
+    additionalInfo: '',
+  });
 
   const paymentMethods = WalletService.getPaymentMethodsForCurrency(currency);
   const availableBalance = wallet.balances[currency];
@@ -40,8 +58,16 @@ export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({
     e.preventDefault();
     
     if (!amount || !paymentMethod) {
-      setError('Please fill in all fields');
+      setError('Please fill in all required fields');
       return;
+    }
+
+    // Validate bank information for non-crypto withdrawals
+    if (paymentMethod !== 'crypto' && paymentMethod !== 'ingame_transfer') {
+      if (!bankInfo.bankName || !bankInfo.accountHolderName || !bankInfo.accountNumber) {
+        setError('Please provide complete bank information');
+        return;
+      }
     }
 
     const numAmount = parseFloat(amount);
@@ -59,9 +85,20 @@ export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({
     setError('');
 
     try {
-      await onWithdraw(numAmount, currency, paymentMethod);
+      await onWithdraw(numAmount, currency, paymentMethod, bankInfo, requestNotes);
+      // Reset form
       setAmount('');
       setPaymentMethod('');
+      setRequestNotes('');
+      setBankInfo({
+        bankName: '',
+        accountHolderName: '',
+        accountNumber: '',
+        cardNumber: '',
+        iban: '',
+        swiftCode: '',
+        additionalInfo: '',
+      });
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Withdrawal request failed');
@@ -74,6 +111,16 @@ export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({
     if (!loading) {
       setAmount('');
       setPaymentMethod('');
+      setRequestNotes('');
+      setBankInfo({
+        bankName: '',
+        accountHolderName: '',
+        accountNumber: '',
+        cardNumber: '',
+        iban: '',
+        swiftCode: '',
+        additionalInfo: '',
+      });
       setError('');
       onClose();
     }
@@ -194,6 +241,140 @@ export const WithdrawalForm: React.FC<WithdrawalFormProps> = ({
               </button>
             ))}
           </div>
+        </div>
+
+        {paymentMethod && paymentMethod !== 'crypto' && paymentMethod !== 'ingame_transfer' && (
+          <div className="withdrawal-form__bank-section">
+            <h4 className="withdrawal-form__section-title">Bank Information</h4>
+            <p className="withdrawal-form__section-description">
+              Please provide your bank account details where you want to receive the payment
+            </p>
+            
+            <div className="withdrawal-form__bank-grid">
+              <div className="withdrawal-form__field">
+                <label htmlFor="bankName" className="withdrawal-form__label">
+                  Bank Name <span className="withdrawal-form__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="bankName"
+                  value={bankInfo.bankName}
+                  onChange={(e) => setBankInfo({ ...bankInfo, bankName: e.target.value })}
+                  placeholder="e.g., Bank of America, Chase, Wells Fargo"
+                  className="withdrawal-form__input"
+                  disabled={loading}
+                  required
+                />
+              </div>
+
+              <div className="withdrawal-form__field">
+                <label htmlFor="accountHolderName" className="withdrawal-form__label">
+                  Account Holder Name <span className="withdrawal-form__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="accountHolderName"
+                  value={bankInfo.accountHolderName}
+                  onChange={(e) => setBankInfo({ ...bankInfo, accountHolderName: e.target.value })}
+                  placeholder="Full name as per bank account"
+                  className="withdrawal-form__input"
+                  disabled={loading}
+                  required
+                />
+              </div>
+
+              <div className="withdrawal-form__field">
+                <label htmlFor="accountNumber" className="withdrawal-form__label">
+                  Account Number <span className="withdrawal-form__required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="accountNumber"
+                  value={bankInfo.accountNumber}
+                  onChange={(e) => setBankInfo({ ...bankInfo, accountNumber: e.target.value })}
+                  placeholder="Bank account number"
+                  className="withdrawal-form__input"
+                  disabled={loading}
+                  required
+                />
+              </div>
+
+              <div className="withdrawal-form__field">
+                <label htmlFor="cardNumber" className="withdrawal-form__label">
+                  Card Number (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="cardNumber"
+                  value={bankInfo.cardNumber}
+                  onChange={(e) => setBankInfo({ ...bankInfo, cardNumber: e.target.value })}
+                  placeholder="16-digit card number"
+                  className="withdrawal-form__input"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="withdrawal-form__field">
+                <label htmlFor="iban" className="withdrawal-form__label">
+                  IBAN (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="iban"
+                  value={bankInfo.iban}
+                  onChange={(e) => setBankInfo({ ...bankInfo, iban: e.target.value })}
+                  placeholder="International Bank Account Number"
+                  className="withdrawal-form__input"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="withdrawal-form__field">
+                <label htmlFor="swiftCode" className="withdrawal-form__label">
+                  SWIFT/BIC Code (Optional)
+                </label>
+                <input
+                  type="text"
+                  id="swiftCode"
+                  value={bankInfo.swiftCode}
+                  onChange={(e) => setBankInfo({ ...bankInfo, swiftCode: e.target.value })}
+                  placeholder="Bank identifier code"
+                  className="withdrawal-form__input"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="withdrawal-form__field">
+              <label htmlFor="additionalInfo" className="withdrawal-form__label">
+                Additional Information (Optional)
+              </label>
+              <textarea
+                id="additionalInfo"
+                value={bankInfo.additionalInfo}
+                onChange={(e) => setBankInfo({ ...bankInfo, additionalInfo: e.target.value })}
+                placeholder="Any additional information for the transfer"
+                className="withdrawal-form__textarea"
+                rows={2}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="withdrawal-form__field">
+          <label htmlFor="requestNotes" className="withdrawal-form__label">
+            Request Notes (Optional)
+          </label>
+          <textarea
+            id="requestNotes"
+            value={requestNotes}
+            onChange={(e) => setRequestNotes(e.target.value)}
+            placeholder="Add any notes or special instructions for your withdrawal request"
+            className="withdrawal-form__textarea"
+            rows={3}
+            disabled={loading}
+          />
         </div>
 
         {paymentMethod && (

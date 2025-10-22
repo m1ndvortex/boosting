@@ -31,8 +31,14 @@ export const WalletPage: React.FC = () => {
     await deposit(amount, currency, paymentMethod);
   };
 
-  const handleWithdraw = async (amount: number, currency: Currency, paymentMethod: string) => {
-    await requestWithdrawal(amount, currency, paymentMethod);
+  const handleWithdraw = async (
+    amount: number,
+    currency: Currency,
+    paymentMethod: string,
+    bankInfo?: import('../../types').BankInformation,
+    notes?: string
+  ) => {
+    await requestWithdrawal(amount, currency, paymentMethod, bankInfo, notes);
   };
 
   const handleConvert = async (fromCurrency: Currency, toCurrency: Currency, amount: number) => {
