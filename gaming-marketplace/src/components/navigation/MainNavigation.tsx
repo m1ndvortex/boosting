@@ -21,6 +21,13 @@ const NAVIGATION_TABS: NavigationTab[] = [
     description: 'Browse and purchase gaming services'
   },
   {
+    id: 'role-requests',
+    label: 'Role Requests',
+    icon: '📝',
+    path: '/role-requests',
+    description: 'Apply for service provider roles'
+  },
+  {
     id: 'shop',
     label: 'Shop',
     icon: '🏪',

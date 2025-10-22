@@ -1,0 +1,89 @@
+/* Role Request Page Styles */
+
+.role-request-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.role-request-page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.role-request-page-header h1 {
+  color: var(--text-primary);
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.role-request-page-header p {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.role-request-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.role-request-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  bottom: -2px;
+}
+
+.role-request-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.role-request-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tab-icon {
+  font-size: 18px;
+}
+
+.role-request-content {
+  min-height: 400px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .role-request-page {
+    padding: 16px;
+  }
+
+  .role-request-page-header h1 {
+    font-size: 24px;
+  }
+
+  .role-request-page-header p {
+    font-size: 14px;
+  }
+
+  .role-request-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .tab-icon {
+    font-size: 16px;
+  }
+}

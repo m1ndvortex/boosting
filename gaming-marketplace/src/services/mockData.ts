@@ -378,18 +378,35 @@ export const generateMockDataSet = () => {
     {
       id: 'role_req_1',
       userId: 'user_1',
-      requestedRole: 'booster' as const,
+      username: 'TestClient',
+      email: 'testclient@example.com',
+      requestedRole: 'team_advertiser' as const,
       status: 'pending' as const,
-      requestedAt: new Date(Date.now() - 86400000),
-      reason: 'I have extensive experience in Mythic+ dungeons and would like to offer boosting services.'
+      submittedAt: new Date(Date.now() - 86400000).toISOString(),
+      reason: 'I have extensive experience in Mythic+ dungeons and would like to offer boosting services. I have been playing WoW for over 10 years and have achieved Keystone Master in every season.',
+      experience: 'Led a successful guild for 5 years, managed raid teams, and have deep knowledge of dungeon mechanics and strategies.'
     },
     {
       id: 'role_req_2',
       userId: 'user_2',
+      username: 'ProGamer99',
+      email: 'progamer99@gaming.com',
       requestedRole: 'advertiser' as const,
       status: 'pending' as const,
-      requestedAt: new Date(Date.now() - 43200000),
-      reason: 'I want to create and manage boosting services for my team.'
+      submittedAt: new Date(Date.now() - 43200000).toISOString(),
+      reason: 'I want to create and manage boosting services for my team. I have a proven track record in marketing gaming services and have built a large community following.',
+      experience: 'Previously managed advertising for another gaming service with 5000+ active users. Experienced in social media marketing and customer engagement.'
+    },
+    {
+      id: 'role_req_3',
+      userId: 'user_5',
+      username: 'EliteBooster',
+      email: 'elite@boosting.com',
+      requestedRole: 'advertiser' as const,
+      status: 'pending' as const,
+      submittedAt: new Date(Date.now() - 172800000).toISOString(),
+      reason: 'I am an experienced advertiser with a strong background in gaming communities. I want to help promote high-quality boosting services to reach more clients who need professional assistance.',
+      experience: 'Managed multiple Discord servers with 10k+ members each, experienced in content creation, and have partnerships with gaming influencers.'
     }
   ];
 

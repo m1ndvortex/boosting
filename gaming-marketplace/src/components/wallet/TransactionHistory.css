@@ -34,18 +34,20 @@
 
 .transaction-history__filters {
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 20px;
-  align-items: center;
 }
 
 .transaction-history__filter-group {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
 .transaction-history__select {
-  padding: 8px 12px;
+  width: 100%;
+  padding: 10px 12px;
   background: var(--discord-bg-tertiary);
   border: 2px solid transparent;
   border-radius: 6px;
@@ -62,8 +64,8 @@
 }
 
 .transaction-history__search {
-  flex: 1;
-  padding: 8px 12px;
+  width: 100%;
+  padding: 10px 12px;
   background: var(--discord-bg-tertiary);
   border: 2px solid transparent;
   border-radius: 6px;
@@ -71,6 +73,7 @@
   font-size: 14px;
   font-family: inherit;
   transition: border-color 0.2s ease;
+  box-sizing: border-box;
 }
 
 .transaction-history__search:focus {

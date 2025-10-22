@@ -5,6 +5,7 @@ import { DiscordLogin } from '../../pages/auth/DiscordLogin';
 import { AdminDashboard } from '../../pages/admin/AdminDashboard';
 import { ServiceProviderDashboard } from '../../pages/dashboard/ServiceProviderDashboard';
 import { MarketplacePage } from '../../pages/marketplace/MarketplacePage';
+import { RoleRequestPage } from '../../pages/marketplace/RoleRequestPage';
 import { ShopPage } from '../../pages/shop/ShopPage';
 import { WalletPage } from '../../pages/wallet/WalletPage';
 import { MainLayout } from '../layout/MainLayout';
@@ -138,6 +139,18 @@ export const AppRouter: React.FC = () => {
           <ProtectedRoute>
             <MainLayout>
               <WalletPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Role Request routes - available to all authenticated users */}
+      <Route
+        path="/role-requests"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <RoleRequestPage />
             </MainLayout>
           </ProtectedRoute>
         }

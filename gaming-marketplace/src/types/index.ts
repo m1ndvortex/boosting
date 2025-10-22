@@ -431,3 +431,28 @@ export interface SearchParams {
   query: string;
   filters?: ServiceFilters;
 }
+
+// Role Request System
+export interface RoleRequest {
+  id: string;
+  userId: string;
+  username: string;
+  email: string;
+  requestedRole: 'advertiser' | 'team_advertiser';
+  status: 'pending' | 'approved' | 'rejected';
+  reason: string; // Why they want this role
+  experience?: string; // Optional experience/background
+  idCardFile?: File | string; // File object or URL string for ID card
+  idCardName?: string; // Original filename
+  submittedAt: Date;
+  reviewedAt?: Date;
+  reviewedBy?: string; // Admin who reviewed
+  reviewNotes?: string; // Admin notes for approval/rejection
+}
+
+export interface RoleRequestFormData {
+  requestedRole: 'advertiser' | 'team_advertiser';
+  reason: string;
+  experience?: string;
+  idCardFile: File | null;
+}

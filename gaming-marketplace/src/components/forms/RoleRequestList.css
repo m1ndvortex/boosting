@@ -1,0 +1,164 @@
+/* Role Request List Styles */
+
+.role-request-list-loading,
+.role-request-list-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border: 4px solid var(--bg-tertiary);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.role-request-list {
+  padding: 24px;
+}
+
+.role-request-list h3 {
+  color: var(--text-primary);
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.requests-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.request-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.request-role {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: rgba(250, 166, 26, 0.2);
+  color: #FAA61A;
+}
+
+.status-approved {
+  background: rgba(67, 181, 129, 0.2);
+  color: #43B581;
+}
+
+.status-rejected {
+  background: rgba(237, 66, 69, 0.2);
+  color: #ED4245;
+}
+
+.request-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.request-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.request-field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.request-field span {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.request-reason,
+.request-experience {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+}
+
+.request-notes {
+  padding: 12px;
+  background: rgba(88, 101, 242, 0.1);
+  border-left: 4px solid var(--primary);
+  border-radius: 6px;
+}
+
+.request-notes.rejected-notes {
+  background: rgba(237, 66, 69, 0.1);
+  border-left-color: var(--error);
+}
+
+.request-notes label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.request-notes p {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .requests-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}

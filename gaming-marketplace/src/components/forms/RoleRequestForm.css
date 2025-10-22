@@ -1,0 +1,243 @@
+/* Role Request Form Styles */
+
+.role-request-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.role-request-form-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.role-request-form-header h2 {
+  color: var(--text-primary);
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.role-request-form-header p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.role-request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required {
+  color: var(--error);
+}
+
+.form-select,
+.form-textarea {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 12px;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.form-select {
+  cursor: pointer;
+  height: 44px;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-select:disabled,
+.form-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-select.error,
+.form-textarea.error {
+  border-color: var(--error);
+}
+
+.form-help {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.char-count {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.char-count.warning {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.form-error {
+  color: var(--error);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* File Upload Styles */
+.file-upload-container {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.file-upload-label:hover {
+  border-color: var(--primary);
+  background: var(--bg-hover);
+}
+
+.file-input:disabled + .file-upload-label {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.file-upload-icon {
+  font-size: 24px;
+}
+
+.file-upload-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Privacy Notice */
+.privacy-notice {
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+}
+
+.privacy-notice p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.privacy-notice strong {
+  color: var(--text-primary);
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-error-message {
+  padding: 12px;
+  background: rgba(237, 66, 69, 0.1);
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  color: var(--error);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .role-request-form-container {
+    padding: 16px;
+  }
+
+  .role-request-form-header h2 {
+    font-size: 24px;
+  }
+
+  .role-request-form-header p {
+    font-size: 14px;
+  }
+}
