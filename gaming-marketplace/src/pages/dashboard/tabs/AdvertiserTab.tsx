@@ -3,14 +3,14 @@ import { Sidebar, type SidebarItem } from '../../../components/layout/Sidebar';
 import { DashboardHome } from '../sections/advertiser/DashboardHome';
 import { MyServices } from '../sections/advertiser/MyServices';
 import { RaidBooking } from '../sections/advertiser/RaidBooking';
-import { MyOrders } from '../sections/advertiser/MyOrders';
+import { MythicPlusOrders } from '../sections/advertiser/MythicPlusOrders';
 import { Earnings } from '../sections/advertiser/Earnings';
 import './AdvertiserTab.css';
 
-type AdvertiserSection = 'dashboard' | 'services' | 'raid-booking' | 'orders' | 'earnings';
+type AdvertiserSection = 'dashboard' | 'services' | 'raid-booking' | 'mythic-orders' | 'earnings';
 
 export const AdvertiserTab: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<AdvertiserSection>('dashboard');
+  const [activeSection, setActiveSection] = useState<AdvertiserSection>('mythic-orders');
 
   const sidebarItems: SidebarItem[] = [
     {
@@ -35,11 +35,11 @@ export const AdvertiserTab: React.FC = () => {
       onClick: () => setActiveSection('raid-booking')
     },
     {
-      id: 'orders',
-      label: 'My Orders',
-      icon: '📋',
-      active: activeSection === 'orders',
-      onClick: () => setActiveSection('orders')
+      id: 'mythic-orders',
+      label: 'Mythic+ Orders',
+      icon: '�️',
+      active: activeSection === 'mythic-orders',
+      onClick: () => setActiveSection('mythic-orders')
     },
     {
       id: 'earnings',
@@ -58,8 +58,8 @@ export const AdvertiserTab: React.FC = () => {
         return <MyServices />;
       case 'raid-booking':
         return <RaidBooking />;
-      case 'orders':
-        return <MyOrders />;
+      case 'mythic-orders':
+        return <MythicPlusOrders />;
       case 'earnings':
         return <Earnings />;
       default:

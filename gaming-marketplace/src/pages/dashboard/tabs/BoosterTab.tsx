@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sidebar, type SidebarItem } from '../../../components/layout/Sidebar';
 import { DashboardHome } from '../sections/booster/DashboardHome';
-import { AssignedOrders } from '../sections/booster/AssignedOrders';
+import { MyAssignedOrders } from '../sections/booster/MyAssignedOrders';
 import { MyEarnings } from '../sections/booster/MyEarnings';
 import { Profile } from '../sections/booster/Profile';
 import './BoosterTab.css';
@@ -21,8 +21,8 @@ export const BoosterTab: React.FC = () => {
     },
     {
       id: 'orders',
-      label: 'Assigned Orders',
-      icon: '📋',
+      label: 'My Orders',
+      icon: '�️',
       active: activeSection === 'orders',
       onClick: () => setActiveSection('orders')
     },
@@ -47,7 +47,7 @@ export const BoosterTab: React.FC = () => {
       case 'dashboard':
         return <DashboardHome />;
       case 'orders':
-        return <AssignedOrders />;
+        return <MyAssignedOrders />;
       case 'earnings':
         return <MyEarnings />;
       case 'profile':

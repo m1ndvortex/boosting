@@ -81,6 +81,50 @@ export interface Order {
   evidence?: OrderEvidence;
   createdAt: Date;
   completedAt?: Date;
+  // Mythic+ specific fields
+  mythicPlusDetails?: MythicPlusOrderDetails;
+}
+
+export interface MythicPlusOrderDetails {
+  dungeonName: string;
+  keyLevel: number;
+  dungeonImage?: string;
+  goldPot: number; // Total gold to be split among boosters
+  goldCurrency: 'gold' | 'toman'; // Which currency for the pot
+  team: {
+    tank: BoosterAssignment | null;
+    healer: BoosterAssignment | null;
+    dps1: BoosterAssignment | null;
+    dps2: BoosterAssignment | null;
+    client: ClientInfo;
+  };
+  boostStartTime?: Date;
+  boostEndTime?: Date;
+  boostCompletionTime?: Date;
+  estimatedDuration: number; // in minutes
+  notes?: string;
+  isLocked: boolean; // True after boost starts, prevents advertiser edits
+}
+
+export interface BoosterAssignment {
+  boosterId: string;
+  username: string;
+  avatar: string;
+  role: 'tank' | 'healer' | 'dps';
+  assignedAt: Date;
+  goldShare: number; // Their share from the pot (goldPot / 4)
+  status: 'assigned' | 'confirmed' | 'in_progress' | 'completed';
+}
+
+export interface ClientInfo {
+  userId: string;
+  username: string;
+  characterName: string;
+  characterClass: string;
+  characterSpec: string;
+  realm: string;
+  discord?: string;
+  notes?: string;
 }
 
 export interface OrderEvidence {
