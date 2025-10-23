@@ -38,24 +38,22 @@ export const ActivityLogger: React.FC<ActivityLoggerProps> = ({
     }
   };
 
-  const logActivity = (action: string, details?: Record<string, any>) => {
-    if (!authState.user) return;
-
-    TeamService.logActivity({
-      serviceId: serviceId || '',
-      userId: authState.user.id,
-      userName: authState.user.username,
-      action,
-      changes: details || {},
-      workspaceId: workspaceState.currentWorkspace.type === 'team' 
-        ? workspaceState.currentWorkspace.id 
-        : authState.user.id,
-      workspaceType: workspaceState.currentWorkspace.type
-    });
-
-    // Refresh activities
-    loadActivities();
-  };
+  // Unused function - kept for future use
+  // const logActivity = (action: string, details?: Record<string, any>) => {
+  //   if (!authState.user) return;
+  //   TeamService.logActivity({
+  //     serviceId: serviceId || '',
+  //     userId: authState.user.id,
+  //     userName: authState.user.username,
+  //     action,
+  //     changes: details || {},
+  //     workspaceId: workspaceState.currentWorkspace.type === 'team' 
+  //       ? workspaceState.currentWorkspace.id 
+  //       : authState.user.id,
+  //     workspaceType: workspaceState.currentWorkspace.type
+  //   });
+  //   loadActivities();
+  // };
 
   const getActivityIcon = (action: string): string => {
     if (action.includes('created')) return '➕';
@@ -84,10 +82,8 @@ export const ActivityLogger: React.FC<ActivityLoggerProps> = ({
     return date.toLocaleDateString();
   };
 
-  // Expose logActivity function for parent components
-  React.useImperativeHandle(React.forwardRef(() => null), () => ({
-    logActivity
-  }));
+  // Note: logActivity is available in the component scope for internal use
+  // To expose it to parent components, this component should be wrapped with forwardRef
 
   if (activities.length === 0) {
     return (

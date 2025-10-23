@@ -91,7 +91,7 @@ export const GoldWalletSelector: React.FC<GoldWalletSelectorProps> = ({
                 <div className="gold-wallet-selector__wallet-info">
                   <div className="gold-wallet-selector__wallet-header">
                     <span className="gold-wallet-selector__wallet-name">
-                      {wallet.displayName || `${wallet.realmName} Gold`}
+                      {wallet.realmName} Gold
                     </span>
                     <span className="gold-wallet-selector__wallet-game">
                       {wallet.gameName}

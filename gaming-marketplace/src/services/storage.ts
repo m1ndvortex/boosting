@@ -23,6 +23,10 @@ export class StorageService {
     }
   }
 
+  // Aliases for shorter method names
+  static set = StorageService.setItem;
+  static get = StorageService.getItem;
+
   static removeItem(key: string): void {
     try {
       localStorage.removeItem(key);

@@ -76,7 +76,7 @@ export function useFormValidation<T extends Record<string, any>>(
 
   // Validate a single field
   const validateField = useCallback(async (field: keyof T): Promise<ValidationResult> => {
-    const validator = validators[field];
+    const validator = (validators as Record<keyof T, any>)[field];
     if (!validator) {
       return { isValid: true, errors: [] };
     }
@@ -175,7 +175,7 @@ export function useFormValidation<T extends Record<string, any>>(
     // Set new timeout
     debounceTimeouts.current[fieldKey] = setTimeout(() => {
       validateField(field);
-    }, debounceDelay);
+    }, debounceDelay) as unknown as number;
   }, [validateField, debounceDelay]);
 
   // Set single field value
@@ -193,7 +193,7 @@ export function useFormValidation<T extends Record<string, any>>(
     });
 
     // Validate on change if enabled
-    if (validateOnChange && validators[field]) {
+    if (validateOnChange && (validators as Record<keyof T, any>)[field]) {
       debouncedValidateField(field);
     }
   }, [validateOnChange, validators, debouncedValidateField]);
@@ -211,7 +211,7 @@ export function useFormValidation<T extends Record<string, any>>(
     // Validate changed fields if enabled
     if (validateOnChange) {
       Object.keys(values).forEach(field => {
-        if (validators[field as keyof T]) {
+        if ((validators as Record<keyof T, any>)[field as keyof T]) {
           debouncedValidateField(field as keyof T);
         }
       });
@@ -285,7 +285,7 @@ export function useFormValidation<T extends Record<string, any>>(
     }));
 
     // Validate on blur if enabled
-    if (validateOnBlur && validators[field]) {
+    if (validateOnBlur && (validators as Record<keyof T, any>)[field]) {
       validateField(field);
     }
   }, [validateOnBlur, validators, validateField]);

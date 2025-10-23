@@ -490,7 +490,7 @@ export class WalletService {
   // Admin: Update withdrawal status to processing
   static async setWithdrawalProcessing(
     transactionId: string,
-    adminUserId: string
+    _adminUserId: string
   ): Promise<Transaction> {
     const allTransactions = StorageService.getItem<Transaction[]>(STORAGE_KEYS.TRANSACTIONS) || [];
     const transactionIndex = allTransactions.findIndex(t => t.id === transactionId);

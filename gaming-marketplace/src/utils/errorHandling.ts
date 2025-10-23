@@ -33,7 +33,7 @@ export class UIErrorHandler {
     options: ErrorHandlingOptions = {}
   ): AppError {
     const {
-      showNotification = false,
+      showNotification: _showNotification = false,
       logError = true,
       fallbackMessage = 'An unexpected error occurred',
       context,
@@ -188,7 +188,7 @@ export class UIErrorHandler {
     let timeout: number;
     return (...args: Parameters<T>) => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
+      timeout = setTimeout(() => func(...args), wait) as unknown as number;
     };
   }
 

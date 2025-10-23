@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { TeamService } from '../../services/teamService';
-import type { Team, TeamMember } from '../../types';
+import type { Team } from '../../types';
 import './PermissionManagement.css';
 
 interface Permission {
@@ -49,7 +48,6 @@ export const PermissionManagement: React.FC<PermissionManagementProps> = ({
 }) => {
   const [memberPermissions, setMemberPermissions] = useState<MemberPermissions[]>([]);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     loadMemberPermissions();

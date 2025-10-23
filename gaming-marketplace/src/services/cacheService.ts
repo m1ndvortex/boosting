@@ -1,7 +1,5 @@
 // Cache Service for optimizing wallet data loading and caching
 
-import type { MultiWallet, GameRealm, GameDefinition, MultiWalletTransaction } from '../types';
-
 interface CacheEntry<T> {
   data: T;
   timestamp: number;

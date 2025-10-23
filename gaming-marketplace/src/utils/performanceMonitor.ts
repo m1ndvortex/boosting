@@ -28,7 +28,7 @@ export class PerformanceMonitor {
   /**
    * Start timing an operation
    */
-  static startTiming(operation: string): number {
+  static startTiming(_operation: string): number {
     if (!this.enabled) return 0;
     return performance.now();
   }

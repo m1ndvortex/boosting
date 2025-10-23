@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { TeamService } from '../../services/teamService';
-import { OrderService } from '../../services/orderService';
 import type { Team, Order, ActivityLogEntry } from '../../types';
 import './TeamPerformance.css';
 
@@ -81,8 +80,8 @@ export const TeamPerformance: React.FC<TeamPerformanceProps> = ({ team }) => {
     const allOrders: Order[] = ordersData ? JSON.parse(ordersData) : [];
     
     // Filter orders that belong to team services
-    return allOrders.filter(order => {
-      // Mock logic - in real app, check if order.serviceId belongs to team
+    return allOrders.filter(_order => {
+      // Mock logic - in real app, check if _order.serviceId belongs to team
       return Math.random() > 0.7; // Randomly assign some orders to team
     });
   };

@@ -1,9 +1,8 @@
 // Multi-Wallet context for global multi-wallet state management
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import type { MultiWallet, MultiWalletTransaction, Currency, GameRealm } from '../types';
+import type { MultiWallet, MultiWalletTransaction, GameRealm } from '../types';
 import { MultiWalletService } from '../services/multiWalletService';
-import { GameManagementService } from '../services/gameManagementService';
 import { useAuth } from './AuthContext';
 
 // Multi-Wallet state

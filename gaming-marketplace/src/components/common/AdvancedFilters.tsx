@@ -30,6 +30,13 @@ export interface FilterState {
   [key: string]: any;
 }
 
+// Type aliases for external use
+export type FilterValues = FilterState;
+export type SortConfig = {
+  field: string;
+  direction: 'asc' | 'desc';
+};
+
 interface AdvancedFiltersProps {
   filterGroups: FilterGroup[];
   sortOptions: SortOption[];
@@ -63,7 +70,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     onFiltersChange(newFilters);
   };
 
-  const handleRangeChange = (groupId: string, type: 'min' | 'max', value: number) => {
+  const handleRangeChange = (groupId: string, type: 'min' | 'max' | 'from' | 'to', value: number | string | undefined) => {
     const currentRange = currentFilters[groupId] || {};
     const newRange = { ...currentRange, [type]: value };
     handleFilterChange(groupId, newRange);

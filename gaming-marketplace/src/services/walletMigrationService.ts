@@ -56,7 +56,7 @@ export class WalletMigrationService {
             newBalance: {
               usd: existingWallet.staticWallets.usd.balance,
               toman: existingWallet.staticWallets.toman.balance,
-              totalGold: MultiWalletService.getTotalBalance(userId, 'gold')
+              totalGold: MultiWalletService.getTotalBalance(userId)
             },
             transactionCount: 0
           }
@@ -110,7 +110,7 @@ export class WalletMigrationService {
         newBalance: {
           usd: multiWallet.staticWallets.usd.balance,
           toman: multiWallet.staticWallets.toman.balance,
-          totalGold: MultiWalletService.getTotalBalance(userId, 'gold')
+          totalGold: MultiWalletService.getTotalBalance(userId)
         },
         transactionCount: migratedTransactions.length
       });
@@ -125,7 +125,7 @@ export class WalletMigrationService {
           newBalance: {
             usd: multiWallet.staticWallets.usd.balance,
             toman: multiWallet.staticWallets.toman.balance,
-            totalGold: MultiWalletService.getTotalBalance(userId, 'gold')
+            totalGold: MultiWalletService.getTotalBalance(userId)
           },
           transactionCount: migratedTransactions.length
         }
@@ -225,7 +225,9 @@ export class WalletMigrationService {
       amount: oldTransaction.amount,
       currency: oldTransaction.currency as 'usd' | 'toman' | 'gold',
       goldType,
-      status: oldTransaction.status,
+      status: oldTransaction.status === 'rejected' || oldTransaction.status === 'processing' 
+        ? 'failed' 
+        : oldTransaction.status,
       paymentMethod: oldTransaction.paymentMethod,
       approvedBy: oldTransaction.approvedBy,
       metadata: {
@@ -570,7 +572,7 @@ export class WalletMigrationService {
       
       const newUsd = newWallet.staticWallets.usd.balance;
       const newToman = newWallet.staticWallets.toman.balance;
-      const newGold = MultiWalletService.getTotalBalance(userId, 'gold');
+      const newGold = MultiWalletService.getTotalBalance(userId);
       
       if (Math.abs(oldUsd - newUsd) > 0.01) {
         issues.push(`USD balance mismatch: old=${oldUsd}, new=${newUsd}`);

@@ -54,13 +54,20 @@ export const SuspendedGoldDisplay: React.FC<SuspendedGoldDisplayProps> = ({
 
       setPreviewLoading(true);
       try {
-        const preview = await MultiWalletService.getConversionPreview(
+        const result = await MultiWalletService.getConversionPreview(
           amount,
           'gold',
           selectedCurrency,
           'suspended'
         );
-        setConversionPreview(preview);
+        setConversionPreview({
+          originalAmount: amount,
+          feeAmount: result.fee,
+          netGoldAmount: amount - result.fee,
+          exchangeRate: result.rate,
+          finalFiatAmount: result.total,
+          feePercentage: (result.fee / result.amount) * 100
+        });
       } catch (error) {
         console.error('Error calculating conversion preview:', error);
         setConversionPreview(null);

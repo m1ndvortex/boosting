@@ -303,7 +303,8 @@ export type MultiWalletErrorType =
   | 'CONVERSION_FEE_ERROR'
   | 'INVALID_TRANSACTION'
   | 'WALLET_HAS_BALANCE'
-  | 'DUPLICATE_REALM';
+  | 'DUPLICATE_REALM'
+  | 'PROCESSING_ERROR';
 
 export interface MultiWalletErrorDetails {
   type: MultiWalletErrorType;

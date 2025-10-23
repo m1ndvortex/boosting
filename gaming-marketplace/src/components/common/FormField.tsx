@@ -103,7 +103,7 @@ export const FormField: React.FC<FormFieldProps> = ({
       runValidation(valueToValidate);
     }, debounceDelay);
 
-    setDebounceTimeout(timeout);
+    setDebounceTimeout(timeout as unknown as number);
   }, [runValidation, debounceDelay, debounceTimeout]);
 
   const handleChange = useCallback((newValue: string | number) => {

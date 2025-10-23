@@ -786,8 +786,8 @@ export class MultiWalletService {
 
       const now = new Date();
       const expiredDeposits = suspendedDeposits.filter(deposit => {
-        const expiryDate = new Date(deposit.expiresAt);
-        return expiryDate <= now;
+        const withdrawableDate = new Date(deposit.withdrawableAt);
+        return withdrawableDate <= now;
       });
 
       if (expiredDeposits.length === 0) {
@@ -796,8 +796,8 @@ export class MultiWalletService {
 
       // Remove expired deposits from storage
       const remainingDeposits = suspendedDeposits.filter(deposit => {
-        const expiryDate = new Date(deposit.expiresAt);
-        return expiryDate > now;
+        const withdrawableDate = new Date(deposit.withdrawableAt);
+        return withdrawableDate > now;
       });
 
       StorageService.set(MULTI_WALLET_STORAGE_KEYS.SUSPENDED_DEPOSITS, remainingDeposits);
@@ -812,4 +812,80 @@ export class MultiWalletService {
       );
     }
   }
+
+  /**
+   * Get all suspended deposits for a user with realm information
+   */
+  static getAllSuspendedDeposits(userId: string): Array<SuspendedDeposit & { realmId: string; realmName: string; gameName: string }> {
+    const wallet = this.getMultiWallet(userId);
+    const allDeposits: Array<SuspendedDeposit & { realmId: string; realmName: string; gameName: string }> = [];
+    
+    Object.entries(wallet.goldWallets).forEach(([realmId, goldWallet]) => {
+      const depositsWithRealm = goldWallet.suspendedDeposits.map(deposit => ({
+        ...deposit,
+        realmId,
+        realmName: goldWallet.realmName,
+        gameName: goldWallet.gameName
+      }));
+      allDeposits.push(...depositsWithRealm);
+    });
+    
+    return allDeposits;
+  }
+
+  /**
+   * Get conversion preview for suspended gold
+   */
+  static async getConversionPreview(
+    amount: number,
+    fromType: 'gold' | 'suspended',
+    toCurrency: 'usd' | 'toman',
+    _sourceType?: string
+  ): Promise<{ amount: number; fee: number; total: number; rate: number }> {
+    const feePercentage = fromType === 'suspended' ? 0.05 : 0.03;
+    const rate = toCurrency === 'usd' ? 1 : 50000;
+    
+    const convertedAmount = amount * rate;
+    const fee = convertedAmount * feePercentage;
+    const total = convertedAmount - fee;
+    
+    return { amount: convertedAmount, fee, total, rate };
+  }
+
+  /**
+   * Get total balance across all wallets for a user
+   */
+  static getTotalBalance(userId: string): number {
+    const wallet = this.getMultiWallet(userId);
+    let total = 0;
+    
+    total += wallet.staticWallets.usd.balance;
+    total += wallet.staticWallets.toman.balance / 50000;
+    
+    Object.values(wallet.goldWallets).forEach(goldWallet => {
+      total += goldWallet.withdrawableGold + goldWallet.suspendedGold;
+    });
+    
+    return total;
+  }
+
+  /**
+   * Get wallet with migration information
+   */
+  static getWalletWithMigration(userId: string): MultiWallet {
+    return this.getMultiWallet(userId);
+  }
+
+  /**
+   * Get multi-wallet transactions
+   */
+  static getMultiWalletTransactions(userId: string): MultiWalletTransaction[] {
+    const transactionKey = `${MULTI_WALLET_STORAGE_KEYS.MULTI_WALLET_TRANSACTIONS}-${userId}`;
+    return StorageService.getItem<MultiWalletTransaction[]>(transactionKey) || [];
+  }
+
+  /**
+   * Alias for convertBetweenWallets (backwards compatibility)
+   */
+  static convertBetweenGoldWallets = MultiWalletService.convertBetweenWallets;
 }

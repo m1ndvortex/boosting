@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { TeamService } from '../../services/teamService';
 import { useAuth } from '../../contexts/AuthContext';
-import type { Team } from '../../types';
 import './WorkspaceTemplates.css';
 
 interface WorkspaceTemplate {
